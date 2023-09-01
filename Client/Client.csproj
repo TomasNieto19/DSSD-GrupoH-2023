@@ -18,6 +18,7 @@
 		<Foler Include="Protos\" />
 	</ItemGroup>
 	<ItemGroup>
-		<Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
+		<Protobuf Include="Protos\Greet.proto" GrpcServices="Client" />
+		<Protobuf Include="Protos\UserDto.proto" GrpcServices="Client" />
 	</ItemGroup>
 </Project>
