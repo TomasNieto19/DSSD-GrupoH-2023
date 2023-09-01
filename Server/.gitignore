@@ -1,6 +1,4 @@
-/Server/src/main/java/grpc/*
-/Server/src/main/resources/META-INF/persistence.xml
-
+/src/main/java/grpc/*
 
 target/
 !.mvn/wrapper/maven-wrapper.jar
