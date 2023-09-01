@@ -1,11 +1,11 @@
 package server;
 
-import java.io.IOException;
-
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-
+import java.io.IOException;
 import services.GreeterService;
+import services.UserService;
+import services.RecipeService;
 
 public class server {
 
@@ -15,6 +15,8 @@ public class server {
 
 		Server server = ServerBuilder.forPort(8081)
 				.addService(new GreeterService())
+				.addService(new UserService())
+				.addService(new RecipeService())
 				.build();
 
 		server.start();
@@ -24,5 +26,4 @@ public class server {
 		server.awaitTermination();
 
 	}
-
 }
