@@ -8,15 +8,16 @@ import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Setter
 @Getter
 @Table(name = "recipe")

@@ -1,4 +1,5 @@
 /src/main/java/grpc/*
+!/src/main/java/grpc/
 
 target/
 !.mvn/wrapper/maven-wrapper.jar

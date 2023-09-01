@@ -5,9 +5,7 @@ import entities.Recipe;
 
 public class RecipeDao {
 
-	/*
-	 * METODOS A IMPLEMENTAR: - AGREGAR RECETA - EDITAR RECETA
-	 */
+	//METODOS A IMPLEMENTAR: - EDITAR RECETA	 
 
 	private static RecipeDao instance;
 
@@ -42,6 +40,26 @@ public class RecipeDao {
 		}
 
 		return entity;
+	}
+
+
+	// Metodo para traer receta por id
+	public Recipe getRecipeById(int recipeId) {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		Recipe recipe = null;
+
+		try {
+
+			recipe = em.find(Recipe.class, recipeId);
+
+		} finally {
+
+			em.close();
+
+		}
+
+		return recipe;
 	}
 
 	

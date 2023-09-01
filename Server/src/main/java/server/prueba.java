@@ -1,7 +1,6 @@
 package server;
 
 import java.util.List;
-
 import dao.RecipeDao;
 import dao.UserDao;
 import entities.Recipe;
@@ -11,8 +10,10 @@ public class prueba {
 
 	public static void main(String[] args) throws Exception {
 
-		 
+		
 		/*
+		System.out.println(RecipeDao.getInstance().getRecipeById(1));
+		
 		 * System.out.println(UserDao.getInstance().getUserById(1));
 		 * 
 		 * 
