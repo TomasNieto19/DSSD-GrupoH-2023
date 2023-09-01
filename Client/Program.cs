@@ -1,4 +1,4 @@
-﻿﻿﻿using Grpc.Net.Client;
+﻿﻿using Grpc.Net.Client;
 class Program
 {
     static async Task Main(string[] args)
@@ -34,17 +34,29 @@ class Program
         */
 
 
+        /* PRUEBA DEL GET ALL USERS
         var userServiceClient = new UserService.UserServiceClient(channel);
 
         var allUsersResponse = await userServiceClient.getAllUsersAsync(new Empty());
-
 
         foreach (var userDto in allUsersResponse.Users)
         {
             Console.WriteLine($"User ID: {userDto.IdUser}, Name: {userDto.Name}, Email: {userDto.Email}");
         }
-        /* PRUEBA DEL GET ALL USERS
         */
 
+
+        /* PRUEBA DEL GET RECETA POR ID
+        var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
+
+        var request = new getRecipeByIdRequest
+        {
+            IdRecipe = 1
+        };
+
+        var serverResponse = await recipeServiceClient.getRecipeByIdAsync(request);
+    
+        Console.WriteLine(serverResponse);
+        */
     }
 }
