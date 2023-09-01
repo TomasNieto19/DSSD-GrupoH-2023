@@ -34,7 +34,6 @@ class Program
         */
 
 
-        /* PRUEBA DEL GET ALL USERS
         var userServiceClient = new UserService.UserServiceClient(channel);
 
         var allUsersResponse = await userServiceClient.getAllUsersAsync(new Empty());
@@ -44,6 +43,7 @@ class Program
         {
             Console.WriteLine($"User ID: {userDto.IdUser}, Name: {userDto.Name}, Email: {userDto.Email}");
         }
+        /* PRUEBA DEL GET ALL USERS
         */
 
     }

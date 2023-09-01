@@ -1,11 +1,10 @@
 package server;
 
-import java.io.IOException;
-
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-
+import java.io.IOException;
 import services.GreeterService;
+import services.UserService;
 
 public class server {
 
@@ -15,6 +14,7 @@ public class server {
 
 		Server server = ServerBuilder.forPort(8081)
 				.addService(new GreeterService())
+				.addService(new UserService())
 				.build();
 
 		server.start();
@@ -24,5 +24,4 @@ public class server {
 		server.awaitTermination();
 
 	}
-
 }
