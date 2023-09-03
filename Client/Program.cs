@@ -58,5 +58,28 @@ class Program
     
         Console.WriteLine(serverResponse);
         */
+
+
+        /* PRUEBA DEL ADD RECETA
+        var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
+
+        // Crear un objeto RecipeDto
+        var recipeDto = new RecipeDto
+        {
+            Title = "Nueva Receta",
+            Description = "Una deliciosa receta",
+            Ingredients = "Ingredientes de la receta",
+            Category = "Categoría de la receta",
+            Steps = "Pasos para preparar la receta",
+            PreparationTime = 30,
+            UserId = 1
+        };
+
+        var serverResponse = await recipeServiceClient.addRecipeAsync(recipeDto);
+
+        Console.WriteLine("Server Response: " + serverResponse.Message);
+        */
+
+
     }
 }

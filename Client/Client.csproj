@@ -15,11 +15,11 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<Foler Include="Protos\" />
+		<Folder Include="Protos\" />
 	</ItemGroup>
 	<ItemGroup>
-		<Protobuf Include="Protos\Greet.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\UserDto.proto" GrpcServices="Client" />
-		<Protobuf Include="Protos\RecipeDto.proto" GrpcServices="Client" />
+		<Protobuf Include="Protos\Greet.proto" GrpcServices="Client" /> 
+		<Protobuf Include="Protos\UserDto.proto" GrpcServices="Client" /> 
+		<Protobuf Include="Protos\RecipeDto.proto" GrpcServices="Client" /> 
 	</ItemGroup>
 </Project>

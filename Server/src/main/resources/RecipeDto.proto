@@ -11,22 +11,22 @@ message RecipeDto {
   string category = 5;
   string steps = 6;
   int32 preparationTime = 7;
+  int32 userId = 8;
 }
 
 /* Definicion de Procedimientos Remotos */
 service RecipeService {
 
   rpc getRecipeById (getRecipeByIdRequest) returns (RecipeDto);
-}
+  rpc addRecipe (RecipeDto) returns (ServerResponseRecipe);
 
-/* Respuesta del servidor */
-message ServerResponse {
-  string message = 1;
 }
-
-message Empty {}
 
 // Mensaje de solicitud para getRecipeById
 message getRecipeByIdRequest {
   int32 idRecipe = 1;
+}
+
+message ServerResponseRecipe {
+  string message = 1;
 }
