@@ -4,11 +4,12 @@ import grpc.UserServiceGrpc;
 import grpc.UserDtoOuterClass;
 import java.util.List;
 import org.modelmapper.ModelMapper;
+
 import dao.UserDao;
 import entities.User;
 import grpc.UserDtoOuterClass.AllUsersResponse;
-import grpc.UserDtoOuterClass.Empty;
-import grpc.UserDtoOuterClass.ServerResponse;
+import grpc.UserDtoOuterClass.EmptyUser;
+import grpc.UserDtoOuterClass.ServerResponseUser;
 import grpc.UserDtoOuterClass.UserDto;
 import io.grpc.stub.StreamObserver;
 
@@ -23,10 +24,10 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
 	
 	@Override
-	public void addUser(UserDto request, StreamObserver<ServerResponse> responseObserver) {
+	public void addUser(UserDto request, StreamObserver<ServerResponseUser> responseObserver) {
 		
 		// Construye la respuesta que enviará el servidor luego de que se llame al metodo addUser desde el Client.
-		UserDtoOuterClass.ServerResponse.Builder serverResponse = UserDtoOuterClass.ServerResponse.newBuilder();
+		UserDtoOuterClass.ServerResponseUser.Builder serverResponse = UserDtoOuterClass.ServerResponseUser.newBuilder();
 
 		try {
 
@@ -52,7 +53,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
 	
 	@Override
-	public void getAllUsers(Empty request, StreamObserver<AllUsersResponse> responseObserver) {
+	public void getAllUsers(EmptyUser request, StreamObserver<AllUsersResponse> responseObserver) {
 
 		UserDtoOuterClass.AllUsersResponse.Builder allUsersResponseBuilder = UserDtoOuterClass.AllUsersResponse.newBuilder();
 
