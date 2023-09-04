@@ -1,85 +1,21 @@
-﻿﻿using Grpc.Net.Client;
-class Program
-{
-    static async Task Main(string[] args)
-    {
+using Microsoft.OpenApi.Models;
 
-        AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+var builder = WebApplication.CreateBuilder(args);
 
-        using var channel = GrpcChannel.ForAddress("http://localhost:8081");
+// Add services to the container.
+builder.Services.AddControllers();
 
+// Configure Swagger/OpenAPI
+builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "DSSD-GrupoH-2023" }); });
 
-        /* PRUEBA DEL HELLO WORLD
-        var client = new Greeter.GreeterClient(channel);
+var app = builder.Build();
 
-        var reply = await client.SayHelloAsync(new HelloRequest { Name = "World" });
+if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
 
-        Console.WriteLine("Greeting from .NET: " + reply.Message);
-        */
+app.UseHttpsRedirection();
 
+app.UseAuthorization();
 
-        /* PRUEBA DEL ADD USER
-        var userServiceClient = new UserService.UserServiceClient(channel);
+app.MapControllers();
 
-        var userDto = new UserDto
-        {
-            Name = "John Doe",
-            Email = "johndoe@example.com",
-            Username = "johndoe",
-            Password = "password123"
-        };
-
-        var serverResponse = await userServiceClient.addUserAsync(userDto);
-        Console.WriteLine("Server Response: " + serverResponse.Message);
-        */
-
-
-        /* PRUEBA DEL GET ALL USERS
-        var userServiceClient = new UserService.UserServiceClient(channel);
-
-        var allUsersResponse = await userServiceClient.getAllUsersAsync(new Empty());
-
-        foreach (var userDto in allUsersResponse.Users)
-        {
-            Console.WriteLine($"User ID: {userDto.IdUser}, Name: {userDto.Name}, Email: {userDto.Email}");
-        }
-        */
-
-
-        /* PRUEBA DEL GET RECETA POR ID
-        var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
-
-        var request = new getRecipeByIdRequest
-        {
-            IdRecipe = 1
-        };
-
-        var serverResponse = await recipeServiceClient.getRecipeByIdAsync(request);
-    
-        Console.WriteLine(serverResponse);
-        */
-
-
-        /* PRUEBA DEL ADD RECETA
-        var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
-
-        // Crear un objeto RecipeDto
-        var recipeDto = new RecipeDto
-        {
-            Title = "Nueva Receta",
-            Description = "Una deliciosa receta",
-            Ingredients = "Ingredientes de la receta",
-            Category = "Categoría de la receta",
-            Steps = "Pasos para preparar la receta",
-            PreparationTime = 30,
-            UserId = 1
-        };
-
-        var serverResponse = await recipeServiceClient.addRecipeAsync(recipeDto);
-
-        Console.WriteLine("Server Response: " + serverResponse.Message);
-        */
-
-
-    }
-}
+app.Run();
