@@ -1,21 +1,24 @@
 using Microsoft.OpenApi.Models;
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddControllers();
 
-// Add services to the container.
-builder.Services.AddControllers();
+        builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "DSSD-GrupoH-2023" }); });
 
-// Configure Swagger/OpenAPI
-builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "DSSD-GrupoH-2023" }); });
+        var app = builder.Build();
 
-var app = builder.Build();
+        if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
 
-if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
+        app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+        app.UseAuthorization();
 
-app.UseAuthorization();
+        app.MapControllers();
 
-app.MapControllers();
-
-app.Run();
+        app.Run();
+    }
+}
