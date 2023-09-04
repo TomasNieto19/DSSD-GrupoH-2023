@@ -1,7 +1,13 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import entities.Recipe;
+import entities.User;
 
 public class RecipeDao {
 
@@ -40,6 +46,25 @@ public class RecipeDao {
 		}
 
 		return entity;
+	}
+	@SuppressWarnings("unchecked")
+	public List<Recipe> getAll() {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		List<Recipe> recetas = new ArrayList<>();
+
+		try {
+
+			String jpql = "SELECT r FROM Recipe r";
+			Query query = em.createQuery(jpql, Recipe.class);
+			recetas = query.getResultList();
+
+		} finally {
+
+			em.close();
+		}
+
+		return recetas;
 	}
 
 

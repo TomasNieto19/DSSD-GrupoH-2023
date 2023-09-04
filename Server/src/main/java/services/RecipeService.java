@@ -1,16 +1,31 @@
 package services;
 
 import grpc.RecipeServiceGrpc;
+import grpc.RecipeDtoOuterClass.EmptyRecipe;
 import grpc.RecipeDtoOuterClass.RecipeDto;
 import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
+import grpc.UserDtoOuterClass.UserDto;
+import grpc.RecipeDtoOuterClass;
+import grpc.RecipeDtoOuterClass.AllRecipesResponse;
 import io.grpc.stub.StreamObserver;
-import dao.RecipeDao;
 import entities.Recipe;
+
+
+import java.util.List;
+
+import dao.RecipeDao;
+import dao.UserDao;
 
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
     private RecipeDto mapRecipeToRecipeDto(Recipe recipe){
-
+    	//lo creo para dsp asignarselo al setUser del recipeDTO
+    	
+    	RecipeDtoOuterClass.User user=RecipeDtoOuterClass.User.newBuilder()
+    			.setUserId(recipe.getUser().getIdUser())
+    			.setNombre(recipe.getUser().getName())
+    			.build();
+    	
         return RecipeDto.newBuilder()
             .setIdRecipe(recipe.getIdRecipe())
             .setTitle(recipe.getTitle())
@@ -19,7 +34,8 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
             .setCategory(recipe.getCategory())
             .setSteps(recipe.getSteps())
             .setPreparationTime(recipe.getPreparationTime())
-
+            .setUser(user)
+            
             .build();
 
     }
@@ -45,7 +61,32 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
             responseObserver.onNext(recipe);
             responseObserver.onCompleted();
         }
+    }
+    
+    public void getAllRecipe(EmptyRecipe request,StreamObserver<AllRecipesResponse> responseObserver) {
+    	
+    	RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse.newBuilder();
+    	
+    	try {
 
+			List<Recipe> recipeList = RecipeDao.getInstance().getAll();
 
+			for (Recipe recipe : recipeList) {
+
+				RecipeDto recipeDto = mapRecipeToRecipeDto(recipe);
+
+				allRecipesResponseBuilder.addRecipes(recipeDto);
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Error al enviar la lista de recetas.");
+
+		} finally {
+
+			responseObserver.onNext(allRecipesResponseBuilder.build());
+			responseObserver.onCompleted();
+		}
+    	
     }
 }

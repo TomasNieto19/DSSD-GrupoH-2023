@@ -6,16 +6,16 @@ class Program
 
         AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
 
-        using var channel = GrpcChannel.ForAddress("http://localhost:8081");
+        using var channel = GrpcChannel.ForAddress("http://localhost:8083");
 
 
-        /* PRUEBA DEL HELLO WORLD
-        var client = new Greeter.GreeterClient(channel);
+        //PRUEBA DEL HELLO WORLD
+        //var client = new Greeter.GreeterClient(channel);
 
-        var reply = await client.SayHelloAsync(new HelloRequest { Name = "World" });
+        //var reply = await client.SayHelloAsync(new HelloRequest { Name = "World" });
 
-        Console.WriteLine("Greeting from .NET: " + reply.Message);
-        */
+        //Console.WriteLine("Greeting from .NET: " + reply.Message);
+
 
 
         /* PRUEBA DEL ADD USER
@@ -58,5 +58,26 @@ class Program
     
         Console.WriteLine(serverResponse);
         */
+
+        /* //PRUEBA DEL GET ALL RECIPES
+        var userServiceClient = new UserService.UserServiceClient(channel);
+
+        var allUsersResponse = await userServiceClient.getAllUsersAsync(new Empty());
+
+        foreach (var userDto in allUsersResponse.Users)
+        {
+            Console.WriteLine($"User ID: {userDto.IdUser}, Name: {userDto.Name}, Email: {userDto.Email}");
+        }
+        */
+        var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
+
+        var allRecipesResponse = await recipeServiceClient.getAllRecipeAsync(new EmptyRecipe());
+
+        foreach (var recipeDto in allRecipesResponse.Recipes)
+        {
+            Console.WriteLine($"Recipe ID: {recipeDto.IdRecipe}, Name: {recipeDto.Title},Descriprtion: {recipeDto.Description},Ingredients: {recipeDto.Ingredients}" +
+                $",Category: {recipeDto.Category},Steps: {recipeDto.Steps},PreparationTime: {recipeDto.PreparationTime},User: {recipeDto.User}");
+        }
+        
     }
 }

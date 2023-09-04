@@ -37,6 +37,7 @@ public class prueba {
 		 * 
 		 * for (User usuario : usuarios) { System.out.println(usuario); }
 		 */
+		//System.out.println(RecipeDao.getInstance().getAll());
 
 	}
 }
