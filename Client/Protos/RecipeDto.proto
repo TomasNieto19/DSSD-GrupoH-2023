@@ -25,6 +25,7 @@ service RecipeService {
   rpc getRecipeById (getRecipeByIdRequest) returns (RecipeDto);
   rpc getAllRecipe (EmptyRecipe) returns (AllRecipesResponse);
   rpc addRecipe (RecipeDto) returns (ServerResponseRecipe);
+  rpc getRecipesByUserId (getRecipesByUserIdRequest) returns (getRecipesByUserIdResponse);
   
 }
 
@@ -41,5 +42,13 @@ message getRecipeByIdRequest {
 }
 
 message AllRecipesResponse{
+	repeated RecipeDto recipes = 1;
+}
+
+message getRecipesByUserIdRequest {
+  int32 idUser = 1;
+}
+
+message getRecipesByUserIdResponse{
 	repeated RecipeDto recipes = 1;
 }

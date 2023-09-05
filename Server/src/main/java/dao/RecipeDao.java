@@ -84,5 +84,27 @@ public class RecipeDao {
 
 		return recipe;
 	}
+	
+	// Metodo para traer las recetas del usuario
+	@SuppressWarnings("unchecked")
+	public List<Recipe> getRecipeByUserId(int userId) {
+	    EntityManager em = JPAUtil.getEMF().createEntityManager();
+	    List<Recipe> recetas = new ArrayList<>();
+
+	    try {
+	       
+	        String jpql = "SELECT r FROM Recipe r WHERE r.user.id = :userId";
+	        Query query = em.createQuery(jpql, Recipe.class);
+	        query.setParameter("userId", userId);
+
+	        recetas = query.getResultList();
+	    } finally {
+	        em.close();
+	    }
+
+	    return recetas;
+	}
+
+	
 
 }

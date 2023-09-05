@@ -1,6 +1,8 @@
 package services;
 
 import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
+import grpc.RecipeDtoOuterClass.getRecipesByUserIdRequest;
+import grpc.RecipeDtoOuterClass.getRecipesByUserIdResponse;
 import grpc.RecipeDtoOuterClass.AllRecipesResponse;
 import grpc.RecipeDtoOuterClass.EmptyRecipe;
 import grpc.RecipeDtoOuterClass.RecipeDto;
@@ -64,8 +66,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	@Override
 	public void getAllRecipe(EmptyRecipe request, StreamObserver<AllRecipesResponse> responseObserver) {
 
-		RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse
-				.newBuilder();
+		RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse.newBuilder();
 
 		try {
 
@@ -121,5 +122,33 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
         }
     }
 		 
+	
+	@Override
+	public void getRecipesByUserId(getRecipesByUserIdRequest request, StreamObserver<getRecipesByUserIdResponse> responseObserver) {
+
+		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse.newBuilder();
+		
+		try {
+			
+			List<Recipe> recipeList = RecipeDao.getInstance().getRecipeByUserId(request.getIdUser());
+
+			for (Recipe recipe : recipeList) {
+
+				RecipeDto recipeDto = mapRecipeToRecipeDto(recipe);
+
+				response.addRecipes(recipeDto);
+			}
+			
+		} catch (Exception e) {
+
+			System.out.println("Error al enviar la lista de recetas del usuario.");
+
+		} finally {
+
+			responseObserver.onNext(response.build());
+			responseObserver.onCompleted();
+		}
+	}
+		
 		
 }

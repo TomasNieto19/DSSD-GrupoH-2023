@@ -11,9 +11,11 @@ public class prueba {
 	public static void main(String[] args) throws Exception {
 
 		/*
-		System.out.println(UserDao.getInstance().getUserById(100));
-		 * System.out.println(RecipeDao.getInstance().getRecipeById(1));
+		 * System.out.println(RecipeDao.getInstance().getRecipeByUserId(1));
 		 * 
+		 * System.out.println(UserDao.getInstance().getUserById(100));
+		 * 
+		 * System.out.println(RecipeDao.getInstance().getRecipeById(1));
 		 * 
 		 * 
 		 * Recipe receta = new Recipe("Torta de Chocolate",
@@ -29,9 +31,7 @@ public class prueba {
 		 * 
 		 * User user = new User("tomas", "tnieto852@gmail.com", "tomiUsername", "1234");
 		 * UserDao.getInstance().addUser(user);
-		 */
-
-		/*
+		 * 
 		 * System.out.println( UserDao.getInstance().getAll() ); Prueba traer todos los
 		 * usuarios List<User> usuarios = UserDao.getInstance().getAll();
 		 * 

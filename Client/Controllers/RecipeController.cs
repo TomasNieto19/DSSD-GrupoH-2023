@@ -40,6 +40,16 @@ namespace Client.Controllers
 
         }
 
+        [HttpGet("userRecipes/{id}")]
+        public async Task<IActionResult> GetRecipeByUserId(int id)
+        {
+
+            var request = new getRecipesByUserIdRequest { IdUser = id };
+
+            return Ok(await recipeServiceClient.getRecipesByUserIdAsync(request));
+
+        }
+
 
     }
 }
