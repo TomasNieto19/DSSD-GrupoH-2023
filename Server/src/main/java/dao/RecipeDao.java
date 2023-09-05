@@ -1,11 +1,15 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import entities.Recipe;
+import entities.User;
 
 public class RecipeDao {
-
-	//METODOS A IMPLEMENTAR: - EDITAR RECETA	 
 
 	private static RecipeDao instance;
 
@@ -41,7 +45,8 @@ public class RecipeDao {
 
 		return entity;
 	}
-	
+
+  
 	public Recipe editRecipe(Recipe recipe) throws Exception{
 		
 		
@@ -63,9 +68,27 @@ public class RecipeDao {
 		}
 
 		return entity;
-		
+  }
 			
-		
+	
+	@SuppressWarnings("unchecked")
+	public List<Recipe> getAll() {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		List<Recipe> recetas = new ArrayList<>();
+
+		try {
+
+			String jpql = "SELECT r FROM Recipe r";
+			Query query = em.createQuery(jpql, Recipe.class);
+			recetas = query.getResultList();
+
+		} finally {
+
+			em.close();
+		}
+
+		return recetas;
 	}
 
 
