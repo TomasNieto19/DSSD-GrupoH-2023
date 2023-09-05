@@ -41,6 +41,32 @@ public class RecipeDao {
 
 		return entity;
 	}
+	
+	public Recipe editRecipe(Recipe recipe) throws Exception{
+		
+		
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		Recipe entity = null;
+		
+		try {
+			
+			em.getTransaction().begin();
+			entity = em.merge(recipe);
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+
+			throw new Exception("No se encontro la receta:  " + e.getMessage());
+
+		} finally {
+			em.close();
+		}
+
+		return entity;
+		
+			
+		
+	}
 
 
 	// Metodo para traer receta por id

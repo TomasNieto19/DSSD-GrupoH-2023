@@ -17,6 +17,7 @@ message RecipeDto {
 service RecipeService {
 
   rpc getRecipeById (getRecipeByIdRequest) returns (RecipeDto);
+  rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
 }
 
 /* Respuesta del servidor */
@@ -29,4 +30,8 @@ message Empty {}
 // Mensaje de solicitud para getRecipeById
 message getRecipeByIdRequest {
   int32 idRecipe = 1;
+}
+
+message ServerResponseRecipe {
+  string message = 1;
 }

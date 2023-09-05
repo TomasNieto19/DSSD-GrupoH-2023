@@ -2,12 +2,21 @@ package services;
 
 import grpc.RecipeServiceGrpc;
 import grpc.RecipeDtoOuterClass.RecipeDto;
+import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
 import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
 import io.grpc.stub.StreamObserver;
-import dao.RecipeDao;
-import entities.Recipe;
 
+import javax.transaction.Transactional;
+
+import org.modelmapper.ModelMapper;
+
+import dao.RecipeDao;
+import dao.UserDao;
+import entities.Recipe;
+import entities.User;
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
+	
+	private final ModelMapper modelMapper = new ModelMapper();
 
     private RecipeDto mapRecipeToRecipeDto(Recipe recipe){
 
@@ -48,4 +57,37 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 
     }
+    
+    @Transactional
+    public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
+    	// TODO Auto-generated method stub
+    	ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
+    	Recipe recipe = null;
+        User user = null;
+        
+
+        try {
+        	recipe = modelMapper.map(request, Recipe.class);;
+            user = UserDao.getInstance().getUserById(1);
+        	recipe.setUser(user);
+            RecipeDao.getInstance().editRecipe(recipe);
+
+            serverResponse.setMessage("Receta editada correctamente");
+
+        } catch (Exception e) {
+
+            serverResponse.setMessage("Error al editar la receta: " + e.getMessage());
+
+        }
+        finally {
+
+            responseObserver.onNext(serverResponse.build());
+            responseObserver.onCompleted();
+        }
+    	
+    }
+    
+    
+    
+    
 }

@@ -9,7 +9,7 @@
 			<!-- Driver Persistence -->
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<!-- MySQL URL -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/DSSDGrupoH2023" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/dssdgrupoh2023" />
 			<!-- MySQL Username -->
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<!-- MySQL Password -->
