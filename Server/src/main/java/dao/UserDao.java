@@ -9,7 +9,6 @@ import entities.User;
 public class UserDao {
 	/*
 	 * METODOS A IMPLEMENTAR: 
-	 * - LISTADO DE RECETAS PROPIAS. 
 	 * - LISTADO DE USUARIOS QUE SIGUE. 
 	 * - LISTADO DE RECETAS FAVORITAS.
 	 */
@@ -27,15 +26,15 @@ public class UserDao {
 
 	
 	// Metodo para persistir un usuario en la BD
-	public User addUser(User user) throws Exception {
+	public void addUser(User user) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
-		User entity = null;
+	
 
 		try {
 
 			em.getTransaction().begin();
-			entity = em.merge(user);
+			em.persist(user);
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
@@ -43,12 +42,12 @@ public class UserDao {
 			throw new Exception("Error al persistir Usuario: " + e.getMessage());
 
 		} finally {
+			
 			em.close();
 		}
-
-		return entity;
 	}
 
+	
 	// Metodo para traer todos los usuarios de la BD
 	@SuppressWarnings("unchecked")
 	public List<User> getAll() {
@@ -70,6 +69,7 @@ public class UserDao {
 		return usuarios;
 	}
 
+	
 	// Metodo para traer usuario por id
 	public User getUserById(int userId) {
 
@@ -89,4 +89,5 @@ public class UserDao {
 		return user;
 	}
 
+	
 }

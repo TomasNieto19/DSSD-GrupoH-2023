@@ -1,31 +1,19 @@
 package services;
 
-import grpc.RecipeServiceGrpc;
-import grpc.RecipeDtoOuterClass.EmptyRecipe;
-import grpc.RecipeDtoOuterClass.RecipeDto;
 import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
 import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
-import grpc.UserDtoOuterClass.UserDto;
-import grpc.RecipeDtoOuterClass;
 import grpc.RecipeDtoOuterClass.AllRecipesResponse;
+import grpc.RecipeDtoOuterClass.EmptyRecipe;
+import grpc.RecipeDtoOuterClass.RecipeDto;
+import grpc.RecipeDtoOuterClass;
+import grpc.RecipeServiceGrpc;
 import io.grpc.stub.StreamObserver;
-
-import javax.transaction.Transactional;
-
 import org.modelmapper.ModelMapper;
-
-import dao.RecipeDao;
-import dao.UserDao;
 import entities.Recipe;
 import entities.User;
-
-import entities.Recipe;
-
-
-import java.util.List;
-
 import dao.RecipeDao;
 import dao.UserDao;
+import java.util.List;
 
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	
@@ -48,7 +36,6 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
             .setSteps(recipe.getSteps())
             .setPreparationTime(recipe.getPreparationTime())
             .setUser(user)
-            
             .build();
 
     }
@@ -57,7 +44,6 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
     @Override
     public void getRecipeById(getRecipeByIdRequest request, StreamObserver<RecipeDto> responseObserver) {
    
-
         RecipeDto recipe = null;
         
         try {
@@ -68,14 +54,15 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
         
             System.out.println("Error al enviar la receta por id: " + e.getMessage());
             
-        }
-        finally {
+        }finally {
             
             responseObserver.onNext(recipe);
             responseObserver.onCompleted();
         }
     }
     
+    
+    @Override
     public void getAllRecipe(EmptyRecipe request,StreamObserver<AllRecipesResponse> responseObserver) {
     	
     	RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse.newBuilder();
@@ -103,18 +90,22 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
     	
     }
     
-    @Transactional
+    
+    @Override
     public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
-    	// TODO Auto-generated method stub
+ 
     	ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
     	Recipe recipe = null;
         User user = null;
         
-
         try {
-        	recipe = modelMapper.map(request, Recipe.class);;
-            user = UserDao.getInstance().getUserById(1);
+        	
+        	user = UserDao.getInstance().getUserById(request.getUser().getUserId());
+        	
+        	recipe = modelMapper.map(request, Recipe.class);
+        	
         	recipe.setUser(user);
+        	
             RecipeDao.getInstance().editRecipe(recipe);
 
             serverResponse.setMessage("Receta editada correctamente");
@@ -123,16 +114,13 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
             serverResponse.setMessage("Error al editar la receta: " + e.getMessage());
 
-        }
-        finally {
+        }finally {
 
             responseObserver.onNext(serverResponse.build());
             responseObserver.onCompleted();
         }
     	
     }
-    
-    
     
     
 }

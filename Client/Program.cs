@@ -59,7 +59,7 @@ class Program
         Console.WriteLine(serverResponse);
         */
 
-        /* //PRUEBA DEL GET ALL RECIPES
+        /* //PRUEBA DEL GET ALL USERS
         var userServiceClient = new UserService.UserServiceClient(channel);
 
         var allUsersResponse = await userServiceClient.getAllUsersAsync(new Empty());
@@ -68,7 +68,6 @@ class Program
         {
             Console.WriteLine($"User ID: {userDto.IdUser}, Name: {userDto.Name}, Email: {userDto.Email}");
         }
-        */
         var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
 
         var allRecipesResponse = await recipeServiceClient.getAllRecipeAsync(new EmptyRecipe());
@@ -79,5 +78,34 @@ class Program
                 $",Category: {recipeDto.Category},Steps: {recipeDto.Steps},PreparationTime: {recipeDto.PreparationTime},User: {recipeDto.User}");
         }
         
+        */
+
+
+
+        /* PRUEBA DEL EDIT RECIPE 
+        var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
+
+        RecipeDto recipeDto = new RecipeDto
+        {
+            IdRecipe = 6,
+            Title = "Torta de chocolate",
+            Description = "Una deliciosa receta de torta de chocolate",
+            Ingredients = "Harina, huevos, chocolate, azúcar...",
+            Category = "Postre",
+            Steps = "1. Mezclar ingredientes...",
+            PreparationTime = 45,
+            User = new User
+            {
+                UserId = 1,
+            }
+        };
+
+        var serverResponse = await recipeServiceClient.editRecipeAsync(recipeDto);
+
+        Console.WriteLine("Server Response: " + serverResponse.Message);
+        */
+
+
+
     }
 }

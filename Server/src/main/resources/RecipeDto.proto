@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-
 option java_package = "grpc";
-
 
 /* Entidad */
 message RecipeDto {
@@ -15,16 +13,18 @@ message RecipeDto {
   int32 preparationTime = 7;
   User user = 8;
 }
+
 message User{
 	int32 userId = 1;
 	string nombre = 2;
 }
+
 /* Definicion de Procedimientos Remotos */
 service RecipeService {
 
   rpc getRecipeById (getRecipeByIdRequest) returns (RecipeDto);
-  rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
   rpc getAllRecipe (EmptyRecipe) returns (AllRecipesResponse);
+  rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
 
 }
 

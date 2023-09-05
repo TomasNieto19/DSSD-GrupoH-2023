@@ -1,13 +1,10 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
+import java.util.ArrayList;
+import java.util.List;
 import entities.Recipe;
-import entities.User;
 
 public class RecipeDao {
 
@@ -23,16 +20,15 @@ public class RecipeDao {
 	}
 
 	
-	// Metodo para persistir un usuario en la BD
-	public Recipe addRecipe(Recipe recipe) throws Exception {
+	// Metodo para persistir una receta en la BD
+	public void addRecipe(Recipe recipe) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
-		Recipe entity = null;
-
+	
 		try {
 
 			em.getTransaction().begin();
-			entity = em.merge(recipe);
+			em.persist(recipe);
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
@@ -40,21 +36,20 @@ public class RecipeDao {
 			throw new Exception("Error al persistir Receta:  " + e.getMessage());
 
 		} finally {
+			
 			em.close();
 		}
-
-		return entity;
 	}
 
-  
-	public Recipe editRecipe(Recipe recipe) throws Exception{
-		
-		
+	
+	// Metodo para editar una receta
+	public Recipe editRecipe(Recipe recipe) throws Exception {
+
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
 		Recipe entity = null;
-		
+
 		try {
-			
+
 			em.getTransaction().begin();
 			entity = em.merge(recipe);
 			em.getTransaction().commit();
@@ -64,13 +59,15 @@ public class RecipeDao {
 			throw new Exception("No se encontro la receta:  " + e.getMessage());
 
 		} finally {
+			
 			em.close();
 		}
 
 		return entity;
-  }
-			
-	
+	}
+
+
+	// Metodo para traer todas las recetas
 	@SuppressWarnings("unchecked")
 	public List<Recipe> getAll() {
 
@@ -91,7 +88,7 @@ public class RecipeDao {
 		return recetas;
 	}
 
-
+	
 	// Metodo para traer receta por id
 	public Recipe getRecipeById(int recipeId) {
 
@@ -105,7 +102,6 @@ public class RecipeDao {
 		} finally {
 
 			em.close();
-
 		}
 
 		return recipe;

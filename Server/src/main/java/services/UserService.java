@@ -18,8 +18,13 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 	private final ModelMapper modelMapper = new ModelMapper();
 
 	private UserDto mapUserToUserDto(User user) {
-		return UserDto.newBuilder().setIdUser(user.getIdUser()).setName(user.getName()).setEmail(user.getEmail())
-				.setUsername(user.getUsername()).setPassword(user.getPassword()).build();
+		return UserDto.newBuilder()
+				.setIdUser(user.getIdUser())
+				.setName(user.getName())
+				.setEmail(user.getEmail())
+				.setUsername(user.getUsername())
+				.setPassword(user.getPassword())
+				.build();
 	}
 
 	
@@ -79,4 +84,5 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 		}
 	}
 
+	
 }
