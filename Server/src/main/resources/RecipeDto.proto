@@ -23,7 +23,9 @@ message User{
 service RecipeService {
 
   rpc getRecipeById (getRecipeByIdRequest) returns (RecipeDto);
+  rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
   rpc getAllRecipe (EmptyRecipe) returns (AllRecipesResponse);
+
 }
 
 /* Respuesta del servidor */

@@ -11,8 +11,6 @@ import entities.User;
 
 public class RecipeDao {
 
-	//METODOS A IMPLEMENTAR: - EDITAR RECETA	 
-
 	private static RecipeDao instance;
 
 	// Patron Singleton para reutilizar la instancia en el serivce
@@ -47,6 +45,32 @@ public class RecipeDao {
 
 		return entity;
 	}
+
+  
+	public Recipe editRecipe(Recipe recipe) throws Exception{
+		
+		
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		Recipe entity = null;
+		
+		try {
+			
+			em.getTransaction().begin();
+			entity = em.merge(recipe);
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+
+			throw new Exception("No se encontro la receta:  " + e.getMessage());
+
+		} finally {
+			em.close();
+		}
+
+		return entity;
+  }
+			
+	
 	@SuppressWarnings("unchecked")
 	public List<Recipe> getAll() {
 
