@@ -1,11 +1,14 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import entities.Recipe;
 
 public class RecipeDao {
 
-	//METODOS A IMPLEMENTAR: - EDITAR RECETA	 
+	// METODOS A IMPLEMENTAR: - EDITAR RECETA
 
 	private static RecipeDao instance;
 
@@ -42,6 +45,26 @@ public class RecipeDao {
 		return entity;
 	}
 
+	// Metodo para traer todas las recetas
+	@SuppressWarnings("unchecked")
+	public List<Recipe> getAll() {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		List<Recipe> recetas = new ArrayList<>();
+
+		try {
+
+			String jpql = "SELECT r FROM Recipe r";
+			Query query = em.createQuery(jpql, Recipe.class);
+			recetas = query.getResultList();
+
+		} finally {
+
+			em.close();
+		}
+
+		return recetas;
+	}
 
 	// Metodo para traer receta por id
 	public Recipe getRecipeById(int recipeId) {
@@ -62,5 +85,4 @@ public class RecipeDao {
 		return recipe;
 	}
 
-	
 }

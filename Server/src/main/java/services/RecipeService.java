@@ -1,67 +1,103 @@
 package services;
 
-import grpc.RecipeServiceGrpc;
+import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
+import grpc.RecipeDtoOuterClass.AllRecipesResponse;
+import grpc.RecipeDtoOuterClass.EmptyRecipe;
 import grpc.RecipeDtoOuterClass.RecipeDto;
 import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
-import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
+import grpc.RecipeDtoOuterClass;
+import grpc.RecipeServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import org.modelmapper.ModelMapper;
-import dao.RecipeDao;
-import dao.UserDao;
 import entities.Recipe;
 import entities.User;
+import java.util.List;
+import dao.RecipeDao;
+import dao.UserDao;
 
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
-    private final ModelMapper modelMapper = new ModelMapper();
+	private final ModelMapper modelMapper = new ModelMapper();
+	
+	private RecipeDto mapRecipeToRecipeDto(Recipe recipe) {
+		
+		// lo creo para dsp asignarselo al setUser del recipeDTO
+		RecipeDtoOuterClass.User user = RecipeDtoOuterClass.User.newBuilder()
+				.setUserId(recipe.getUser().getIdUser())
+				.setNombre(recipe.getUser().getName())
+				.build();
 
-    private RecipeDto mapRecipeToRecipeDto(Recipe recipe){
+		return RecipeDto.newBuilder()
+				.setIdRecipe(recipe.getIdRecipe())
+				.setTitle(recipe.getTitle())
+				.setDescription(recipe.getDescription())
+				.setIngredients(recipe.getIngredients())
+				.setCategory(recipe.getCategory())
+				.setSteps(recipe.getSteps())
+				.setPreparationTime(recipe.getPreparationTime())
+				.setUser(user)
+				.build();
+	}
 
-        return RecipeDto.newBuilder()
-            .setIdRecipe(recipe.getIdRecipe())
-            .setTitle(recipe.getTitle())
-            .setDescription(recipe.getDescription())
-            .setIngredients(recipe.getIngredients())
-            .setCategory(recipe.getCategory())
-            .setSteps(recipe.getSteps())
-            .setPreparationTime(recipe.getPreparationTime())
-            .setUserId(recipe.getUser().getIdUser())
-            .build();
-    }
+	
+	@Override
+	public void getRecipeById(getRecipeByIdRequest request, StreamObserver<RecipeDto> responseObserver) {
 
+		RecipeDto recipe = null;
 
-    @Override
-    public void getRecipeById(getRecipeByIdRequest request, StreamObserver<RecipeDto> responseObserver) {
-   
-        RecipeDto recipe = null;
-        
-        try {
-            
-            recipe = mapRecipeToRecipeDto(RecipeDao.getInstance().getRecipeById(request.getIdRecipe()));
-            
-        } catch (Exception e) {
-        
-            System.out.println("Error al enviar la receta por id: " + e.getMessage());
-            
-        }
-        finally {
-            
-            responseObserver.onNext(recipe);
-            responseObserver.onCompleted();
-        }
-    }
+		try {
 
-    
-    @Override
-    public void addRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
+			recipe = mapRecipeToRecipeDto(RecipeDao.getInstance().getRecipeById(request.getIdRecipe()));
+
+		} catch (Exception e) {
+
+			System.out.println("Error al enviar la receta por id: " + e.getMessage());
+
+		} finally {
+
+			responseObserver.onNext(recipe);
+			responseObserver.onCompleted();
+		}
+	}
+
+	
+	@Override
+	public void getAllRecipe(EmptyRecipe request, StreamObserver<AllRecipesResponse> responseObserver) {
+
+		RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse
+				.newBuilder();
+
+		try {
+
+			List<Recipe> recipeList = RecipeDao.getInstance().getAll();
+
+			for (Recipe recipe : recipeList) {
+
+				RecipeDto recipeDto = mapRecipeToRecipeDto(recipe);
+
+				allRecipesResponseBuilder.addRecipes(recipeDto);
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Error al enviar la lista de recetas.");
+
+		} finally {
+
+			responseObserver.onNext(allRecipesResponseBuilder.build());
+			responseObserver.onCompleted();
+		}
+	}
+	
+	
+	@Override
+	public void addRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
 
         ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
-        
-        User userCreator = null;
 
         try {
             
-            userCreator = UserDao.getInstance().getUserById(request.getUserId());
+        	User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
             if(userCreator == null) throw new Exception("El usuario no existe");
 
@@ -84,6 +120,6 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
             responseObserver.onCompleted();
         }
     }
-
-    
+		 
+		
 }

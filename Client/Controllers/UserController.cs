@@ -18,7 +18,7 @@ namespace Client.Controllers
         public async Task<IActionResult> GetUsers()
         {
 
-            return Ok(await userServiceClient.getAllUsersAsync(new Empty()));
+            return Ok(await userServiceClient.getAllUsersAsync(new EmptyUser()));
 
         }
 

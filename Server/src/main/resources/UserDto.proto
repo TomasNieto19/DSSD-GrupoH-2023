@@ -14,17 +14,17 @@ message UserDto {
 /* Definicion de Procedimientos Remotos */
 service UserService{
 
-  rpc addUser (UserDto) returns (ServerResponse);
-  rpc getAllUsers (Empty) returns (AllUsersResponse);
+  rpc addUser (UserDto) returns (ServerResponseUser);
+  rpc getAllUsers (EmptyUser) returns (AllUsersResponse);
 
 }
 
 /* Respuesta del servidor*/
-message ServerResponse {
+message ServerResponseUser {
   string message = 1;
 }
 
-message Empty {}
+message EmptyUser {}
 
 message AllUsersResponse {
   repeated UserDto users = 1;

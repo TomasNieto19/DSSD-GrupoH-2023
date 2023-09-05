@@ -14,6 +14,14 @@ namespace Client.Controllers
             recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
         }
 
+        [HttpGet("recipes")]
+        public async Task<IActionResult> GetRcipes()
+        {
+
+            return Ok(await recipeServiceClient.getAllRecipeAsync(new EmptyRecipe()));
+
+        }
+
         [HttpGet("recipe/{id}")]
         public async Task<IActionResult> GetRecipeById(int id)
         {
