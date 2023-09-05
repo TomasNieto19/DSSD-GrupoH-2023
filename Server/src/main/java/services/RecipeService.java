@@ -1,12 +1,12 @@
 package services;
 
-import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
-import grpc.RecipeDtoOuterClass.getRecipesByUserIdRequest;
 import grpc.RecipeDtoOuterClass.getRecipesByUserIdResponse;
+import grpc.RecipeDtoOuterClass.getRecipesByUserIdRequest;
+import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
+import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
 import grpc.RecipeDtoOuterClass.AllRecipesResponse;
 import grpc.RecipeDtoOuterClass.EmptyRecipe;
 import grpc.RecipeDtoOuterClass.RecipeDto;
-import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
 import grpc.RecipeDtoOuterClass;
 import grpc.RecipeServiceGrpc;
 import io.grpc.stub.StreamObserver;
@@ -18,7 +18,7 @@ import dao.RecipeDao;
 import dao.UserDao;
 
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
-
+	
 	private final ModelMapper modelMapper = new ModelMapper();
 	
 	private RecipeDto mapRecipeToRecipeDto(Recipe recipe) {
@@ -150,5 +150,36 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		}
 	}
 		
-		
+
+	@Override
+    public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
+ 
+    	ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
+    	Recipe recipe = null;
+        User user = null;
+        
+        try {
+        	
+        	user = UserDao.getInstance().getUserById(request.getUser().getUserId());
+        	
+        	recipe = modelMapper.map(request, Recipe.class);
+        	
+        	recipe.setUser(user);
+        	
+            RecipeDao.getInstance().editRecipe(recipe);
+
+            serverResponse.setMessage("Receta editada correctamente");
+
+        } catch (Exception e) {
+
+            serverResponse.setMessage("Error al editar la receta: " + e.getMessage());
+
+        }finally {
+
+            responseObserver.onNext(serverResponse.build());
+            responseObserver.onCompleted();
+        }
+    }
+
+
 }

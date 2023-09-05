@@ -30,8 +30,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 	@Override
 	public void addUser(UserDto request, StreamObserver<ServerResponseUser> responseObserver) {
 
-		// Construye la respuesta que enviará el servidor luego de que se llame al
-		// metodo addUser desde el Client.
+		// Construye la respuesta que enviará el servidor luego de que se llame al metodo addUser desde el Client.
 		UserDtoOuterClass.ServerResponseUser.Builder serverResponse = UserDtoOuterClass.ServerResponseUser.newBuilder();
 
 		try {

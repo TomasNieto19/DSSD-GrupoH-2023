@@ -26,6 +26,7 @@ service RecipeService {
   rpc getAllRecipe (EmptyRecipe) returns (AllRecipesResponse);
   rpc addRecipe (RecipeDto) returns (ServerResponseRecipe);
   rpc getRecipesByUserId (getRecipesByUserIdRequest) returns (getRecipesByUserIdResponse);
+  rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
   
 }
 

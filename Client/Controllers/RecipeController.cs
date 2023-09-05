@@ -32,6 +32,16 @@ namespace Client.Controllers
 
         }
 
+        [HttpGet("userRecipes/{id}")]
+        public async Task<IActionResult> GetRecipeByUserId(int id)
+        {
+
+            var request = new getRecipesByUserIdRequest { IdUser = id };
+
+            return Ok(await recipeServiceClient.getRecipesByUserIdAsync(request));
+
+        }
+
         [HttpPost("addRecipe")]
         public async Task<IActionResult> AddRecipe(RecipeDto recipeDto)
         {
@@ -40,13 +50,11 @@ namespace Client.Controllers
 
         }
 
-        [HttpGet("userRecipes/{id}")]
-        public async Task<IActionResult> GetRecipeByUserId(int id)
+        [HttpPut("edit")]
+        public async Task<IActionResult> EditRecipe(RecipeDto recipeDto)
         {
 
-            var request = new getRecipesByUserIdRequest { IdUser = id };
-
-            return Ok(await recipeServiceClient.getRecipesByUserIdAsync(request));
+            return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));
 
         }
 
