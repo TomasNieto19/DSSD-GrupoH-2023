@@ -2,7 +2,6 @@ syntax = "proto3";
 
 option java_package = "grpc";
 
-
 /* Entidad */
 message UserDto {
   int32 idUser = 1;
