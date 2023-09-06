@@ -2,17 +2,14 @@ package dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import org.hibernate.Hibernate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import entities.User;
 
 public class UserDao {
-	/*
-	 * METODOS A IMPLEMENTAR: 
-	 * - LISTADO DE USUARIOS QUE SIGUE. 
-	 * - LISTADO DE RECETAS FAVORITAS.
-	 */
-
+		
 	private static UserDao instance;
 
 	// Patron Singleton para reutilizar la instancia en el serivce
@@ -26,15 +23,16 @@ public class UserDao {
 
 	
 	// Metodo para persistir un usuario en la BD
-	public void addUser(User user) throws Exception {
+	public User addUser(User user) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
-	
 
+		User userAdd = null;
+		
 		try {
 
 			em.getTransaction().begin();
-			em.persist(user);
+			userAdd = em.merge(user);
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
@@ -42,9 +40,11 @@ public class UserDao {
 			throw new Exception("Error al persistir Usuario: " + e.getMessage());
 
 		} finally {
-			
+
 			em.close();
 		}
+		
+		return userAdd;
 	}
 
 	
@@ -83,10 +83,30 @@ public class UserDao {
 		} finally {
 
 			em.close();
-
 		}
 
 		return user;
+	}
+
+	
+	// Metodo que retorla la lista de usrios que sigue el userId
+	public Set<User> getUserFollowers(int userId) {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		User user = null;
+
+		try {
+
+			user = em.find(User.class, userId);
+
+			Hibernate.initialize(user.getFollowers());
+
+		} finally {
+
+			em.close();
+		}
+
+		return user.getFollowers();
 	}
 
 	
