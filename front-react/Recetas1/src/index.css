@@ -1,0 +1,19 @@
+:root{
+
+  margin: 0;
+  padding: 0;
+
+}
+
+.loader__container{
+
+  text-align: center;
+  padding: 14rem;
+
+}
+
+.container{
+
+  min-width: 100vh;
+
+}
