@@ -8,6 +8,8 @@ import grpc.UserDtoOuterClass.followActionRequest;
 import grpc.UserDtoOuterClass.followActionResponse;
 import grpc.UserDtoOuterClass.getFollowersRequest;
 import grpc.UserDtoOuterClass.getFollowersResponse;
+import grpc.UserDtoOuterClass.loginRequest;
+import grpc.UserDtoOuterClass.loginResponse;
 import grpc.UserDtoOuterClass;
 import grpc.UserServiceGrpc;
 import org.modelmapper.ModelMapper;
@@ -153,6 +155,37 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 		} catch (Exception e) {
 			
 			response.setMessage("Error al realizar la accion de seguir o dejar de seguir: " + e.getMessage());
+		 
+		}finally {
+			
+			responseObserver.onNext(response.build());
+			responseObserver.onCompleted();
+		}
+	}
+
+	
+	@Override
+	public void login(loginRequest request, StreamObserver<loginResponse> responseObserver) {
+		
+		loginResponse.Builder response = loginResponse.newBuilder();
+		
+		try {
+			
+			User user = UserDao.getInstance().getUserByUsernameAndPassword(request.getUsername(), request.getPassword());
+			
+			if( user == null ){
+
+				response.setMessage("Usuario o contraseña incorrectos");
+
+			}else{
+
+				response.setMessage("Usuario logueado correctamente");
+				response.setUserId(user.getIdUser());
+			}
+
+		} catch (Exception e) {
+			
+			response.setMessage("Error al realizar el login: " + e.getMessage());
 		 
 		}finally {
 			

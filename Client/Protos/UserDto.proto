@@ -18,7 +18,8 @@ service UserService{
   rpc getAllUsers (EmptyUser) returns (AllUsersResponse);
   rpc getFollowers (getFollowersRequest) returns (getFollowersResponse);
   rpc followAction (followActionRequest) returns (followActionResponse);
-  
+  rpc login (loginRequest) returns (loginResponse);
+
 }
 
 message ServerResponseUser {
@@ -47,4 +48,14 @@ message followActionRequest{
 
 message followActionResponse{
   string message = 1;
+}
+
+message loginRequest{
+  string username = 1;
+  string password = 2;
+}
+
+message loginResponse{
+  string message = 1;
+  int32 userId = 2;
 }

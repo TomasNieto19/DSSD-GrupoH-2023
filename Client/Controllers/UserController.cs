@@ -40,13 +40,23 @@ namespace Client.Controllers
 
         }
 
-        [HttpPost("followers/{idFollower}/{idFollowing}")]
+        [HttpPost("followAction")]
         public async Task<IActionResult> FollowAction(int idFollower, int idFollowing)
         {
 
             var request = new followActionRequest { IdFollower = idFollower, IdFollowing = idFollowing };
 
             return Ok(await userServiceClient.followActionAsync(request));
+
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+
+            var request = new loginRequest { Username = username, Password = password };
+
+            return Ok(await userServiceClient.loginAsync(request));
 
         }
 
