@@ -10,29 +10,13 @@ import dao.UserDao;
 import entities.Recipe;
 import entities.User;
 
-public class prueba {
+public class Login {
 	public static final String ANSI_GREEN = "\u001B[32m";
 	public static final String ANSI_RESET = "\u001B[0m";
 
 	public static void main(String[] args) throws Exception {
 
-		
-		
-//		
-//		System.out.println(RecipeDao.getInstance().getRecipeById(1));
-//		
-//		  System.out.println(UserDao.getInstance().getUserById(1));
-//		  
-		  
-//		Recipe receta = new Recipe("Torta de Chocolate", "Una deliciosa receta de torta de chocolate",
-//				"Harina, huevos, chocolate, azúcar...", "Postre", "1. Mezclar ingredientes...", 45,
-//				UserDao.getInstance().getUserById(1));
-//		
-//		RecipeDao.getInstance().addRecipe(receta);
-//		  
-		
-		  
-		
+	
 		    //*METODO RETORNA INFORMACION DEL USUARIO  USER Y PASS CORRECTA------------------------------------------------------------
 		    //***************************
 			System.out.println("\nTrae informacion de usuario (User,Pass)\n"+UserDao.getInstance().getUserByUsernameAndPassword("user","1234"));
