@@ -1,7 +1,5 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -120,11 +118,8 @@ public class RecipeDao {
 	    try {
 	       
 	        String jpql = "SELECT r FROM Recipe r WHERE r.user.id = :userId";
-
 	        Query query = em.createQuery(jpql, Recipe.class);
-
 	        query.setParameter("userId", userId);
-
 	        recetas = query.getResultList();
 
 	    } finally {

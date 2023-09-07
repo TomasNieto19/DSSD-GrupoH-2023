@@ -23,7 +23,96 @@ public class UserDao {
 		return instance;
 	}
 
-		//TRAE UN USUARIO  CUANDO EL USERNAME Y EL PASS SON CORRECTAS
+	
+	// Metodo para persistir un usuario en la BD
+	public User addOrUpdateUser(User user) throws Exception {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+
+		User userAdd = null;
+
+		try {
+
+			em.getTransaction().begin();
+			userAdd = em.merge(user);
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+
+			throw new Exception("Error al persistir Usuario: " + e.getMessage());
+
+		} finally {
+			
+			em.close();
+		}
+
+		return userAdd;
+	}
+
+	
+	// Metodo para traer todos los usuarios de la BD
+	@SuppressWarnings("unchecked")
+	public List<User> getAll() {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		List<User> usuarios = new ArrayList<>();
+
+		try {
+
+			String jpql = "SELECT u FROM User u";
+			Query query = em.createQuery(jpql, User.class);
+			usuarios = query.getResultList();
+
+		} finally {
+
+			em.close();
+		}
+
+		return usuarios;
+	}
+
+	
+	// Metodo para traer usuario por id
+	public User getUserById(int userId) {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		User user = null;
+
+		try {
+
+			user = em.find(User.class, userId);
+
+		} finally {
+
+			em.close();
+		}
+
+		return user;
+	}
+
+	
+	// Metodo que retorla la lista de usrios que sigue el userId
+	public Set<User> getUserFollowers(int userId) {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		User user = null;
+
+		try {
+
+			user = em.find(User.class, userId);
+
+			Hibernate.initialize(user.getFollowers());
+
+		} finally {
+
+			em.close();
+		}
+
+		return user.getFollowers();
+	}
+
+
+	//TRAE UN USUARIO  CUANDO EL USERNAME Y EL PASS SON CORRECTAS
 	public User getUserByUsernameAndPassword(String username, String password) {
 	    EntityManager em = JPAUtil.getEMF().createEntityManager();
 	    TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.username = :username AND u.password = :password", User.class);
@@ -61,91 +150,6 @@ public class UserDao {
 	    	return null; 
 	        
 	    }
-	}
-
-	
-	// Metodo para persistir un usuario en la BD
-	public void addUser(User user) throws Exception {
-
-		EntityManager em = JPAUtil.getEMF().createEntityManager();
-	
-
-		try {
-
-			em.getTransaction().begin();
-			em.persist(user);
-			em.getTransaction().commit();
-
-		} catch (Exception e) {
-
-			throw new Exception("Error al persistir Usuario: " + e.getMessage());
-
-		} finally {
-			
-			em.close();
-		}
-	}
-
-	
-	// Metodo para traer todos los usuarios de la BD
-	@SuppressWarnings("unchecked")
-	public List<User> getAll() {
-
-		EntityManager em = JPAUtil.getEMF().createEntityManager();
-		List<User> usuarios = new ArrayList<>();
-
-		try {
-
-			String jpql = "SELECT u FROM User u";
-			Query query = em.createQuery(jpql, User.class);
-			usuarios = query.getResultList();
-
-		} finally {
-
-			em.close();
-		}
-
-		return usuarios;
-	}
-
-	
-	// Metodo para traer usuario por id
-	public static User getUserById(int userId) {
-
-		EntityManager em = JPAUtil.getEMF().createEntityManager();
-		User user = null;
-
-		try {
-
-			user = em.find(User.class, userId);
-
-		} finally {
-
-			em.close();
-		}
-
-		return user;
-	}
-
-	
-	// Metodo que retorla la lista de usrios que sigue el userId
-	public Set<User> getUserFollowers(int userId) {
-
-		EntityManager em = JPAUtil.getEMF().createEntityManager();
-		User user = null;
-
-		try {
-
-			user = em.find(User.class, userId);
-
-			Hibernate.initialize(user.getFollowers());
-
-		} finally {
-
-			em.close();
-		}
-
-		return user.getFollowers();
 	}
 
 

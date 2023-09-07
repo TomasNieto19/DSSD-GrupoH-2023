@@ -11,22 +11,11 @@ import grpc.UserDtoOuterClass.getFollowersResponse;
 import grpc.UserDtoOuterClass;
 import grpc.UserServiceGrpc;
 import org.modelmapper.ModelMapper;
-
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.Set;
 import dao.UserDao;
 import entities.User;
-
-
-import dao.UserDao;
-import entities.User;
-import grpc.UserDtoOuterClass.AllUsersResponse;
-import grpc.UserDtoOuterClass.EmptyUser;
-import grpc.UserDtoOuterClass.ServerResponseUser;
-import grpc.UserDtoOuterClass.UserDto;
-import io.grpc.stub.StreamObserver;
-
 
 public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
@@ -53,7 +42,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
 			User userToAdd = modelMapper.map(request, User.class);
 			User userAdded = null;
-			userAdded = UserDao.getInstance().addUser(userToAdd);
+			userAdded = UserDao.getInstance().addOrUpdateUser(userToAdd);
 			
 			serverResponse.setMessage("Usuario añadido correctamente");
 			serverResponse.setIdUser(userAdded.getIdUser());
@@ -102,7 +91,6 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 	}
 
 	
-
 	@Override
 	public void getFollowers(getFollowersRequest request, StreamObserver<getFollowersResponse> responseObserver) {
 	
@@ -160,7 +148,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 			
 			userFollower.setFollowers(followers);
 			
-			UserDao.getInstance().addUser(userFollower);
+			UserDao.getInstance().addOrUpdateUser(userFollower);
 			
 		} catch (Exception e) {
 			

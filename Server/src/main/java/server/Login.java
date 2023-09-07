@@ -81,7 +81,7 @@ public class Login {
 			   System.out.println("\nTrae usuario por id");
 		        User retrievedUser;
 				try {
-					retrievedUser = UserDao.getUserById(2);
+					retrievedUser = UserDao.getInstance().getUserById(2);
 					System.out.println("Usuario devuelto por id: " + retrievedUser);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -102,7 +102,7 @@ public class Login {
 			//*CAMBIAR CONTRASEÑA DE FORMA MANUAL-------------------------------------------------------------------------------------  
 		     //********************
 			 System.out.println("\nCamabiar contraseña de forma manual");
-			 UserDao.getInstance().updatePasswordOfUser(UserDao.getUserById(3).getEmail(), "CAMBIADO");
+			 UserDao.getInstance().updatePasswordOfUser(UserDao.getInstance().getUserById(3).getEmail(), "CAMBIADO");
 			 System.out.println(UserDao.getInstance().getUserById(3));
 			
 	

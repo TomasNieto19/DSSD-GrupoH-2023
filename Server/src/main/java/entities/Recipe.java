@@ -52,8 +52,7 @@ public class Recipe {
 	@JoinColumn(name = "id_user", nullable = true)
 	private User user;
 
-	public Recipe(String title, String description, String ingredients, String category, String steps,
-			int preparationTime, User user) {
+	public Recipe(String title, String description, String ingredients, String category, String steps, int preparationTime, User user) {
 		this.title = title;
 		this.description = description;
 		this.ingredients = ingredients;

@@ -2,10 +2,10 @@ package dao;
 
 import entities.User;
 
-public class RegistrationService {private UserDao userDao = new UserDao();
+public class RegistrationService {
 
 public boolean isUsernameEmailTaken(String username,String email) {
-    User existingUser = userDao.getUserByUsernameAndEmail(username,email);
+    User existingUser = UserDao.getInstance().getUserByUsernameAndEmail(username,email);
     return existingUser != null;
 }
 
@@ -17,9 +17,9 @@ public boolean registerUser(String name, String email, String username, String p
 
     // crea usuario y lo guardo en la BD
    
-    User newUser = new User(name, email, username, password, role);
+    //User newUser = new User(name, email, username, password, role);
     try {
-		userDao.addUser(newUser);
+	//	UserDao.getInstance().addOrUpdateUser(newUser);
 	} catch (Exception e) {
 		e.printStackTrace();
 	}

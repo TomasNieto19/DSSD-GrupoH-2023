@@ -47,8 +47,8 @@ public class User {
 	@Column(name = "password", nullable = false)
 	private String password;
 	
-	@Column(name = "role", nullable = false)
-	private String role;
+	//@Column(name = "role", nullable = false)
+	//private String role;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinTable(name = "followers", joinColumns = @JoinColumn(name = "id_follower"), inverseJoinColumns = @JoinColumn(name = "id_following"))
@@ -59,13 +59,7 @@ public class User {
 		this.email = email;
 		this.username = username;
 		this.password = password;
+		//this.role = role;
 	}
 
-	@Override
-	public String toString() {
-		return 	"User id: " + idUser + ", name:" + name + ", email: " + email + ", username=" + username
-				+ ", password: " + password + ", role: " + role ;
-	}
-	
-	
 }
