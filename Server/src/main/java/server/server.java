@@ -3,9 +3,7 @@ package server;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
-import services.GreeterService;
-import services.UserService;
-import services.RecipeService;
+import services.*;
 
 public class server {
 
@@ -15,8 +13,8 @@ public class server {
 
 		Server server = ServerBuilder.forPort(8081)
 				.addService(new GreeterService())
-				.addService(new UserService())
 				.addService(new RecipeService())
+				.addService(new UserService())
 				.build();
 
 		server.start();

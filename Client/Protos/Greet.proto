@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "Server";
+option java_package = "grpc";
 
 // The greeting service definition.
 service Greeter {

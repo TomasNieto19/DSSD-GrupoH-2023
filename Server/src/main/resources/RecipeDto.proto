@@ -16,7 +16,7 @@ message RecipeDto {
 
 message User{
 	int32 userId = 1;
-	string nombre = 2;
+	string username = 2;
 }
 
 /* Definicion de Procedimientos Remotos */
@@ -24,22 +24,30 @@ service RecipeService {
 
   rpc getRecipeById (getRecipeByIdRequest) returns (RecipeDto);
   rpc getAllRecipe (EmptyRecipe) returns (AllRecipesResponse);
+  rpc addRecipe (RecipeDto) returns (ServerResponseRecipe);
+  rpc getRecipesByUserId (getRecipesByUserIdRequest) returns (getRecipesByUserIdResponse);
   rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
-
+  
 }
 
-/* Respuesta del servidor */
 message ServerResponseRecipe {
   string message = 1;
 }
 
 message EmptyRecipe {}
 
-// Mensaje de solicitud para getRecipeById
 message getRecipeByIdRequest {
   int32 idRecipe = 1;
 }
 
 message AllRecipesResponse{
+	repeated RecipeDto recipes = 1;
+}
+
+message getRecipesByUserIdRequest {
+  int32 idUser = 1;
+}
+
+message getRecipesByUserIdResponse{
 	repeated RecipeDto recipes = 1;
 }

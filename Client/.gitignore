@@ -1,100 +1,28 @@
-# .NET Core
-*.dll
-*.pdb
-*.dll
-*.exe
-*.suo
+# Directorio de binarios y archivos generados por el compilador
+/bin/
+/obj/
+
+# Archivos de configuración específicos del entorno
+/appsettings.json
+/appsettings.Development.json
+
+# Directorio de dependencias
+/packages/
+
+# Directorio de registros y archivos de registro
+/logs/
+*.log
+
+# Archivos de usuario
 *.user
-*.userosscache
+*.suo
 *.sln.docstates
 
-# Visual Studio
+# Archivos de respaldo
+*~
+*.bak
+
+# Carpeta de caché de NuGet
 .vscode/
 .vs/
-*_i.c
-*_p.c
-*.ilk
-*.meta
-**/bin
-**/obj
-*.pch
-*.pdb
-*.pgc
-*.pgd
-*.rsp
-*.sbr
-*.tlb
-*.tli
-*.tlh
-*.tmp
-*.tmp_proj
-*.log
-*.vspscc
-*.vssscc
-.builds
-*.pidb
-*.svclog
-*.scc
-
-# Rider
-.idea/
-
-/build/
-*.suo
-*.user
-_ReSharper.*/
-*.sdf
-bin/
-obj/
-Debug/
-Release/
-*.opensdf
-*.tlog
-*.log
-TestResult.xml
-*.VisualState.xml
-Version.cs
-Version.h
-Version.cpp
-*/bin/*
-*/obj/*
-
-
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-
-# NuGet Packages
-*.nupkg
-# The packages folder can be ignored because of Package Restore
-**/packages/*
-# except build/, which is used as an MSBuild target.
-!**/packages/build/
-# Uncomment if necessary however generally it will be regenerated when needed
-#!**/packages/repositories.config
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# VS Code directory settings
-.vscode/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
+npm-debug.log

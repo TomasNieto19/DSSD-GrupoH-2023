@@ -3,18 +3,14 @@ package dao;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import org.hibernate.Hibernate;
 import javax.persistence.TypedQuery;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import entities.User;
 
 public class UserDao {
-	/*
-	 * METODOS A IMPLEMENTAR: 
-	 * - LISTADO DE USUARIOS QUE SIGUE. 
-	 * - LISTADO DE RECETAS FAVORITAS.
-	 */
 
 	private static UserDao instance;
 
@@ -66,7 +62,6 @@ public class UserDao {
 	        
 	    }
 	}
-
 
 	
 	// Metodo para persistir un usuario en la BD
@@ -127,10 +122,30 @@ public class UserDao {
 		} finally {
 
 			em.close();
-
 		}
 
 		return user;
+	}
+
+	
+	// Metodo que retorla la lista de usrios que sigue el userId
+	public Set<User> getUserFollowers(int userId) {
+
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		User user = null;
+
+		try {
+
+			user = em.find(User.class, userId);
+
+			Hibernate.initialize(user.getFollowers());
+
+		} finally {
+
+			em.close();
+		}
+
+		return user.getFollowers();
 	}
 
 
@@ -166,8 +181,6 @@ public class UserDao {
 	}
 
 
-
-
 	public User updateUser(User password) throws Exception {
 	    EntityManager em = JPAUtil.getEMF().createEntityManager();
 	    User entity = null;
@@ -186,6 +199,8 @@ public class UserDao {
 	
 	 
 	 }
+   
+
 	public void updatePasswordOfUser(String email, String newPassword) {
         EntityManager em = JPAUtil.getEMF().createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -216,13 +231,5 @@ public class UserDao {
         }
     }
 		
-
-
-
-
-	
-
-
-	
 
 }
