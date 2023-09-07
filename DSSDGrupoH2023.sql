@@ -3,30 +3,45 @@ create database DSSDGrupoH2023;
 use DSSDGrupoH2023;
 
 CREATE TABLE `users` (
-  `id_user` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_user`)
+    `id_user` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `username` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id_user`)
 );
 
 CREATE TABLE `recipe` (
-  `id_recipe` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `ingredients` varchar(7500) NOT NULL,
-  `category` varchar(255) NOT NULL,
-  `steps` varchar(7500) NOT NULL,
-  `preparation_time` int NOT NULL,
-  `id_user` int NOT NULL,
-  PRIMARY KEY (`id_recipe`),
-  FOREIGN KEY (id_user) REFERENCES users(id_user)
-) ;
+    `id_recipe` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `description` VARCHAR(255) NOT NULL,
+    `ingredients` VARCHAR(7500) NOT NULL,
+    `category` VARCHAR(255) NOT NULL,
+    `steps` VARCHAR(7500) NOT NULL,
+    `preparation_time` INT NOT NULL,
+    `id_user` INT NOT NULL,
+    PRIMARY KEY (`id_recipe`),
+    FOREIGN KEY (id_user)
+        REFERENCES users (id_user)
+);
+
+CREATE TABLE `followers` (
+    `id_follower` INT NOT NULL,
+    `id_following` INT NOT NULL,
+    FOREIGN KEY (id_follower)
+        REFERENCES users (id_user),
+    FOREIGN KEY (id_following)
+        REFERENCES users (id_user),
+    PRIMARY KEY (id_follower , id_following)
+);
 
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
+
+INSERT INTO followers (id_follower, id_following) VALUES
+(1,2),
+(2,1);
   
   INSERT INTO recipe (title, description, ingredients, category, steps, preparation_time, id_user) VALUES
   ('Galletas veganas de chocolate',
