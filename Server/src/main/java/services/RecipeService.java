@@ -1,16 +1,32 @@
 package services;
 
-import grpc.RecipeServiceGrpc;
-import grpc.RecipeDtoOuterClass.RecipeDto;
+import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
 import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
+import grpc.RecipeDtoOuterClass.AllRecipesResponse;
+import grpc.RecipeDtoOuterClass.EmptyRecipe;
+import grpc.RecipeDtoOuterClass.RecipeDto;
+import grpc.RecipeDtoOuterClass;
+import grpc.RecipeServiceGrpc;
 import io.grpc.stub.StreamObserver;
-import dao.RecipeDao;
+import org.modelmapper.ModelMapper;
 import entities.Recipe;
+import entities.User;
+import dao.RecipeDao;
+import dao.UserDao;
+import java.util.List;
 
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
+	
+	private final ModelMapper modelMapper = new ModelMapper();
 
     private RecipeDto mapRecipeToRecipeDto(Recipe recipe){
-
+    	//lo creo para dsp asignarselo al setUser del recipeDTO
+    	
+    	RecipeDtoOuterClass.User user=RecipeDtoOuterClass.User.newBuilder()
+    			.setUserId(recipe.getUser().getIdUser())
+    			.setNombre(recipe.getUser().getName())
+    			.build();
+    	
         return RecipeDto.newBuilder()
             .setIdRecipe(recipe.getIdRecipe())
             .setTitle(recipe.getTitle())
@@ -19,7 +35,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
             .setCategory(recipe.getCategory())
             .setSteps(recipe.getSteps())
             .setPreparationTime(recipe.getPreparationTime())
-
+            .setUser(user)
             .build();
 
     }
@@ -28,7 +44,6 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
     @Override
     public void getRecipeById(getRecipeByIdRequest request, StreamObserver<RecipeDto> responseObserver) {
    
-
         RecipeDto recipe = null;
         
         try {
@@ -39,13 +54,73 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
         
             System.out.println("Error al enviar la receta por id: " + e.getMessage());
             
-        }
-        finally {
+        }finally {
             
             responseObserver.onNext(recipe);
             responseObserver.onCompleted();
         }
-
-
     }
+    
+    
+    @Override
+    public void getAllRecipe(EmptyRecipe request,StreamObserver<AllRecipesResponse> responseObserver) {
+    	
+    	RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse.newBuilder();
+    	
+    	try {
+
+			List<Recipe> recipeList = RecipeDao.getInstance().getAll();
+
+			for (Recipe recipe : recipeList) {
+
+				RecipeDto recipeDto = mapRecipeToRecipeDto(recipe);
+
+				allRecipesResponseBuilder.addRecipes(recipeDto);
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Error al enviar la lista de recetas.");
+
+		} finally {
+
+			responseObserver.onNext(allRecipesResponseBuilder.build());
+			responseObserver.onCompleted();
+		}
+    	
+    }
+    
+    
+    @Override
+    public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
+ 
+    	ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
+    	Recipe recipe = null;
+        User user = null;
+        
+        try {
+        	
+        	user = UserDao.getInstance().getUserById(request.getUser().getUserId());
+        	
+        	recipe = modelMapper.map(request, Recipe.class);
+        	
+        	recipe.setUser(user);
+        	
+            RecipeDao.getInstance().editRecipe(recipe);
+
+            serverResponse.setMessage("Receta editada correctamente");
+
+        } catch (Exception e) {
+
+            serverResponse.setMessage("Error al editar la receta: " + e.getMessage());
+
+        }finally {
+
+            responseObserver.onNext(serverResponse.build());
+            responseObserver.onCompleted();
+        }
+    	
+    }
+    
+    
 }
