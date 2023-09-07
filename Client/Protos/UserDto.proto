@@ -21,7 +21,6 @@ service UserService{
   
 }
 
-/* Respuesta del servidor*/
 message ServerResponseUser {
   int32 idUser = 1;
   string message = 2;

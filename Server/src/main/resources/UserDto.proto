@@ -18,10 +18,9 @@ service UserService{
   rpc getAllUsers (EmptyUser) returns (AllUsersResponse);
   rpc getFollowers (getFollowersRequest) returns (getFollowersResponse);
   rpc followAction (followActionRequest) returns (followActionResponse);
-
+  
 }
 
-/* Respuesta del servidor*/
 message ServerResponseUser {
   int32 idUser = 1;
   string message = 2;

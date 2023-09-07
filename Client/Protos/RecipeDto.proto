@@ -30,14 +30,12 @@ service RecipeService {
   
 }
 
-/* Respuesta del servidor */
 message ServerResponseRecipe {
   string message = 1;
 }
 
 message EmptyRecipe {}
 
-/* Mensaje de solicitud para getRecipeById */
 message getRecipeByIdRequest {
   int32 idRecipe = 1;
 }
