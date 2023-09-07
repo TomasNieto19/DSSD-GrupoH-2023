@@ -1,4 +1,4 @@
-﻿﻿using Grpc.Net.Client;
+﻿using Grpc.Net.Client;
 class Program
 {
     static async Task Main(string[] args)
@@ -9,6 +9,14 @@ class Program
         using var channel = GrpcChannel.ForAddress("http://localhost:8083");
 
 
+        // PRUEBA DEL HELLO WORLD
+        var client = new Greeter.GreeterClient(channel);
+
+        var reply = await client.SayHelloAsync(new HelloRequest { Name = "Mundo" });
+
+        Console.WriteLine("Greeting from .NET: " + reply.Message);
+        
+
         //PRUEBA DEL HELLO WORLD
         //var client = new Greeter.GreeterClient(channel);
 
@@ -18,7 +26,7 @@ class Program
 
 
 
-        /* PRUEBA DEL ADD USER
+        // PRUEBA DEL ADD USER
         var userServiceClient = new UserService.UserServiceClient(channel);
 
         var userDto = new UserDto
@@ -31,10 +39,10 @@ class Program
 
         var serverResponse = await userServiceClient.addUserAsync(userDto);
         Console.WriteLine("Server Response: " + serverResponse.Message);
-        */
+        
 
 
-        /* PRUEBA DEL GET ALL USERS
+        /*/ PRUEBA DEL GET ALL USERS
         var userServiceClient = new UserService.UserServiceClient(channel);
 
         var allUsersResponse = await userServiceClient.getAllUsersAsync(new Empty());
@@ -46,7 +54,7 @@ class Program
         */
 
 
-        /* PRUEBA DEL GET RECETA POR ID
+        /*/ PRUEBA DEL GET RECETA POR ID
         var recipeServiceClient = new RecipeService.RecipeServiceClient(channel);
 
         var request = new getRecipeByIdRequest
