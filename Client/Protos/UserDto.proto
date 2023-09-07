@@ -21,7 +21,8 @@ service UserService{
 
 /* Respuesta del servidor*/
 message ServerResponseUser {
-  string message = 1;
+  int32 idUser = 1;
+  string message = 2;
 }
 
 message EmptyUser {}

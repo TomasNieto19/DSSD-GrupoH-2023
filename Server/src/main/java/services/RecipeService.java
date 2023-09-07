@@ -26,7 +26,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		// lo creo para dsp asignarselo al setUser del recipeDTO
 		RecipeDtoOuterClass.User user = RecipeDtoOuterClass.User.newBuilder()
 				.setUserId(recipe.getUser().getIdUser())
-				.setNombre(recipe.getUser().getName())
+				.setUsername(recipe.getUser().getUsername())
 				.build();
 
 		return RecipeDto.newBuilder()

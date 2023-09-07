@@ -16,7 +16,7 @@ message RecipeDto {
 
 message User{
 	int32 userId = 1;
-	string nombre = 2;
+	string username = 2;
 }
 
 /* Definicion de Procedimientos Remotos */

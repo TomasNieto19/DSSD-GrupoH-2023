@@ -26,17 +26,16 @@ public class UserDao {
 
 	
 	// Metodo para persistir un usuario en la BD
-	public void addUser(User user) throws Exception {
+	public User addUser(User user) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
-	
-
+		User userAdded = null;
 		try {
 
 			em.getTransaction().begin();
-			em.persist(user);
+			userAdded = em.merge(user);
 			em.getTransaction().commit();
-
+			
 		} catch (Exception e) {
 
 			throw new Exception("Error al persistir Usuario: " + e.getMessage());
@@ -45,6 +44,9 @@ public class UserDao {
 			
 			em.close();
 		}
+		
+		return userAdded;
+		
 	}
 
 	

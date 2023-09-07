@@ -36,10 +36,11 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 		try {
 
 			User userToAdd = modelMapper.map(request, User.class);
-
-			UserDao.getInstance().addUser(userToAdd);
-
+			User userAdded = null;
+			userAdded = UserDao.getInstance().addUser(userToAdd);
+			
 			serverResponse.setMessage("Usuario añadido correctamente");
+			serverResponse.setIdUser(userAdded.getIdUser());
 
 		} catch (Exception e) {
 
