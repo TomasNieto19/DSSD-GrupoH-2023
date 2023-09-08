@@ -6,12 +6,13 @@ export const authSlice = createSlice({
         user: {
 
             username: "",
-            userId: 0
+            userId: 0,
+            usersFollowing: []
 
         }
     },
     reducers: {
-        toRegisterUser: (state, action)=>{
+        toLoginUser: (state, action)=>{
 
             state.user = action.payload.user;
 
@@ -21,10 +22,26 @@ export const authSlice = createSlice({
             localStorage.clear();
             state.user = {}
 
+        },
+        setUsersFollowing: (state, action)=>{
+
+            let userFollowing = action.payload.user;
+            let userFind = state.user.usersFollowing.find(user => user.idUser === userFollowing.idUser);
+            console.log("LO ENCONTRE", userFind);
+            if(!userFind){
+                state.user.usersFollowing.push(userFollowing);
+            }else{
+
+                let index = state.user.usersFollowing.indexOf(userFind);
+                state.user.usersFollowing.splice(index, 1);
+
+            }
+            
+
         }
     }
 });
 
 
 
-export const { toRegisterUser,unLoginUser } = authSlice.actions;
+export const { toLoginUser,unLoginUser,setUsersFollowing } = authSlice.actions;

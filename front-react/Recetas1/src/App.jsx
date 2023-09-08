@@ -9,6 +9,7 @@ import MyRecipesContainer from './components/recipe/MyRecipesContainer'
 import RecipeDetail from './components/recipe/RecipeDetailContainer'
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
+import UsersListContainer from './components/users/UsersListContainer'
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/login' element={<Login/>}/>
         <Route path='/addRecipe' element={<AddRecipe/>}/>
         <Route path='/myRecipes' element={<MyRecipesContainer/>}/>
+        <Route path='/users' element={<UsersListContainer/>}/>
         <Route path='/recipe/:id' element={<RecipeDetail/>}/>
       </Routes>
       </BrowserRouter>

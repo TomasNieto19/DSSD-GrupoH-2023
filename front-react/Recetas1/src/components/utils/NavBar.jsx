@@ -9,14 +9,16 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import { useDispatch, useSelector } from 'react-redux';
-import { toRegisterUser, unLoginUser } from '../../store/auth/authSlice';
+import { toLoginUser, unLoginUser } from '../../store/auth/authSlice';
 import { Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 const pages = [{
     text: "My recipes",
     value: "myRecipes"},{
     text: "Add Recipe",
-    value: "addRecipe"}];
+    value: "addRecipe"},{
+        text: "Users",
+        value: "users"}];
 export const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const handleOpenNavMenu = (event) => {
@@ -46,7 +48,7 @@ export const NavBar = () => {
 
     useEffect(() => {
       
-        dispatch(toRegisterUser({user : JSON.parse(localStorage.getItem('user'))}));
+        dispatch(toLoginUser({user : JSON.parse(localStorage.getItem('user'))}));
 
     }, [])
     

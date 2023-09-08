@@ -1,15 +1,21 @@
 import { Google } from '@mui/icons-material'
 import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 import { Link as RouterLink, useNavigate} from 'react-router-dom'
-import React from 'react'
+import React, { useState } from 'react'
 import AuthLayout from './layout/AuthLayout'
+import { loginUserThunk } from '../../store/auth/thunksAuth'
+import { useDispatch } from 'react-redux'
 
 const Login = () => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const dispatch = useDispatch();
 
   const toRecipes = () =>{
 
-    navigate('/');
+    dispatch(loginUserThunk(username, password));
+    navigate("/");
 
   }
 
@@ -19,10 +25,11 @@ const Login = () => {
           <Grid container>
             <Grid item xs={12} sx={{ mt: 2 }}>
               <TextField
-                label="Correo electronico"
-                placeholder="correo@gmail.com"
-                type="email"
+                label="Usuario"
+                placeholder="Usuario"
+                
                 fullWidth
+                onChange={({target})=>setUsername(target.value)}
               />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
@@ -31,6 +38,7 @@ const Login = () => {
                 placeholder="Contraseña"
                 type="password"
                 fullWidth
+                onChange={({target})=>setPassword(target.value)}
               />
             </Grid>
             <Grid container spacing={2} sx={{ mt: 1 }}>

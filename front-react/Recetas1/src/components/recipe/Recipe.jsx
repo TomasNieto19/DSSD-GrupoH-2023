@@ -32,44 +32,50 @@ export default function Recipe({ recipe }) {
 
   console.log(recipe.user);
   return (
-    <Card sx={{ maxWidth: 350 }} onClick={() => toRecipeDetalle(recipe.idRecipe)}>
+    <Card sx={{ maxWidth: 350, backgroundColor: "#223344" }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
             {recipe.user.username ? (recipe.user.username).charAt(0) : "U"}
           </Avatar>
         }
+        titleTypographyProps={{color: "#a8add3"}}
         title={recipe.title}
+        subheaderTypographyProps={{color: "#a8add3"}}
         subheader={`${recipe.user.username? "por " + recipe.user.username : ""}`}
       />
 
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="#a8add3">
           {recipe.description}
         </Typography>
       </CardContent>
       <CardContent>
-        <Typography variant="body2" color="text.secondary" fontWeight="bold">
+        <Typography variant="body2" color="#a8add3" fontWeight="bold">
           Categoria: {recipe.category}
         </Typography>
       </CardContent>
       <CardContent>
-        <Typography variant="body2" color="text.secondary" fontWeight="bold">
+        <Typography variant="body2" color="#a8add3" fontWeight="bold">
           Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
         </Typography>
       </CardContent>
 
       <CardContent>
-        <Typography paragraph>Pasos:</Typography>
-        <Typography paragraph>
+        <Typography paragraph color={"#a8add3"}>Pasos:</Typography>
+        <Typography paragraph color={"#a8add3"}>
           {recipe.steps}
         </Typography>
       </CardContent>
-      <CardActions sx={{ display: "flex", justifyContent: "end" }}>
-        <IconButton aria-label="Agregar a favoritos">
+      <CardActions sx={{ display: "flex", justifyContent: "space-between", paddingRight: 1, paddingLeft: 1}}>
+      <Button sx={{textTransform: 'lowercase'}} onClick={()=>toRecipeDetalle(recipe.idRecipe)}><Typography>
+          Ver detalle
+        </Typography>
+        </Button>
+        <IconButton aria-label="Agregar a favoritos" >
           <FavoriteIcon />
         </IconButton>
-
+        
       </CardActions>
 
     </Card>
