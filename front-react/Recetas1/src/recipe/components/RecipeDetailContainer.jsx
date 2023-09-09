@@ -15,6 +15,7 @@ const RecipeDetail = () => {
   useEffect(() => {
     
     dispatch(getRecipeByRecipeId(id));
+    console.log("HOLAAA")
 
   }, [])
   

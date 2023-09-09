@@ -36,7 +36,7 @@ export const loginUserThunk = (username, password) => {
         const {data: dataLogin, status} = await recetasApi.post(`/login?username=${username}&password=${password}`);
         if(status === 200){
             
-            const {data, status} = await recetasApi.get(`/followers/${dataLogin.userId}`);
+            const {data, status} = await recetasApi.get(`/followings/${dataLogin.userId}`);
             console.log(data);
             const bodyState = {
 

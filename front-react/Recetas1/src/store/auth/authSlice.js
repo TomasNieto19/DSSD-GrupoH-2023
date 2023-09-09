@@ -20,14 +20,15 @@ export const authSlice = createSlice({
         unLoginUser: (state, action)=>{
 
             localStorage.clear();
-            state.user = {}
+            state.user = {username: "",
+            userId: 0,
+            usersFollowing: []}
 
         },
         setUsersFollowing: (state, action)=>{
 
             let userFollowing = action.payload.user;
             let userFind = state.user.usersFollowing.find(user => user.idUser === userFollowing.idUser);
-            console.log("LO ENCONTRE", userFind);
             if(!userFind){
                 state.user.usersFollowing.push(userFollowing);
             }else{
@@ -36,7 +37,7 @@ export const authSlice = createSlice({
                 state.user.usersFollowing.splice(index, 1);
 
             }
-            
+            localStorage.setItem('user', JSON.stringify(state.user));
 
         }
     }

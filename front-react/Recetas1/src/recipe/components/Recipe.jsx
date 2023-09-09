@@ -73,7 +73,7 @@ export default function Recipe({ recipe }) {
         </Typography>
         </Button>
         <IconButton aria-label="Agregar a favoritos" >
-          <FavoriteIcon />
+          <FavoriteIcon sx={{color: "#0b1218"}}/>
         </IconButton>
         
       </CardActions>

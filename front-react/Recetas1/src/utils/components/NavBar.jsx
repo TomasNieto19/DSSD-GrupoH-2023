@@ -34,7 +34,7 @@ export const NavBar = () => {
     const unLogin = () =>{
 
         dispatch(unLoginUser());
-        navigate("/login");
+        
     }
 
     const toRedirect = (page) =>{
@@ -48,7 +48,10 @@ export const NavBar = () => {
 
     useEffect(() => {
       
-        dispatch(toLoginUser({user : JSON.parse(localStorage.getItem('user'))}));
+        if(JSON.parse(localStorage.getItem('user')) !== null){
+            dispatch(toLoginUser({user : JSON.parse(localStorage.getItem('user'))}));
+        }
+        
 
     }, [])
     

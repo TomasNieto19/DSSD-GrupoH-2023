@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRecipes } from '../../store/receta/thunksRecipe';
 import { Container} from '@mui/material';
 import { RecipesList } from './RecipesList';
-import Loader from '../utils/Loader';
+import Loader from '../../utils/components/Loader';
 
 const RecipesListContainer = () => {
 

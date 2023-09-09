@@ -17,7 +17,7 @@ const User = ({user}) => {
     }
   return (
     <>
-    {userLogged.userId !== user.idUser && <Card sx={{ maxWidth: 350, display: "flex", flexDirection: "column", padding: 2, backgroundColor: "#223344" }}>
+    <Card sx={{ maxWidth: 350, display: "flex", flexDirection: "column", padding: 2, backgroundColor: "#223344" }}>
       <Avatar sx={{ bgcolor: "#2D4356", width: 150, height: 150, alignSelf: "center"}} aria-label="avatar">
             <Typography fontSize={80}>{user.username ? (user.username).charAt(0) : "U"}</Typography>
           </Avatar>
@@ -42,7 +42,7 @@ const User = ({user}) => {
       </CardActions>
       
 
-    </Card>}
+    </Card>
     
     </>
   )

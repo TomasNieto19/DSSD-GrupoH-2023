@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getRecipesByUserId } from '../../store/receta/thunksRecipe';
 import { RecipesList } from './RecipesList';
-import Loader from '../utils/Loader';
+import Loader from '../../utils/components/Loader'
 import { Container, Typography } from '@mui/material';
 
 const MyRecipesContainer = () => {

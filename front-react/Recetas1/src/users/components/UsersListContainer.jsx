@@ -8,9 +8,11 @@ const UsersListContainer = () => {
 
     const dispatch = useDispatch();
     const {users} = useSelector(state=>state.user);
-
+    const {user} = useSelector(state=>state.auth)
+    let filter = users.filter(userFilter => userFilter.idUser !== user.userId)
+    console.log(filter)
     useEffect(() => {
-        
+        console.log("AAAA")
         dispatch(getUsers());
 
     }, [])
@@ -19,7 +21,7 @@ const UsersListContainer = () => {
   return (
     <Container sx={{minWidth:'80%', minHeight: '100%', padding: 5}} >
         <Typography variant='h3'>Users</Typography>
-    <UsersList users={users}/>
+    <UsersList users={filter}/>
     </Container>
   )
 }
