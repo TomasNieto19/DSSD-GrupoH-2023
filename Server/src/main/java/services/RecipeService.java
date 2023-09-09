@@ -18,115 +18,108 @@ import dao.RecipeDao;
 import dao.UserDao;
 
 public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
-	
+
 	private final ModelMapper modelMapper = new ModelMapper();
 
-	
 	private RecipeDto mapRecipeToRecipeDto(Recipe recipe) {
-		
+
 		// lo creo para dsp asignarselo al setUser del recipeDTO
 		RecipeDtoOuterClass.User user = RecipeDtoOuterClass.User.newBuilder()
-				.setUserId(recipe.getUser().getIdUser())
-				.setUsername(recipe.getUser().getUsername())
-				.build();
+			.setUserId(recipe.getUser().getIdUser())
+			.setUsername(recipe.getUser().getUsername())
+			.build();
 
 		return RecipeDto.newBuilder()
-				.setIdRecipe(recipe.getIdRecipe())
-				.setTitle(recipe.getTitle())
-				.setDescription(recipe.getDescription())
-				.setIngredients(recipe.getIngredients())
-				.setCategory(recipe.getCategory())
-				.setSteps(recipe.getSteps())
-				.setPreparationTime(recipe.getPreparationTime())
-				.setUser(user)
-				.build();
+			.setIdRecipe(recipe.getIdRecipe())
+			.setTitle(recipe.getTitle())
+			.setDescription(recipe.getDescription())
+			.setIngredients(recipe.getIngredients())
+			.setCategory(recipe.getCategory())
+			.setSteps(recipe.getSteps())
+			.setPreparationTime(recipe.getPreparationTime())
+			.setUser(user)
+			.build();
 	}
-	
-	
+
 	@Override
 	public void getRecipeById(getRecipeByIdRequest request, StreamObserver<RecipeDto> responseObserver) {
 
 		RecipeDto recipe = null;
 
 		try {
-			
+
 			recipe = mapRecipeToRecipeDto(RecipeDao.getInstance().getRecipeById(request.getIdRecipe()));
-			
-			
+
 		} catch (Exception e) {
-			
+
 			System.out.println("Error al enviar la receta por id: " + e.getMessage());
-			
+
 		} finally {
-			
+
 			responseObserver.onNext(recipe);
 			responseObserver.onCompleted();
 		}
 	}
-	
-	
+
 	@Override
 	public void getAllRecipe(EmptyRecipe request, StreamObserver<AllRecipesResponse> responseObserver) {
 
 		RecipeDtoOuterClass.AllRecipesResponse.Builder allRecipesResponseBuilder = RecipeDtoOuterClass.AllRecipesResponse.newBuilder();
 
 		try {
-			
+
 			List<Recipe> recipeList = RecipeDao.getInstance().getAll();
-			
+
 			for (Recipe recipe : recipeList) {
-				
+
 				RecipeDto recipeDto = mapRecipeToRecipeDto(recipe);
-				
+
 				allRecipesResponseBuilder.addRecipes(recipeDto);
 			}
-			
+
 		} catch (Exception e) {
-			
-			System.out.println("Error al enviar la lista de recetas.");
-			
+
+			System.out.println("Error al enviar la lista de recetas: " + e.getMessage());
+
 		} finally {
-			
+
 			responseObserver.onNext(allRecipesResponseBuilder.build());
 			responseObserver.onCompleted();
 		}
 	}
-	
-	
+
 	@Override
 	public void addRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
-		
-		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
-		
-        try {
-            
-			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
-			
-            if(userCreator == null) throw new Exception("El usuario no existe");
-			
-            Recipe recipeToAdd = modelMapper.map(request, Recipe.class);
-            
-            recipeToAdd.setUser(userCreator);
 
-            RecipeDao.getInstance().addRecipe(recipeToAdd);
-			
-            serverResponse.setMessage("Receta añadida correctamente");
-            
-        } catch (Exception e) {
-			
+		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
+
+		try {
+
+			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
+
+			if (userCreator == null) throw new Exception("El usuario no existe");
+
+			Recipe recipeToAdd = modelMapper.map(request, Recipe.class);
+
+			recipeToAdd.setUser(userCreator);
+
+			RecipeDao.getInstance().addRecipe(recipeToAdd);
+
+			serverResponse.setMessage("Receta añadida correctamente");
+
+		} catch (Exception e) {
+
 			serverResponse.setMessage("Error al añadir la receta: " + e.getMessage());
-            
-        }
-        finally {
-			
+
+		} finally {
+
 			responseObserver.onNext(serverResponse.build());
-            responseObserver.onCompleted();
-        }
-    }
-	
-	
+			responseObserver.onCompleted();
+		}
+	}
+
 	@Override
-	public void getRecipesByUserId(getRecipesByUserIdRequest request, StreamObserver<getRecipesByUserIdResponse> responseObserver) {
+	public void getRecipesByUserId(getRecipesByUserIdRequest request,StreamObserver<getRecipesByUserIdResponse> responseObserver) {
 
 		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse.newBuilder();
 
@@ -143,7 +136,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 		} catch (Exception e) {
 
-			System.out.println("Error al enviar la lista de recetas del usuario.");
+			System.out.println("Error al enviar la lista de recetas del usuario: " + e.getMessage());
 
 		} finally {
 
@@ -151,37 +144,35 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 			responseObserver.onCompleted();
 		}
 	}
-    
 
-    @Override
-    public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
- 
-    	ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
-    	Recipe recipe = null;
-        User user = null;
-        
-        try {
-        	
-        	user = UserDao.getInstance().getUserById( request.getUser().getUserId());
-        	
-        	recipe = modelMapper.map(request, Recipe.class);
-        	
-        	recipe.setUser(user);
-        	
-            RecipeDao.getInstance().editRecipe(recipe);
+	@Override
+	public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
 
-            serverResponse.setMessage("Receta editada correctamente");
+		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
+		Recipe recipe = null;
+		User user = null;
 
-        } catch (Exception e) {
+		try {
 
-            serverResponse.setMessage("Error al editar la receta: " + e.getMessage());
+			user = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
-        }finally {
+			recipe = modelMapper.map(request, Recipe.class);
 
-            responseObserver.onNext(serverResponse.build());
-            responseObserver.onCompleted();
-        }
-    }
-	
+			recipe.setUser(user);
 
-    }
+			RecipeDao.getInstance().editRecipe(recipe);
+
+			serverResponse.setMessage("Receta editada correctamente");
+
+		} catch (Exception e) {
+
+			serverResponse.setMessage("Error al editar la receta: " + e.getMessage());
+
+		} finally {
+
+			responseObserver.onNext(serverResponse.build());
+			responseObserver.onCompleted();
+		}
+	}
+
+}

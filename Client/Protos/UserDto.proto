@@ -16,7 +16,7 @@ service UserService{
 
   rpc addUser (UserDto) returns (ServerResponseUser);
   rpc getAllUsers (EmptyUser) returns (AllUsersResponse);
-  rpc getFollowers (getFollowersRequest) returns (getFollowersResponse);
+  rpc getFollowings (getFollowingsRequest) returns (getFollowingsResponse);
   rpc followAction (followActionRequest) returns (followActionResponse);
   rpc login (loginRequest) returns (loginResponse);
 
@@ -33,11 +33,11 @@ message AllUsersResponse {
   repeated UserDto users = 1;
 }
 
-message getFollowersRequest{
+message getFollowingsRequest{
   int32 idUser = 1;
 }
 
-message getFollowersResponse{
+message getFollowingsResponse{
   repeated UserDto followers = 1;
 }
 

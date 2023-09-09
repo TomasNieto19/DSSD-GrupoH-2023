@@ -92,7 +92,7 @@ public class UserDao {
 
 	
 	// Metodo que retorla la lista de usrios que sigue el userId
-	public Set<User> getUserFollowers(int userId) {
+	public Set<User> getUserFollowing(int userId) {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
 		User user = null;
@@ -101,14 +101,14 @@ public class UserDao {
 
 			user = em.find(User.class, userId);
 
-			Hibernate.initialize(user.getFollowers());
+			Hibernate.initialize(user.getFollowing());
 
 		} finally {
 
 			em.close();
 		}
 
-		return user.getFollowers();
+		return user.getFollowing();
 	}
 
 

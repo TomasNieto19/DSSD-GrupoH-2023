@@ -25,7 +25,7 @@ CREATE TABLE `recipe` (
         REFERENCES users (id_user)
 );
 
-CREATE TABLE `followers` (
+CREATE TABLE `follows` (
     `id_follower` INT NOT NULL,
     `id_following` INT NOT NULL,
     FOREIGN KEY (id_follower)
@@ -39,7 +39,7 @@ INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
 
-INSERT INTO followers (id_follower, id_following) VALUES
+INSERT INTO follows (id_follower, id_following) VALUES
 (1,2),
 (2,1);
   

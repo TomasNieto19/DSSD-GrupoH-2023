@@ -22,13 +22,13 @@ namespace Client.Controllers
 
         }
 
-        [HttpGet("followers/{id}")]
-        public async Task<IActionResult> GetFollowers(int id)
+        [HttpGet("followings/{id}")]
+        public async Task<IActionResult> GetFollowings(int id)
         {
 
-            var request = new getFollowersRequest { IdUser = id };
+            var request = new getFollowingsRequest { IdUser = id };
 
-            return Ok(await userServiceClient.getFollowersAsync(request));
+            return Ok(await userServiceClient.getFollowingsAsync(request));
 
         }
 
