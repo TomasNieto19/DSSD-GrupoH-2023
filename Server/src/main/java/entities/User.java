@@ -23,7 +23,7 @@ import java.util.HashSet;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "following")
+//@ToString(exclude = "following")
 @EqualsAndHashCode(exclude = "following")
 @Setter
 @Getter
@@ -49,10 +49,16 @@ public class User {
 	
 	//@Column(name = "role", nullable = false)
 	//private String role;
-
+	
+	@ToString.Exclude
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinTable(name = "follows", joinColumns = @JoinColumn(name = "id_follower"), inverseJoinColumns = @JoinColumn(name = "id_following"))
 	private Set<User> following = new HashSet<User>();
+	
+	@ToString.Exclude
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinTable(name = "favorite_recipes", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_recipe"))
+	private Set<Recipe>favoriteRecipes = new HashSet<Recipe>();
 
 	public User(String name, String email, String username, String password) {
 		this.name = name;

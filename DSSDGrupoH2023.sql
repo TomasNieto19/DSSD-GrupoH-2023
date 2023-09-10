@@ -35,6 +35,15 @@ CREATE TABLE `follows` (
     PRIMARY KEY (id_follower , id_following)
 );
 
+CREATE TABLE `favorite_recipes`(
+	`id_user` INT NOT NULL,
+    `id_recipe` INT NOT NULL,
+    FOREIGN KEY (id_user)
+        REFERENCES users (id_user),
+	FOREIGN KEY (id_recipe)
+        REFERENCES recipe (id_recipe)
+);
+
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');

@@ -9,6 +9,7 @@ import dao.UserDao;
 import entities.*;
 import entities.Recipe;
 import java.util.List;
+import java.util.Set;
 
 public class prueba {
 
@@ -75,5 +76,8 @@ public class prueba {
      *
      * System.out.println(RecipeDao.getInstance().getAll());
      */
+	
+	  //System.out.println(UserDao.getInstance().getUserFavoriteRecipe(1));
+	 
   }
 }
