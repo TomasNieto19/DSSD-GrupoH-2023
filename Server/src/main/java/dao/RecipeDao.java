@@ -21,14 +21,14 @@ public class RecipeDao {
 
 	
 	// Metodo para persistir una receta en la BD
-	public void addRecipe(Recipe recipe) throws Exception {
+	public Recipe addRecipe(Recipe recipe) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
-	
+		Recipe recipeAdded = null;
 		try {
 
 			em.getTransaction().begin();
-			em.persist(recipe);
+			recipeAdded = em.merge(recipe);
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
@@ -39,6 +39,8 @@ public class RecipeDao {
 			
 			em.close();
 		}
+		
+		return recipeAdded;
 	}
 
 	

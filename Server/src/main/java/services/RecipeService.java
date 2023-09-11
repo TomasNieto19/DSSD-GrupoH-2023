@@ -93,6 +93,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
 
+		Recipe recipeAdded = null;
 		try {
 
 			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
@@ -103,9 +104,10 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			recipeToAdd.setUser(userCreator);
 
-			RecipeDao.getInstance().addRecipe(recipeToAdd);
+			recipeAdded = RecipeDao.getInstance().addRecipe(recipeToAdd);
 
 			serverResponse.setMessage("Receta añadida correctamente");
+			serverResponse.setIdRecipe(recipeAdded.getIdRecipe());
 
 		} catch (Exception e) {
 
