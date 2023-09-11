@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Grpc.Net.Client;
+using static UserService;
 
 namespace Client.Controllers
 {
@@ -57,7 +58,13 @@ namespace Client.Controllers
             return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));
 
         }
+        [HttpGet("favoriteRecipes/{idUser}")]
+        public async Task<IActionResult> GetFavoriteRecipes(int idUser)
+        {
+            var request = new getFavoriteRecipesRequest { UserId = idUser };
 
+            return Ok(await recipeServiceClient.getFavoriteRecipesAsync(request));
+        }
 
     }
 }

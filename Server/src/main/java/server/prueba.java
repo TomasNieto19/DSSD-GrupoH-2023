@@ -77,7 +77,7 @@ public class prueba {
      * System.out.println(RecipeDao.getInstance().getAll());
      */
 	
-	  //System.out.println(UserDao.getInstance().getUserFavoriteRecipe(1));
+	  System.out.println(RecipeDao.getInstance().getUserFavoriteRecipe(1));
 	 
   }
 }

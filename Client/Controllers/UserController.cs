@@ -59,14 +59,7 @@ namespace Client.Controllers
             return Ok(await userServiceClient.loginAsync(request));
 
         }
-        [HttpGet("favoriteRecipes/{id}")]
-        public async Task<IActionResult> getUserFavoriteRecipe(int id)
-        {
-            var request = new getFavoriteRecipesRequest { IdUser = id };
-
-            return Ok(await userServiceClient.getFavoriteRecipesAsync(request));
-
-        }
+        
 
 
 

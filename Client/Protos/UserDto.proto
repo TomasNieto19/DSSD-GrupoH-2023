@@ -19,7 +19,7 @@ service UserService{
   rpc getFollowings (getFollowingsRequest) returns (getFollowingsResponse);
   rpc followAction (followActionRequest) returns (followActionResponse);
   rpc login (loginRequest) returns (loginResponse);
-  rpc getFavoriteRecipes(getFavoriteRecipesRequest) returns(getFavoriteRecipesResponse);
+  
 }
 
 message ServerResponseUser {
@@ -32,12 +32,7 @@ message EmptyUser {}
 message AllUsersResponse {
   repeated UserDto users = 1;
 }
-message getFavoriteRecipesRequest{
-	int32 idUser=1;
-}
-message getFavoriteRecipesResponse{
-	repeated UserDto favoriteRecipes = 1;
-}
+
 message getFollowingsRequest{
   int32 idUser = 1;
 }

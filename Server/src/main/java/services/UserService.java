@@ -8,8 +8,6 @@ import grpc.UserDtoOuterClass.followActionRequest;
 import grpc.UserDtoOuterClass.followActionResponse;
 import grpc.UserDtoOuterClass.getFollowingsRequest;
 import grpc.UserDtoOuterClass.getFollowingsResponse;
-import grpc.UserDtoOuterClass.getFavoriteRecipesRequest;
-import grpc.UserDtoOuterClass.getFavoriteRecipesResponse;
 import grpc.UserDtoOuterClass.loginRequest;
 import grpc.UserDtoOuterClass.loginResponse;
 import grpc.RecipeDtoOuterClass.RecipeDto;
@@ -19,9 +17,12 @@ import org.modelmapper.ModelMapper;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.Set;
+import dao.RecipeDao;
 import dao.UserDao;
 import entities.Recipe;
 import entities.User;
+import services.RecipeService;
+
 
 public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
@@ -36,6 +37,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 			.setPassword(user.getPassword())
 			.build();
 	}
+	
 
 	@Override
 	public void addUser(UserDto request, StreamObserver<ServerResponseUser> responseObserver) {
@@ -96,34 +98,36 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 			responseObserver.onCompleted();
 		}
 	}
-	@Override
-	public void getFavoriteRecipes(getFavoriteRecipesRequest request,StreamObserver<getFavoriteRecipesResponse> responseObserver) {
-		
-		UserDtoOuterClass.getFavoriteRecipesResponse.Builder response = UserDtoOuterClass.getFavoriteRecipesResponse.newBuilder();
-		
-		try {
-
-			Set<Recipe> recipeList = UserDao.getInstance().getUserFavoriteRecipe(request.getIdUser());
-
-			for (Recipe recipe :recipeList) {
-				
-				
-				//TERMINAR ESTA PARTE.
-
-				response.addFavoriteRecipes();
-			}
-
-		} catch (Exception e) {
-
-			System.out.println("Error al enviar la lista de recetas favoritas: " + e.getMessage());
-
-		} finally {
-
-			responseObserver.onNext(response.build());
-			responseObserver.onCompleted();
-		}
-	}
+	/*
+	 * @Override public void getFavoriteRecipes(getFavoriteRecipesRequest
+	 * request,StreamObserver<getFavoriteRecipesResponse> responseObserver) {
+	 * 
+	 * UserDtoOuterClass.getFavoriteRecipesResponse.Builder response =
+	 * UserDtoOuterClass.getFavoriteRecipesResponse.newBuilder();
+	 * 
+	 * try {
+	 * 
+	 * Set<Recipe> recipeList =
+	 * UserDao.getInstance().getUserFavoriteRecipe(request.getIdUser());
+	 * 
+	 * for (Recipe recipe : recipeList) {
+	 * 
+	 * 
+	 * }
+	 * 
+	 * } catch (Exception e) {
+	 * 
+	 * System.out.println("Error al enviar la lista de recetas favoritas: " +
+	 * e.getMessage());
+	 * 
+	 * } finally {
+	 * 
+	 * responseObserver.onNext(response.build()); responseObserver.onCompleted(); }
+	 * }
+	 */
 	
+	
+
 	@Override
 	public void getFollowings(getFollowingsRequest request, StreamObserver<getFollowingsResponse> responseObserver) {
 

@@ -2,9 +2,15 @@ package dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import org.hibernate.Hibernate;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import entities.Recipe;
+import entities.User;
 
 public class RecipeDao {
 
@@ -40,7 +46,24 @@ public class RecipeDao {
 			em.close();
 		}
 	}
+	//metodo que retorna la lista de recetas que el usuario faveó
+		public Set<Recipe> getUserFavoriteRecipe(int userId){
+			
+			EntityManager em = JPAUtil.getEMF().createEntityManager();
+			User user = null;
+			try {
 
+				user = em.find(User.class, userId);
+
+				Hibernate.initialize(user.getFavoriteRecipes());
+
+			} finally {
+
+				em.close();
+			}
+
+			return user.getFavoriteRecipes();
+		}
 	
 	// Metodo para editar una receta
 	public Recipe editRecipe(Recipe recipe) throws Exception {
