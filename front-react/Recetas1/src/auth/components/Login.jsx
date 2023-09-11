@@ -30,6 +30,7 @@ const Login = () => {
                 
                 fullWidth
                 onChange={({target})=>setUsername(target.value)}
+                inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }}
               />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
@@ -39,16 +40,17 @@ const Login = () => {
                 type="password"
                 fullWidth
                 onChange={({target})=>setPassword(target.value)}
+                inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }}
               />
             </Grid>
             <Grid container spacing={2} sx={{ mt: 1 }}>
               <Grid item xs={12} sm={12} md={12}>
-                <Button variant='contained' onClick={()=>toRecipes()} fullWidth>Login</Button>
+                <Button variant='contained' sx={{backgroundColor: "#0b1218"}} onClick={()=>toRecipes()} fullWidth>Login</Button>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="end" sx={{mt: 1}}>
 
-              <Link component={RouterLink} color="inherit" to="/register">Crear una cuenta</Link>
+              <Link component={RouterLink} to="/register">Crear una cuenta</Link>
 
             </Grid>
           </Grid>

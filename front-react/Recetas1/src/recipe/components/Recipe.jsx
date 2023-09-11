@@ -19,7 +19,6 @@ export default function Recipe({ recipe }) {
   let hr = 0;
   let min = 0;
   if (recipe) {
-    console.log(recipe.preparationTime)
     hr = recipe.preparationTime > 60 ? Math.round(recipe.preparationTime / 60) : 0;
     min = recipe.preparationTime - (hr * 60);
   }
@@ -30,7 +29,6 @@ export default function Recipe({ recipe }) {
 
   }
 
-  console.log(recipe.user);
   return (
     <Card sx={{ maxWidth: 350, backgroundColor: "#223344" }}>
       <CardHeader

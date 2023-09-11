@@ -1,4 +1,4 @@
-import { recetasApi } from "../../api/api";
+import { imgurApi, recetasApi } from "../../api/api";
 
 import { addRecipe, editRecipe, isLoadingRecipes, setRecipeDetail, setRecipes } from "./recipeSlice"
 
@@ -19,9 +19,9 @@ export const getRecipesByUserId = (id) => {
     return async (dispatch, getState) => {
 
         dispatch(isLoadingRecipes());
-        console.log(id);
+
         const { data } = await recetasApi.get(`/userRecipes/${id}`);
-        console.log("AAAAAAAA",data);
+
         dispatch(setRecipes({ recipes: data.recipes }));
 
     }
@@ -41,10 +41,16 @@ export const getRecipeByRecipeId = (id) => {
 
 }
 
-export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pasos, tiempo) => {
+export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pasos, tiempo, images) => {
 
     return async (dispatch, getState) => {
+        const {data: dataImg, status: statusImg} = await imgurApi.post("/3/image", images[0].file, {headers: {'Authorization': 'Client-ID f65efd43d7c6ecd'}});
+        if(statusImg == 200){
 
+            const {data: dataUrl} = dataImg;
+            console.log(dataUrl.link);
+
+        }
         const {auth} = getState();
         const {user} = auth;
 
@@ -62,23 +68,30 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
             }
 
         }
-        const bodyState = {
+        
 
-            "title": titulo,
-            "description": descripcion,
-            "ingredients": ingredientes,
-            "category": categoria,
-            "steps": pasos,
-            "preparationTime": parseInt(tiempo),
-            "user": {
-                "userId": user.userId,
-                "username": user.username
+        const { data, status } = await recetasApi.post("/addRecipe", bodyPost)
+        if(status === 200 && data.idRecipe !== 0){
+
+            const bodyState = {
+                "idRecipe": data.idRecipe,
+                "title": titulo,
+                "description": descripcion,
+                "ingredients": ingredientes,
+                "category": categoria,
+                "steps": pasos,
+                "preparationTime": parseInt(tiempo),
+                "user": {
+                    "userId": user.userId,
+                    "username": user.username
+                }
+    
             }
 
-        }
+            dispatch(addRecipe({recipe: bodyState}));
 
-        const { data } = await recetasApi.post("/addRecipe", bodyPost)
-        dispatch(addRecipe({recipe: bodyState}));
+        }
+        
 
     }
 

@@ -12,7 +12,7 @@ const RecipeDetailItem = ({recipe}) => {
   let hr = 0;
   let min = 0;
   if (recipe) {
-    console.log(recipe.preparationTime)
+
     hr = recipe.preparationTime > 60 ? Math.round(recipe.preparationTime / 60) : 0;
     min = recipe.preparationTime - (hr * 60);
   }

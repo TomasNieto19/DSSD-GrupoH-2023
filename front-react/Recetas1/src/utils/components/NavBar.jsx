@@ -65,7 +65,7 @@ export const NavBar = () => {
                         Chef En Casa
                     </Typography>
                     </Button>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                    {user.userId !== 0 && <><Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -96,16 +96,15 @@ export const NavBar = () => {
                         >
                             {pages.map((page) => (
                                 <MenuItem key={page.text} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page.text}</Typography>
+                                    <Button key={page.value} sx={{ backgroundColor: "#2D4356", width: "100%" }} onClick={() => toRedirect(page.value)}><Typography key={page.value} sx={{ textDecoration: 'none', color: 'white', textTransform: "Capitalize" }}>{page.text}</Typography></Button>
                                 </MenuItem>
                             ))}
                         </Menu>
-                    </Box>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
-                            <Button key={page.value} onClick={()=>toRedirect(page.value)}><Typography key={page.value} sx={{textDecoration: 'none', color: 'white', textTransform: "Capitalize"}}>{page.text}</Typography></Button>
-                        ))}
-                    </Box>
+                    </Box><Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                            {pages.map((page) => (
+                                <Button key={page.value} onClick={() => toRedirect(page.value)}><Typography key={page.value} sx={{ textDecoration: 'none', color: 'white', textTransform: "Capitalize" }}>{page.text}</Typography></Button>
+                            ))}
+                        </Box></>}
                     <Typography variant="h6" component="div">
                         {user && user.username}
                     </Typography>

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { recetasApi } from "../../api/api";
 import { toLoginUser } from "./authSlice";
 
@@ -20,7 +21,7 @@ export const registerUser = (username, name, email, password) => {
         const {data, status} = await recetasApi.post("/addUser", bodyPost);
         if(status ==200){
 
-            console.log("Usuario registrado correctamente");
+            
 
         }
         
@@ -32,12 +33,10 @@ export const registerUser = (username, name, email, password) => {
 export const loginUserThunk = (username, password) => {
 
     return async (dispatch, getState) => {
-
         const {data: dataLogin, status} = await recetasApi.post(`/login?username=${username}&password=${password}`);
-        if(status === 200){
-            
+        const {userId, message} = dataLogin;    
+        if(status === 200 && userId !== 0){
             const {data, status} = await recetasApi.get(`/followings/${dataLogin.userId}`);
-            console.log(data);
             const bodyState = {
 
                 "username": username,
@@ -47,8 +46,20 @@ export const loginUserThunk = (username, password) => {
             }
             dispatch(toLoginUser({user: bodyState}));
             localStorage.setItem('user', JSON.stringify(bodyState))
-            console.log("Usuario logueado correctamente correctamente");
+            
 
+        }else{
+            
+            toast.error(message, {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
         }
         
 

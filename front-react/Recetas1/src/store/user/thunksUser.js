@@ -8,7 +8,6 @@ export const getUsers = () => {
         const {auth} = getState();
         const {user} = auth;
         const {usersFollowing} = user;
-        console.log(usersFollowing)
         const {data, status} = await recetasApi.get("/users");
         if(status === 200){
             let usersMaped = data.users.map((user)=>{
