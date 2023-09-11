@@ -33,6 +33,7 @@ const Register = () => {
                 type="text"
                 fullWidth
                 onChange={({target})=>setUsername(target.value)}
+                inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }}
               />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
@@ -42,6 +43,7 @@ const Register = () => {
                 type="text"
                 fullWidth
                 onChange={({target})=>setName(target.value)}
+                inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }}
               />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
@@ -51,6 +53,7 @@ const Register = () => {
                 type="email"
                 fullWidth
                 onChange={({target})=>setEmail(target.value)}
+                inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }}
               />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
@@ -60,16 +63,17 @@ const Register = () => {
                 type="password"
                 fullWidth
                 onChange={({target})=>setPassword(target.value)}
+                inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }}
               />
             </Grid>
             <Grid container sx={{ mt: 2 }} direction="row" justifyContent="center">
               <Grid item xs={12} sm={12} md={8} >
-                <Button variant='contained' onClick={()=>toLogin()} fullWidth>Crear cuenta</Button>
+                <Button variant='contained' sx={{backgroundColor: "#0b1218"}} onClick={()=>toLogin()} fullWidth>Crear cuenta</Button>
               </Grid>
             </Grid>
             <Grid container direction="row" justifyContent="end" sx={{mt: 1}}>
-              <Typography sx={{mr: 1}}>¿Ya tienes cuenta?</Typography>
-              <Link component={RouterLink} color="inherit" to="/login">Ingresar</Link>
+              <Typography sx={{mr: 1, color: "white"}}>¿Ya tienes cuenta?</Typography>
+              <Link component={RouterLink} to="/login">Ingresar</Link>
 
             </Grid>
           </Grid>

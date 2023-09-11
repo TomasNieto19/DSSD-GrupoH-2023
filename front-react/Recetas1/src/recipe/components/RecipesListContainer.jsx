@@ -9,8 +9,7 @@ const RecipesListContainer = () => {
 
     const dispatch = useDispatch();
   const {isLoading, recipes}= useSelector(state=> state.recipe);
-    console.log(recipes);
-  
+  console.log(recipes);
 
   useEffect(() => {
     dispatch(getRecipes());

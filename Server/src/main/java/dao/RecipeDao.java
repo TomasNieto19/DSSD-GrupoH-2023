@@ -21,14 +21,15 @@ public class RecipeDao {
 
 	
 	// Metodo para persistir una receta en la BD
-	public void addRecipe(Recipe recipe) throws Exception {
+	public Recipe addOrUpdateRecipe(Recipe recipe) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
-	
+		Recipe recipeAdded = null;
+		
 		try {
 
 			em.getTransaction().begin();
-			em.persist(recipe);
+			recipeAdded = em.merge(recipe);
 			em.getTransaction().commit();
 
 		} catch (Exception e) {
@@ -39,31 +40,8 @@ public class RecipeDao {
 			
 			em.close();
 		}
-	}
-
-	
-	// Metodo para editar una receta
-	public Recipe editRecipe(Recipe recipe) throws Exception {
-
-		EntityManager em = JPAUtil.getEMF().createEntityManager();
-		Recipe entity = null;
-
-		try {
-
-			em.getTransaction().begin();
-			entity = em.merge(recipe);
-			em.getTransaction().commit();
-
-		} catch (Exception e) {
-
-			throw new Exception("No se encontro la receta:  " + e.getMessage());
-
-		} finally {
-			
-			em.close();
-		}
-
-		return entity;
+		
+		return recipeAdded;
 	}
 
 

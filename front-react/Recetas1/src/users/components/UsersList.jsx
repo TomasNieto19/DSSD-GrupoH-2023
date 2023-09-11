@@ -3,7 +3,6 @@ import User from './User';
 import { Grid } from '@mui/material';
 
 const UsersList = ({users}) => {
-  console.log("hola aca desde usersList", users);
 
   return (
     <Grid container padding={10}>

@@ -9,7 +9,6 @@ const User = ({user}) => {
 
     const {user: userLogged}= useSelector(state=>state.auth)
     const dispatch = useDispatch();
-    console.log(userLogged);
     const toFollow = () =>{
 
         dispatch(setFollowThunk(userLogged.userId, user));

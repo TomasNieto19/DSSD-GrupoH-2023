@@ -38,6 +38,7 @@ service RecipeService {
 
 message ServerResponseRecipe {
   string message = 1;
+  int32 idRecipe = 2; 
 }
 
 message EmptyRecipe {}

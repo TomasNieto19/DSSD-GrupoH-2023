@@ -10,9 +10,8 @@ const UsersListContainer = () => {
     const {users} = useSelector(state=>state.user);
     const {user} = useSelector(state=>state.auth)
     let filter = users.filter(userFilter => userFilter.idUser !== user.userId)
-    console.log(filter)
     useEffect(() => {
-        console.log("AAAA")
+      
         dispatch(getUsers());
 
     }, [])

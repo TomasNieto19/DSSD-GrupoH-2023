@@ -11,11 +11,10 @@ const RecipeDetail = () => {
   const dispatch = useDispatch();
   const {recipeDetail} = useSelector(state=> state.recipe);
 
-  console.log(recipeDetail);
   useEffect(() => {
     
     dispatch(getRecipeByRecipeId(id));
-    console.log("HOLAAA")
+
 
   }, [])
   

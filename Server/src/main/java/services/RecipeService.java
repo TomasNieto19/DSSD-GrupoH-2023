@@ -26,33 +26,35 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	private RecipeDto mapRecipeToRecipeDto(Recipe recipe) {
 		// Mapeo del user
 		RecipeDtoOuterClass.User user = RecipeDtoOuterClass.User.newBuilder()
-				.setUserId(recipe.getUser().getIdUser())
-				.setUsername(recipe.getUser().getUsername())
-				.build();
+			.setUserId(recipe.getUser().getIdUser())
+			.setUsername(recipe.getUser().getUsername())
+			.build();
 
 		// Mapeo de las fotos
 		List<RecipeDtoOuterClass.Photo> photoList = new ArrayList<>();
 
 		for (Photo photo : recipe.getPhotos()) {
+
 			RecipeDtoOuterClass.Photo photoDto = RecipeDtoOuterClass.Photo.newBuilder()
-					.setIdPhoto(photo.getIdPhoto())
-					.setUrl(photo.getUrl())
-					.build();
+				.setIdPhoto(photo.getIdPhoto())
+				.setUrl(photo.getUrl())
+				.build();
+
 			photoList.add(photoDto);
 		}
 
 		// Mapeo de la RecipeDto
 		return RecipeDto.newBuilder()
-				.setIdRecipe(recipe.getIdRecipe())
-				.setTitle(recipe.getTitle())
-				.setDescription(recipe.getDescription())
-				.setIngredients(recipe.getIngredients())
-				.setCategory(recipe.getCategory())
-				.setSteps(recipe.getSteps())
-				.setPreparationTime(recipe.getPreparationTime())
-				.setUser(user)
-				.addAllPhotos(photoList)
-				.build();
+			.setIdRecipe(recipe.getIdRecipe())
+			.setTitle(recipe.getTitle())
+			.setDescription(recipe.getDescription())
+			.setIngredients(recipe.getIngredients())
+			.setCategory(recipe.getCategory())
+			.setSteps(recipe.getSteps())
+			.setPreparationTime(recipe.getPreparationTime())
+			.setUser(user)
+			.addAllPhotos(photoList)
+			.build();
 	}
 
 	@Override
@@ -63,6 +65,8 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		try {
 
 			recipe = mapRecipeToRecipeDto(RecipeDao.getInstance().getRecipeById(request.getIdRecipe()));
+
+			if( recipe == null ) throw new Exception("La receta no existe");
 
 		} catch (Exception e) {
 
@@ -83,6 +87,8 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		try {
 
 			List<Recipe> recipeList = RecipeDao.getInstance().getAll();
+
+			if( recipeList.isEmpty() ) throw new Exception("La lista de recetas está vacía");
 
 			for (Recipe recipe : recipeList) {
 
@@ -111,16 +117,16 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
-			if (userCreator == null)
-				throw new Exception("El usuario no existe");
+			if (userCreator == null) throw new Exception("El usuario no existe");
 
 			Recipe recipeToAdd = modelMapper.map(request, Recipe.class);
 
 			recipeToAdd.setUser(userCreator);
 
-			RecipeDao.getInstance().addRecipe(recipeToAdd);
+			Recipe recipeAdded = RecipeDao.getInstance().addOrUpdateRecipe(recipeToAdd);
 
 			serverResponse.setMessage("Receta añadida correctamente");
+			serverResponse.setIdRecipe(recipeAdded.getIdRecipe());
 
 		} catch (Exception e) {
 
@@ -134,13 +140,15 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	}
 
 	@Override
-	public void getRecipesByUserId(getRecipesByUserIdRequest request,StreamObserver<getRecipesByUserIdResponse> responseObserver) {
+	public void getRecipesByUserId(getRecipesByUserIdRequest request, StreamObserver<getRecipesByUserIdResponse> responseObserver) {
 
 		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse.newBuilder();
 
 		try {
 
 			List<Recipe> recipeList = RecipeDao.getInstance().getRecipeByUserId(request.getIdUser());
+
+			if( recipeList.isEmpty() ) throw new Exception("La lista de recetas del usuario está vacía");
 
 			for (Recipe recipe : recipeList) {
 
@@ -173,7 +181,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			recipe.setUser(user);
 
-			RecipeDao.getInstance().editRecipe(recipe);
+			RecipeDao.getInstance().addOrUpdateRecipe(recipe);
 
 			serverResponse.setMessage("Receta editada correctamente");
 
