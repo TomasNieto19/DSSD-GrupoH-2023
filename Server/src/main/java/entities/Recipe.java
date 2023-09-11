@@ -2,12 +2,17 @@ package entities;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -22,8 +27,6 @@ import lombok.Setter;
 @Getter
 @Table(name = "recipe")
 public class Recipe {
-
-	// ATRIBUTO QUE FALTA: una foto como mínimo y 5 como máximo,
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +54,10 @@ public class Recipe {
 	@ManyToOne
 	@JoinColumn(name = "id_user", nullable = true)
 	private User user;
+
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+	@JoinColumn(name = "id_recipe")
+	private List<Photo> photos = new ArrayList<Photo>();
 
 	public Recipe(String title, String description, String ingredients, String category, String steps, int preparationTime, User user) {
 		this.title = title;

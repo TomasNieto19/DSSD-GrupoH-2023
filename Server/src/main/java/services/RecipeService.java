@@ -11,8 +11,10 @@ import grpc.RecipeDtoOuterClass;
 import grpc.RecipeServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import org.modelmapper.ModelMapper;
+import entities.Photo;
 import entities.Recipe;
 import entities.User;
+import java.util.ArrayList;
 import java.util.List;
 import dao.RecipeDao;
 import dao.UserDao;
@@ -22,23 +24,35 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	private final ModelMapper modelMapper = new ModelMapper();
 
 	private RecipeDto mapRecipeToRecipeDto(Recipe recipe) {
-
-		// lo creo para dsp asignarselo al setUser del recipeDTO
+		// Mapeo del user
 		RecipeDtoOuterClass.User user = RecipeDtoOuterClass.User.newBuilder()
-			.setUserId(recipe.getUser().getIdUser())
-			.setUsername(recipe.getUser().getUsername())
-			.build();
+				.setUserId(recipe.getUser().getIdUser())
+				.setUsername(recipe.getUser().getUsername())
+				.build();
 
+		// Mapeo de las fotos
+		List<RecipeDtoOuterClass.Photo> photoList = new ArrayList<>();
+
+		for (Photo photo : recipe.getPhotos()) {
+			RecipeDtoOuterClass.Photo photoDto = RecipeDtoOuterClass.Photo.newBuilder()
+					.setIdPhoto(photo.getIdPhoto())
+					.setUrl(photo.getUrl())
+					.build();
+			photoList.add(photoDto);
+		}
+
+		// Mapeo de la RecipeDto
 		return RecipeDto.newBuilder()
-			.setIdRecipe(recipe.getIdRecipe())
-			.setTitle(recipe.getTitle())
-			.setDescription(recipe.getDescription())
-			.setIngredients(recipe.getIngredients())
-			.setCategory(recipe.getCategory())
-			.setSteps(recipe.getSteps())
-			.setPreparationTime(recipe.getPreparationTime())
-			.setUser(user)
-			.build();
+				.setIdRecipe(recipe.getIdRecipe())
+				.setTitle(recipe.getTitle())
+				.setDescription(recipe.getDescription())
+				.setIngredients(recipe.getIngredients())
+				.setCategory(recipe.getCategory())
+				.setSteps(recipe.getSteps())
+				.setPreparationTime(recipe.getPreparationTime())
+				.setUser(user)
+				.addAllPhotos(photoList)
+				.build();
 	}
 
 	@Override
@@ -97,7 +111,8 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
-			if (userCreator == null) throw new Exception("El usuario no existe");
+			if (userCreator == null)
+				throw new Exception("El usuario no existe");
 
 			Recipe recipeToAdd = modelMapper.map(request, Recipe.class);
 
@@ -149,14 +164,12 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
 
 		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
-		Recipe recipe = null;
-		User user = null;
 
 		try {
 
-			user = UserDao.getInstance().getUserById(request.getUser().getUserId());
+			User user = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
-			recipe = modelMapper.map(request, Recipe.class);
+			Recipe recipe = modelMapper.map(request, Recipe.class);
 
 			recipe.setUser(user);
 
