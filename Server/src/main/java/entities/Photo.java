@@ -36,6 +36,4 @@ public class Photo {
   @ManyToOne
   @JoinColumn(name = "id_recipe", nullable = false)
   private Recipe recipe;
-
-  
 }

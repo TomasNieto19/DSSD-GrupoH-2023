@@ -21,7 +21,6 @@ message User{
 }
 
 message Photo{
-  int32 idPhoto = 1;
   string url = 2;
 }
 

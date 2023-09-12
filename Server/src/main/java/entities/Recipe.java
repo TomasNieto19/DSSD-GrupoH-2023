@@ -68,5 +68,4 @@ public class Recipe {
 		this.preparationTime = preparationTime;
 		this.user = user;
 	}
-
 }

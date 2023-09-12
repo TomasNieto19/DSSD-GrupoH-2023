@@ -36,7 +36,6 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		for (Photo photo : recipe.getPhotos()) {
 
 			RecipeDtoOuterClass.Photo photoDto = RecipeDtoOuterClass.Photo.newBuilder()
-				.setIdPhoto(photo.getIdPhoto())
 				.setUrl(photo.getUrl())
 				.build();
 
