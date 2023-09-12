@@ -36,4 +36,9 @@ public class Photo {
   @ManyToOne
   @JoinColumn(name = "id_recipe", nullable = false)
   private Recipe recipe;
+
+  public Photo(String url, Recipe recipe) {
+    this.url = url;
+    this.recipe = recipe;
+  }
 }

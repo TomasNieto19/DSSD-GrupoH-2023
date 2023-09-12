@@ -14,7 +14,7 @@ public class PasswordResetService {
     private Map<String, String> passwordResetTokens = new HashMap<>();
 
     // Tiempo de vida de los tokens en milisegundos (por ejemplo, 1 hora).
-    private static final long TOKEN_EXPIRATION_TIME = 3600000;
+    //private static final long TOKEN_EXPIRATION_TIME = 3600000;
 
     public boolean requestPasswordReset(String email) {
         User user = userDao.getUserByEmail(email);
