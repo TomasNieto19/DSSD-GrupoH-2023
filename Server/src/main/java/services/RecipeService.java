@@ -149,9 +149,11 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	}
 
 	@Override
-	public void getRecipesByUserId(getRecipesByUserIdRequest request, StreamObserver<getRecipesByUserIdResponse> responseObserver) {
+	public void getRecipesByUserId(getRecipesByUserIdRequest request,
+			StreamObserver<getRecipesByUserIdResponse> responseObserver) {
 
-		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse.newBuilder();
+		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse
+				.newBuilder();
 
 		try {
 
@@ -186,22 +188,23 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
-			if (userCreator == null)
-				throw new Exception("El usuario no existe");
+			if (userCreator == null) throw new Exception("El usuario no existe");
 
 			Recipe recipeToEdit = modelMapper.map(request, Recipe.class);
 
 			recipeToEdit.setUser(userCreator);
 
-			List<Photo> photosToAdd = new ArrayList<Photo>();
+			List<Photo> recipePhotos = new ArrayList<Photo>();
+
+			RecipeDao.getInstance().deletePhotosByRecipeId(recipeToEdit.getIdRecipe());
 
 			for (RecipeDtoOuterClass.Photo item : request.getPhotosList()) {
-
-				photosToAdd.add(new Photo(item.getUrl(), recipeToEdit));
+				
+				recipePhotos.add(new Photo(item.getUrl(), recipeToEdit));
 
 			}
 
-			recipeToEdit.setPhotos(photosToAdd);
+			recipeToEdit.setPhotos(recipePhotos);
 
 			RecipeDao.getInstance().addOrUpdateRecipe(recipeToEdit);
 
@@ -218,5 +221,4 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 			responseObserver.onCompleted();
 		}
 	}
-
 }
