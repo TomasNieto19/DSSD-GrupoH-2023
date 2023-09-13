@@ -4,8 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
-
-import entities.Photo;
 import entities.Recipe;
 
 public class RecipeDao {
@@ -21,20 +19,12 @@ public class RecipeDao {
 		return instance;
 	}
 
-	
 	// Metodo para persistir una receta en la BD
 	public Recipe addOrUpdateRecipe(Recipe recipe) throws Exception {
-		
-		System.out.println(recipe);
-		
-		for (Photo item : recipe.getPhotos()) {
-			System.out.println(item.getRecipe());
-		}
-		
-		
+
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
 		Recipe recipeAdded = null;
-		
+
 		try {
 
 			em.getTransaction().begin();
@@ -46,13 +36,12 @@ public class RecipeDao {
 			throw new Exception("Error al persistir Receta:  " + e.getMessage());
 
 		} finally {
-			
+
 			em.close();
 		}
-		
+
 		return recipeAdded;
 	}
-
 
 	// Metodo para traer todas las recetas
 	@SuppressWarnings("unchecked")
@@ -75,7 +64,6 @@ public class RecipeDao {
 		return recetas;
 	}
 
-	
 	// Metodo para traer receta por id
 	public Recipe getRecipeById(int recipeId) {
 
@@ -93,29 +81,27 @@ public class RecipeDao {
 
 		return recipe;
 	}
-	
 
 	// Metodo para traer las recetas del usuario
 	@SuppressWarnings("unchecked")
 	public List<Recipe> getRecipeByUserId(int userId) {
 
-	    EntityManager em = JPAUtil.getEMF().createEntityManager();
-	    List<Recipe> recetas = new ArrayList<>();
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		List<Recipe> recetas = new ArrayList<>();
 
-	    try {
-	       
-	        String jpql = "SELECT r FROM Recipe r WHERE r.user.id = :userId";
-	        Query query = em.createQuery(jpql, Recipe.class);
-	        query.setParameter("userId", userId);
-	        recetas = query.getResultList();
+		try {
 
-	    } finally {
+			String jpql = "SELECT r FROM Recipe r WHERE r.user.id = :userId";
+			Query query = em.createQuery(jpql, Recipe.class);
+			query.setParameter("userId", userId);
+			recetas = query.getResultList();
 
-	        em.close();
-	    }
+		} finally {
 
-	    return recetas;
+			em.close();
+		}
+
+		return recetas;
 	}
 
-	
 }

@@ -25,20 +25,20 @@ import lombok.ToString;
 @Table(name = "photo")
 public class Photo {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_photo")
-  private int idPhoto;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_photo")
+	private int idPhoto;
 
-  @Column(name = "url", nullable = false)
-  private String url;
+	@Column(name = "url", nullable = false)
+	private String url;
 
-  @ManyToOne
-  @JoinColumn(name = "id_recipe", nullable = false)
-  private Recipe recipe;
+	@ManyToOne
+	@JoinColumn(name = "id_recipe", nullable = false)
+	private Recipe recipe;
 
-  public Photo(String url, Recipe recipe) {
-    this.url = url;
-    this.recipe = recipe;
-  }
+	public Photo(String url, Recipe recipe) {
+		this.url = url;
+		this.recipe = recipe;
+	}
 }

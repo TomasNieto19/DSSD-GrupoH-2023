@@ -55,8 +55,7 @@ public class Recipe {
 	@JoinColumn(name = "id_user", nullable = true)
 	private User user;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "id_recipe")
+	@OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Photo> photos = new ArrayList<Photo>();
 
 	public Recipe(String title, String description, String ingredients, String category, String steps, int preparationTime, User user) {

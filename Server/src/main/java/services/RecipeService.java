@@ -65,7 +65,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			recipe = mapRecipeToRecipeDto(RecipeDao.getInstance().getRecipeById(request.getIdRecipe()));
 
-			if( recipe == null ) throw new Exception("La receta no existe");
+			if (recipe == null) throw new Exception("La receta no existe");
 
 		} catch (Exception e) {
 
@@ -87,7 +87,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			List<Recipe> recipeList = RecipeDao.getInstance().getAll();
 
-			if( recipeList.isEmpty() ) throw new Exception("La lista de recetas está vacía");
+			if (recipeList.isEmpty()) throw new Exception("La lista de recetas está vacía");
 
 			for (Recipe recipe : recipeList) {
 
@@ -108,35 +108,35 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	}
 
 	@Override
-	 public void addRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
+	public void addRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
 
 		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
-		 
+
 		try {
-			
+
 			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
 			if (userCreator == null) throw new Exception("El usuario no existe");
 
 			Recipe recipeToAdd = modelMapper.map(request, Recipe.class);
-			
+
 			recipeToAdd.setUser(userCreator);
-			
+
 			List<Photo> photosToAdd = new ArrayList<Photo>();
-			
+
 			for (RecipeDtoOuterClass.Photo item : request.getPhotosList()) {
-				
-				photosToAdd.add(new Photo(item.getUrl(), recipeToAdd));	
-				
+
+				photosToAdd.add(new Photo(item.getUrl(), recipeToAdd));
+
 			}
-			
+
 			recipeToAdd.setPhotos(photosToAdd);
-			
+
 			Recipe recipeAdded = RecipeDao.getInstance().addOrUpdateRecipe(recipeToAdd);
 
 			serverResponse.setMessage("Receta añadida correctamente");
 			serverResponse.setIdRecipe(recipeAdded.getIdRecipe());
-			
+
 		} catch (Exception e) {
 
 			serverResponse.setMessage("Error al añadir la receta: " + e.getMessage());
@@ -147,7 +147,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 			responseObserver.onCompleted();
 		}
 	}
-	
+
 	@Override
 	public void getRecipesByUserId(getRecipesByUserIdRequest request, StreamObserver<getRecipesByUserIdResponse> responseObserver) {
 
@@ -157,7 +157,7 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 
 			List<Recipe> recipeList = RecipeDao.getInstance().getRecipeByUserId(request.getIdUser());
 
-			if( recipeList.isEmpty() ) throw new Exception("La lista de recetas del usuario está vacía");
+			if (recipeList.isEmpty()) throw new Exception("La lista de recetas del usuario está vacía");
 
 			for (Recipe recipe : recipeList) {
 
@@ -177,45 +177,36 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		}
 	}
 
-
-	/*
-	 * NO FUNCIONA
-	 * 
-	 * - Al intentar hacer el update de la receta con sus fotos, da el siguiente error:
-	 * 
-	 * "message": "Error al editar la receta: Error al persistir Receta:  Error while committing the transaction",
-	 * 
-	 * ERROR: Column 'id_recipe' cannot be null
-	 * 
-	 * */
 	@Override
 	public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
 
 		ServerResponseRecipe.Builder serverResponse = ServerResponseRecipe.newBuilder();
-		 
+
 		try {
-			
+
 			User userCreator = UserDao.getInstance().getUserById(request.getUser().getUserId());
 
-			if (userCreator == null) throw new Exception("El usuario no existe");
+			if (userCreator == null)
+				throw new Exception("El usuario no existe");
 
 			Recipe recipeToEdit = modelMapper.map(request, Recipe.class);
-			
+
 			recipeToEdit.setUser(userCreator);
-			
+
 			List<Photo> photosToAdd = new ArrayList<Photo>();
-			
+
 			for (RecipeDtoOuterClass.Photo item : request.getPhotosList()) {
-				
-				photosToAdd.add(new Photo(item.getUrl(), recipeToEdit));	
-				
+
+				photosToAdd.add(new Photo(item.getUrl(), recipeToEdit));
+
 			}
-			
+
 			recipeToEdit.setPhotos(photosToAdd);
-			
+
 			RecipeDao.getInstance().addOrUpdateRecipe(recipeToEdit);
 
 			serverResponse.setMessage("Receta editada correctamente");
+			serverResponse.setIdRecipe(recipeToEdit.getIdRecipe());
 
 		} catch (Exception e) {
 
