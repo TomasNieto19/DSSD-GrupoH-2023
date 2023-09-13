@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+
+import entities.Photo;
 import entities.Recipe;
 
 public class RecipeDao {
@@ -22,7 +24,14 @@ public class RecipeDao {
 	
 	// Metodo para persistir una receta en la BD
 	public Recipe addOrUpdateRecipe(Recipe recipe) throws Exception {
-
+		
+		System.out.println(recipe);
+		
+		for (Photo item : recipe.getPhotos()) {
+			System.out.println(item.getRecipe());
+		}
+		
+		
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
 		Recipe recipeAdded = null;
 		

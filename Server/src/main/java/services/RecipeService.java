@@ -177,6 +177,17 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 		}
 	}
 
+
+	/*
+	 * NO FUNCIONA
+	 * 
+	 * - Al intentar hacer el update de la receta con sus fotos, da el siguiente error:
+	 * 
+	 * "message": "Error al editar la receta: Error al persistir Receta:  Error while committing the transaction",
+	 * 
+	 * ERROR: Column 'id_recipe' cannot be null
+	 * 
+	 * */
 	@Override
 	public void editRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
 

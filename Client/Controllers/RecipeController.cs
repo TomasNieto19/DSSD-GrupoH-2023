@@ -43,10 +43,20 @@ namespace Client.Controllers
         }
 
         [HttpPut("edit")]
-        public async Task<IActionResult> EditRecipe(RecipeDto recipeDto)
+        public async Task<IActionResult> EditRecipe(RecipeRequest recipeRequest)
         {
 
-            return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));
+           if (recipeRequest.Recipe != null)
+            {
+                var recipeDto = recipeRequest.Recipe;
+
+                // Mapea el array de fotos request al array de fotos del RecipeDto por ser solo lectura
+                recipeDto.Photos.AddRange(recipeRequest.Photos.Select(photoRequest => new Photo { Url = photoRequest.Url }));
+
+                return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));  
+            }
+            
+            return BadRequest("La receta no puede ser nula");
 
         }
 
