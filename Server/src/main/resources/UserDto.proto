@@ -2,13 +2,20 @@ syntax = "proto3";
 
 option java_package = "grpc";
 
-/* Entidad */
+/* Entidades */
 message UserDto {
   int32 idUser = 1;
   string name = 2;
   string email = 3;
   string username = 4;
   string password = 5;
+}
+
+message UserBasic {
+  int32 idUser = 1;
+  string name = 2;
+  string email = 3;
+  string username = 4;
 }
 
 /* Definicion de Procedimientos Remotos */
@@ -40,7 +47,7 @@ message favoriteActionResponse{
 }
 
 message AllUsersResponse {
-  repeated UserDto users = 1;
+  repeated UserBasic users = 1;
 }
 
 message getFollowingsRequest{
@@ -48,7 +55,7 @@ message getFollowingsRequest{
 }
 
 message getFollowingsResponse{
-  repeated UserDto followers = 1;
+  repeated UserBasic followings = 1;
 }
 
 message followActionRequest{

@@ -1,6 +1,7 @@
 package services;
 
 import grpc.UserDtoOuterClass.ServerResponseUser;
+import grpc.UserDtoOuterClass.UserBasic;
 import grpc.UserDtoOuterClass.AllUsersResponse;
 import grpc.UserDtoOuterClass.EmptyUser;
 import grpc.UserDtoOuterClass.UserDto;
@@ -27,17 +28,15 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
 	private final ModelMapper modelMapper = new ModelMapper();
 
-	private UserDto mapUserToUserDto(User user) {
-		return UserDto.newBuilder()
+	private UserBasic mapUserToUserBasic(User user) {
+		return UserBasic.newBuilder()
 			.setIdUser(user.getIdUser())
 			.setName(user.getName())
 			.setEmail(user.getEmail())
 			.setUsername(user.getUsername())
-			.setPassword(user.getPassword())
 			.build();
 	}
 	
-
 	@Override
 	public void addUser(UserDto request, StreamObserver<ServerResponseUser> responseObserver) {
 
@@ -81,10 +80,9 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 			List<User> userList = UserDao.getInstance().getAll();
 
 			for (User user : userList) {
+				
+				allUsersResponseBuilder.addUsers(mapUserToUserBasic(user));
 
-				UserDto userDto = mapUserToUserDto(user);
-
-				allUsersResponseBuilder.addUsers(userDto);
 			}
 
 		} catch (Exception e) {
@@ -109,9 +107,8 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
 			for (User user : userList) {
 
-				UserDto userDto = mapUserToUserDto(user);
+				response.addFollowings(mapUserToUserBasic(user));
 
-				response.addFollowers(userDto);
 			}
 
 		} catch (Exception e) {
