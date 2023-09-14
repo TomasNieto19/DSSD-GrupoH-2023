@@ -1,5 +1,5 @@
 public static class GlobalConstants
 {
-    public const string JavaServerGRPC = "http://localhost:8081";
+    public const string JavaServerGRPC = "http://localhost:8082";
 
 }

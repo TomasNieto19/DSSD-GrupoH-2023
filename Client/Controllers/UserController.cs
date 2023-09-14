@@ -60,6 +60,17 @@ namespace Client.Controllers
 
         }
 
+        [HttpPost("favoriteAction")]
+        public async Task<IActionResult> FavoriteAction(int idUser, int idRecipe)
+        {
+
+            var request = new favoriteActionRequest { IdUser = idUser, IdRecipe = idRecipe };
+
+            return Ok(await userServiceClient.favoriteActionAsync(request));
+
+        }
+
+
 
     }
 }

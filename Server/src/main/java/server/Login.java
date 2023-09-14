@@ -1,7 +1,6 @@
 package server;
 
 import java.util.List;
-
 import dao.AuthenticationService;
 import dao.PasswordResetService;
 import dao.RecipeDao;
@@ -9,6 +8,7 @@ import dao.RegistrationService;
 import dao.UserDao;
 import entities.Recipe;
 import entities.User;
+
 
 public class Login {
 	public static final String ANSI_GREEN = "\u001B[32m";
