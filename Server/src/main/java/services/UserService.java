@@ -4,6 +4,8 @@ import grpc.UserDtoOuterClass.ServerResponseUser;
 import grpc.UserDtoOuterClass.AllUsersResponse;
 import grpc.UserDtoOuterClass.EmptyUser;
 import grpc.UserDtoOuterClass.UserDto;
+import grpc.UserDtoOuterClass.favoriteActionRequest;
+import grpc.UserDtoOuterClass.favoriteActionResponse;
 import grpc.UserDtoOuterClass.followActionRequest;
 import grpc.UserDtoOuterClass.followActionResponse;
 import grpc.UserDtoOuterClass.getFollowingsRequest;
@@ -16,7 +18,9 @@ import org.modelmapper.ModelMapper;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.Set;
+import dao.RecipeDao;
 import dao.UserDao;
+import entities.Recipe;
 import entities.User;
 
 public class UserService extends UserServiceGrpc.UserServiceImplBase {
@@ -32,6 +36,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 			.setPassword(user.getPassword())
 			.build();
 	}
+	
 
 	@Override
 	public void addUser(UserDto request, StreamObserver<ServerResponseUser> responseObserver) {
@@ -97,7 +102,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 	public void getFollowings(getFollowingsRequest request, StreamObserver<getFollowingsResponse> responseObserver) {
 
 		UserDtoOuterClass.getFollowingsResponse.Builder response = UserDtoOuterClass.getFollowingsResponse.newBuilder();
-
+		
 		try {
 
 			Set<User> userList = UserDao.getInstance().getUserFollowing(request.getIdUser());
@@ -139,7 +144,7 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
 				followers.remove(userFollowing);
 
-				response.setMessage("Se dejó de seguir al usuario correctamente");
+				response.setMessage("Se dejo de seguir al usuario correctamente");
 
 			} else {
 
@@ -192,5 +197,48 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 			responseObserver.onCompleted();
 		}
 	}
+	
+	@Override
+    public void favoriteAction(favoriteActionRequest request, StreamObserver<favoriteActionResponse> responseObserver) {
+
+        favoriteActionResponse.Builder response = favoriteActionResponse.newBuilder();
+
+        try {
+
+            User user = UserDao.getInstance().getUserById(request.getIdUser());
+
+            Recipe recipe = RecipeDao.getInstance().getRecipeById(request.getIdRecipe());
+
+            if (user == null || recipe == null) throw new Exception("Error, usuario o receta es null");
+
+            Set<Recipe> recipes = RecipeDao.getInstance().getUserFavoriteRecipe(request.getIdUser());
+
+            if (recipes.contains(recipe)) {
+
+                recipes.remove(recipe);
+
+                response.setMessage("Se quito la receta de favoritos.");
+
+            } else {
+
+                recipes.add(recipe);
+
+                response.setMessage("Se agrego la receta a favoritos.");
+            }
+			
+            user.setFavoriteRecipes(recipes);
+
+            UserDao.getInstance().addOrUpdateUser(user);
+
+        } catch (Exception e) {
+
+            response.setMessage("Error al realizar la accion de favear o sacar de favoritos: " + e.getMessage());
+
+        } finally {
+
+            responseObserver.onNext(response.build());
+            responseObserver.onCompleted();
+        }
+    }
 
 }

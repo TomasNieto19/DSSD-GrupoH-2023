@@ -3,6 +3,8 @@ package services;
 import grpc.RecipeDtoOuterClass.getRecipesByUserIdResponse;
 import grpc.RecipeDtoOuterClass.getRecipesByUserIdRequest;
 import grpc.RecipeDtoOuterClass.ServerResponseRecipe;
+import grpc.RecipeDtoOuterClass.getFavoriteRecipesRequest;
+import grpc.RecipeDtoOuterClass.getFavoriteRecipesResponse;
 import grpc.RecipeDtoOuterClass.getRecipeByIdRequest;
 import grpc.RecipeDtoOuterClass.AllRecipesResponse;
 import grpc.RecipeDtoOuterClass.EmptyRecipe;
@@ -16,6 +18,7 @@ import entities.Recipe;
 import entities.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import dao.RecipeDao;
 import dao.UserDao;
 
@@ -106,6 +109,32 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 			responseObserver.onCompleted();
 		}
 	}
+	@Override
+	public void getFavoriteRecipes(getFavoriteRecipesRequest request,StreamObserver<getFavoriteRecipesResponse> responseObserver) {
+		
+		RecipeDtoOuterClass.getFavoriteRecipesResponse.Builder response = RecipeDtoOuterClass.getFavoriteRecipesResponse.newBuilder();
+		
+		try {
+
+			Set<Recipe> recipeList = RecipeDao.getInstance().getUserFavoriteRecipe(request.getUserId());
+
+			for (Recipe recipe : recipeList) {
+
+				RecipeDto recipeDto = mapRecipeToRecipeDto(recipe);
+
+				response.addFavoriteRecipes(recipeDto);
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Error al enviar la lista de recetas favoritas: " + e.getMessage());
+
+		} finally {
+
+			responseObserver.onNext(response.build());
+			responseObserver.onCompleted();
+		}
+	}
 
 	@Override
 	public void addRecipe(RecipeDto request, StreamObserver<ServerResponseRecipe> responseObserver) {
@@ -149,11 +178,9 @@ public class RecipeService extends RecipeServiceGrpc.RecipeServiceImplBase {
 	}
 
 	@Override
-	public void getRecipesByUserId(getRecipesByUserIdRequest request,
-			StreamObserver<getRecipesByUserIdResponse> responseObserver) {
+	public void getRecipesByUserId(getRecipesByUserIdRequest request, StreamObserver<getRecipesByUserIdResponse> responseObserver) {
 
-		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse
-				.newBuilder();
+		RecipeDtoOuterClass.getRecipesByUserIdResponse.Builder response = RecipeDtoOuterClass.getRecipesByUserIdResponse.newBuilder();
 
 		try {
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option java_package = "grpc";
 
-/* Entidad */
+/* Entidades */
 message RecipeDto {
   int32 idRecipe = 1;
   string title = 2;
@@ -32,15 +32,24 @@ service RecipeService {
   rpc addRecipe (RecipeDto) returns (ServerResponseRecipe);
   rpc getRecipesByUserId (getRecipesByUserIdRequest) returns (getRecipesByUserIdResponse);
   rpc editRecipe (RecipeDto) returns (ServerResponseRecipe);
+  rpc getFavoriteRecipes(getFavoriteRecipesRequest) returns(getFavoriteRecipesResponse);
   
+}
+
+message EmptyRecipe {}
+
+message getFavoriteRecipesRequest{
+	int32 userId=1;
+}
+
+message getFavoriteRecipesResponse{
+	repeated RecipeDto favoriteRecipes = 1;
 }
 
 message ServerResponseRecipe {
   string message = 1;
   int32 idRecipe = 2; 
 }
-
-message EmptyRecipe {}
 
 message getRecipeByIdRequest {
   int32 idRecipe = 1;

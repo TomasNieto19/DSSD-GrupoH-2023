@@ -8,6 +8,8 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import entities.Recipe;
 import entities.User;
 
 public class UserDao {
@@ -109,6 +111,24 @@ public class UserDao {
 		}
 
 		return user.getFollowing();
+	}
+	//metodo que retorna la lista de recetas que el usuario faveó
+	public Set<Recipe> getUserFavoriteRecipe(int userId){
+		
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+		User user = null;
+		try {
+
+			user = em.find(User.class, userId);
+
+			Hibernate.initialize(user.getFavoriteRecipes());
+
+		} finally {
+
+			em.close();
+		}
+
+		return user.getFavoriteRecipes();
 	}
 
 

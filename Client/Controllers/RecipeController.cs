@@ -46,23 +46,34 @@ namespace Client.Controllers
         public async Task<IActionResult> EditRecipe(RecipeRequest recipeRequest)
         {
 
-           if (recipeRequest.Recipe != null)
+            if (recipeRequest.Recipe != null)
             {
                 var recipeDto = recipeRequest.Recipe;
 
                 // Mapea el array de fotos request al array de fotos del RecipeDto por ser solo lectura
                 recipeDto.Photos.AddRange(recipeRequest.Photos.Select(photoRequest => new Photo { Url = photoRequest.Url }));
 
-                return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));  
+                return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));
             }
-            
+
             return BadRequest("La receta no puede ser nula");
+
+        }
+
+        [HttpGet("favoriteRecipes/{idUser}")]
+        public async Task<IActionResult> GetFavoriteRecipes(int idUser)
+        {
+
+            var request = new getFavoriteRecipesRequest { UserId = idUser };
+
+            return Ok(await recipeServiceClient.getFavoriteRecipesAsync(request));
 
         }
 
         [HttpPost("addRecipe")]
         public async Task<IActionResult> AddRecipe(RecipeRequest recipeRequest)
         {
+
             if (recipeRequest.Recipe != null)
             {
                 var recipeDto = recipeRequest.Recipe;
@@ -72,7 +83,7 @@ namespace Client.Controllers
 
                 return Ok(await recipeServiceClient.addRecipeAsync(recipeDto));
             }
-            
+
             return BadRequest("La receta no puede ser nula");
 
         }

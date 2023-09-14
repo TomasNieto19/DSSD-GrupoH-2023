@@ -5,6 +5,7 @@ import javax.persistence.GenerationType;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -67,4 +68,20 @@ public class Recipe {
 		this.preparationTime = preparationTime;
 		this.user = user;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Recipe recipe = (Recipe) o;
+		return idRecipe == recipe.idRecipe;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(idRecipe);
+	}
+
 }
