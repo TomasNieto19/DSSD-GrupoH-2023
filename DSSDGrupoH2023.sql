@@ -25,6 +25,15 @@ CREATE TABLE `recipe` (
         REFERENCES users (id_user)
 );
 
+CREATE TABLE `photo` (
+    `id_photo` INT NOT NULL AUTO_INCREMENT,
+    `url` VARCHAR(16000) NOT NULL,
+    `id_recipe` INT NOT NULL,
+    PRIMARY KEY (`id_photo`),
+    FOREIGN KEY (`id_recipe`)
+        REFERENCES `recipe` (`id_recipe`)
+);
+
 CREATE TABLE `follows` (
     `id_follower` INT NOT NULL,
     `id_following` INT NOT NULL,
@@ -35,12 +44,12 @@ CREATE TABLE `follows` (
     PRIMARY KEY (id_follower , id_following)
 );
 
-CREATE TABLE `favorite_recipes`(
-	`id_user` INT NOT NULL,
+CREATE TABLE `favorite_recipes` (
+    `id_user` INT NOT NULL,
     `id_recipe` INT NOT NULL,
     FOREIGN KEY (id_user)
         REFERENCES users (id_user),
-	FOREIGN KEY (id_recipe)
+    FOREIGN KEY (id_recipe)
         REFERENCES recipe (id_recipe)
 );
 
@@ -48,10 +57,6 @@ INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
 
-INSERT INTO follows (id_follower, id_following) VALUES
-(1,2),
-(2,1);
-  
   INSERT INTO recipe (title, description, ingredients, category, steps, preparation_time, id_user) VALUES
   ('Galletas veganas de chocolate',
    'Cookies veganas de textura suave con sabor a chocolate, aroma a naranja y chispas de chocolate negro que se derriten en tu boca.',
@@ -81,3 +86,17 @@ INSERT INTO follows (id_follower, id_following) VALUES
    '1. Cortar los filetes por la mitad si fuera necesario y retirar el exceso de grasa.\n2. Picar el perejil y el ajo lo más pequeño posible.\n3. Batir los huevos en un plato hondo y añadir perejil, ajo, sal y pimienta.\n4. En un plato llano, colocar el pan rallado.\n5. Pasar los filetes por pan, luego por huevo, y nuevamente por pan.\n6. Calentar abundante aceite en una sartén u olla ancha.\n7. Freír las milanesas por ambos lados hasta que estén doradas. Una vez listas, colocar sobre un papel absorbente.',
    50,
    1);
+
+INSERT INTO photo (url, id_recipe) VALUES
+("https://i.imgur.com/I1SyBTh.jpeg", 1),
+("https://i.imgur.com/d2F6BCW.jpeg", 1),
+("https://i.imgur.com/s8z6wDy.jpeg", 2),
+("https://i.imgur.com/CiXw8oo.jpeg", 2), 
+("https://i.imgur.com/aikou9b.jpeg", 3),
+("https://i.imgur.com/JTNYjR5.jpeg", 3), 
+("https://i.imgur.com/JS5eg4D.jpeg", 4),
+("https://i.imgur.com/Hf2Th3u.jpeg", 4);
+
+INSERT INTO follows (id_follower, id_following) VALUES
+(1,2),
+(2,1);

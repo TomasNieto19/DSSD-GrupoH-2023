@@ -11,8 +11,7 @@ public class server {
 
 		System.out.println("Iniciando servidor");
 
-		Server server = ServerBuilder.forPort(8082)
-				.addService(new GreeterService())
+		Server server = ServerBuilder.forPort(8081)
 				.addService(new RecipeService())
 				.addService(new UserService())
 				.build();
@@ -20,7 +19,7 @@ public class server {
 		server.start();
 
 		System.out.println("Servidor en puerto " + server.getPort());
-
+		
 		server.awaitTermination();
 
 	}

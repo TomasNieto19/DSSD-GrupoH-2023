@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Grpc.Net.Client;
-using static UserService;
 
 namespace Client.Controllers
 {
@@ -33,38 +32,74 @@ namespace Client.Controllers
 
         }
 
-        [HttpGet("userRecipes/{id}")]
-        public async Task<IActionResult> GetRecipeByUserId(int id)
+        [HttpGet("userRecipes/{userId}")]
+        public async Task<IActionResult> GetRecipeByUserId(int userId)
         {
 
-            var request = new getRecipesByUserIdRequest { IdUser = id };
+            var request = new getRecipesByUserIdRequest { IdUser = userId };
 
             return Ok(await recipeServiceClient.getRecipesByUserIdAsync(request));
 
         }
 
-        [HttpPost("addRecipe")]
-        public async Task<IActionResult> AddRecipe(RecipeDto recipeDto)
-        {
-
-            return Ok(await recipeServiceClient.addRecipeAsync(recipeDto));
-
-        }
-
         [HttpPut("edit")]
-        public async Task<IActionResult> EditRecipe(RecipeDto recipeDto)
+        public async Task<IActionResult> EditRecipe(RecipeRequest recipeRequest)
         {
 
-            return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));
+            if (recipeRequest.Recipe != null)
+            {
+                var recipeDto = recipeRequest.Recipe;
+
+                // Mapea el array de fotos request al array de fotos del RecipeDto por ser solo lectura
+                recipeDto.Photos.AddRange(recipeRequest.Photos.Select(photoRequest => new Photo { Url = photoRequest.Url }));
+
+                return Ok(await recipeServiceClient.editRecipeAsync(recipeDto));
+            }
+
+            return BadRequest("La receta no puede ser nula");
 
         }
+
         [HttpGet("favoriteRecipes/{idUser}")]
         public async Task<IActionResult> GetFavoriteRecipes(int idUser)
         {
+
             var request = new getFavoriteRecipesRequest { UserId = idUser };
 
             return Ok(await recipeServiceClient.getFavoriteRecipesAsync(request));
+
         }
 
+        [HttpPost("addRecipe")]
+        public async Task<IActionResult> AddRecipe(RecipeRequest recipeRequest)
+        {
+
+            if (recipeRequest.Recipe != null)
+            {
+                var recipeDto = recipeRequest.Recipe;
+
+                // Mapea el array de fotos request al array de fotos del RecipeDto por ser solo lectura
+                recipeDto.Photos.AddRange(recipeRequest.Photos.Select(photoRequest => new Photo { Url = photoRequest.Url }));
+
+                return Ok(await recipeServiceClient.addRecipeAsync(recipeDto));
+            }
+
+            return BadRequest("La receta no puede ser nula");
+
+        }
+    }
+
+    public class PhotoRequest
+    {
+        public string? Url { get; set; }
+    }
+    public class RecipeRequest
+    {
+        public RecipeDto? Recipe { get; set; }
+        public List<PhotoRequest> Photos { get; set; }
+        public RecipeRequest()
+        {
+            Photos = new List<PhotoRequest>();
+        }
     }
 }

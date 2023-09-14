@@ -23,30 +23,25 @@ service UserService{
   
 }
 
+message EmptyUser {}
+
 message ServerResponseUser {
   int32 idUser = 1;
   string message = 2;
 }
 
-message EmptyUser {}
-
 message favoriteActionRequest{
-	int32 idUser = 1;
-	int32 idRecipe = 2;
+  int32 idUser = 1;
+  int32 idRecipe = 2;
 }
 
 message favoriteActionResponse{
-	string message = 1;
+  string message = 1;
 }
-
 
 message AllUsersResponse {
   repeated UserDto users = 1;
 }
-
-
-
-
 
 message getFollowingsRequest{
   int32 idUser = 1;
