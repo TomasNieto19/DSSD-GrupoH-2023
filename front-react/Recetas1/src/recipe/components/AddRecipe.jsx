@@ -1,4 +1,4 @@
-import { Add, Label } from '@mui/icons-material'
+import { Add, DeleteOutline, Label } from '@mui/icons-material'
 import { Button, Container, ImageList, ImageListItem, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -51,6 +51,13 @@ export const AddRecipe = () => {
 
   }
 
+  const onDeleteImage = (url) =>{
+
+    let arrayFilter = images.filter((photoF)=> photoF.url !== url);
+    setImages(arrayFilter);
+
+  }
+
   const onAddImage = () => {
     if(image !== undefined && image !== null){
 
@@ -95,6 +102,7 @@ export const AddRecipe = () => {
               height="300"
               loading="lazy"
             />
+            <Button color='error' onClick={()=>onDeleteImage(item.url)}><DeleteOutline/></Button> 
           </ImageListItem>
         ))}
       </ImageList>}

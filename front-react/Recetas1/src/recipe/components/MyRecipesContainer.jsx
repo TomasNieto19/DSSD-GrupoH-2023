@@ -4,6 +4,7 @@ import { getRecipesByUserId } from '../../store/receta/thunksRecipe';
 import { RecipesList } from './RecipesList';
 import Loader from '../../utils/components/Loader'
 import { Container, Typography } from '@mui/material';
+import RecipeNotFound from './RecipeNotFound';
 
 const MyRecipesContainer = () => {
 
@@ -15,13 +16,12 @@ const MyRecipesContainer = () => {
         dispatch(getRecipesByUserId(user.userId));
 
     }, [user])
-    
 
   return (
     <Container sx={{minWidth:'80%', minHeight: '100%', padding: 10}} >
       <Typography variant='h3'>My Recipes</Typography>
         {isLoading && <Loader/>}
-    <RecipesList recipes={recipes}/>
+    {recipes && recipes.length !== 0 ? <RecipesList recipes={recipes}/>: <RecipeNotFound/>}
     </Container>
   )
 }

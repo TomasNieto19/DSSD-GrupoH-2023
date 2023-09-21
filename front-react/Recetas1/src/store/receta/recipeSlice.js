@@ -18,6 +18,20 @@ export const recipeSlice = createSlice({
             state.recipes = action.payload.recipes;
 
         },
+        setLoading: (state, action)=>{
+
+            state.isLoading = action.payload;
+
+        },
+        setFav: (state, action) =>{
+
+            let id = action.payload.id
+            let recipeFind = state.recipes.find(recipe => recipe.idRecipe === id);
+            let index = state.recipes.indexOf(recipeFind);
+            state.recipes[index].fav = !state.recipes[index].fav;
+            state.recipeDetail.fav = !state.recipeDetail.fav; 
+
+        },
         addRecipe: (state, action)=>{
 
             state.recipes.push(action.payload.recipe);
@@ -47,4 +61,4 @@ export const recipeSlice = createSlice({
 
 
 
-export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe } = recipeSlice.actions;
+export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav} = recipeSlice.actions;
