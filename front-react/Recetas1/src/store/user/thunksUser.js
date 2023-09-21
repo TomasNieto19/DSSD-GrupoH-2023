@@ -11,7 +11,6 @@ export const getUsers = () => {
         const {data, status} = await recetasApi.get("/users");
         if(status === 200){
             let usersMaped = data.users.map((user)=>{
-
                 let userFind = usersFollowing.find(userFollowing => userFollowing.idUser === user.idUser);
 
                 if(userFind){

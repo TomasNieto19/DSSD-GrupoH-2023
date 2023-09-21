@@ -1,14 +1,15 @@
-import { Avatar, Card, CardActions, CardContent, CardHeader, IconButton, TextField, Typography } from '@mui/material';
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, IconButton, ImageList, ImageListItem, TextField, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import Loader from '../../utils/components/Loader';
-import { Edit, Save } from '@mui/icons-material';
+import { Add, DeleteOutline, Edit, Save } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { editRecipeThunk } from '../../store/receta/thunksRecipe';
+import { editRecipeThunk, favRecipeThunk } from '../../store/receta/thunksRecipe';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 
-const RecipeDetailItem = ({recipe}) => {
+const RecipeDetailItem = ({ recipe }) => {
   let hr = 0;
   let min = 0;
   if (recipe) {
@@ -17,45 +18,113 @@ const RecipeDetailItem = ({recipe}) => {
     min = recipe.preparationTime - (hr * 60);
   }
   const [edit, setEdit] = useState(true);
-  const {recipeDetail} = useSelector(state=> state.recipe)
-  const {user} = useSelector(state=> state.auth)
+  const { isLoading,recipeDetail } = useSelector(state => state.recipe)
+  const { user } = useSelector(state => state.auth)
   const [titulo, setTitulo] = useState();
-    const [descripcion, setDescripcion] = useState();
-    const [ingredientes, setIngredientes] = useState();
-    const [categoria, setCategoria] = useState();
-    const [pasos, setPasos] = useState();
-    const [tiempo, setTiempo] = useState();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [disabledEdit, setDisabledEdit] = useState();
+  const [descripcion, setDescripcion] = useState();
+  const [ingredientes, setIngredientes] = useState();
+  const [categoria, setCategoria] = useState();
+  const [pasos, setPasos] = useState();
+  const [tiempo, setTiempo] = useState();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [disabledEdit, setDisabledEdit] = useState();
+  const [photos, setPhotos] = useState([]);
+  const [images, setImages] = useState([]);
+  const [image, setImage] = useState();
+
+  const toFavRecipe = (id, recipe) =>{
+
+    dispatch(favRecipeThunk(id, recipe));
+
+  }
 
   useEffect(() => {
-    if(recipe !== null || recipe !== undefined){
-    setTitulo(recipe.title)
-    setDescripcion(recipe.description)
-    setIngredientes(recipe.ingredients)
-    setCategoria(recipe.category)
-    setPasos(recipe.steps)
-    setTiempo(recipe.preparationTime)
-    if(recipe.user && recipe.user.userId !== user.userId){
-      setDisabledEdit(true);
-    }else{
-      setDisabledEdit(false);
+    setImages([]);
+    setImage(undefined);
+    if (recipe !== null || recipe !== undefined) {
+      setTitulo(recipe.title)
+      setDescripcion(recipe.description)
+      setIngredientes(recipe.ingredients)
+      setCategoria(recipe.category)
+      setPasos(recipe.steps)
+      setTiempo(recipe.preparationTime)
+      if (recipe.user && recipe.user.userId !== user.userId) {
+        setDisabledEdit(true);
+      } else {
+        setDisabledEdit(false);
+      }
     }
+
+    setPhotos(recipe.photos)
+
+  }, [recipe])
+
+  const deleteImg = (photo) =>{
+
+    let arrayFilter = photos.filter((photoF)=> photoF.url !== photo.url);
+    setPhotos(arrayFilter);
+  }
+
+
+
+  const toEditRecipe = () => {
+    if((photos.length >=2 && images.length >= 2) || (images.length + photos.length >=2)){
+    dispatch(editRecipeThunk(recipe.idRecipe, titulo, descripcion, ingredientes, categoria, pasos, tiempo, photos, images));
+    setEdit(true);
+    }else{
+
+      toast("Debe ingresar un minimo de 2 fotos");
+
+    }
+  }
+
+  const onChangeFile = event => {
+    var file = event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+
+      setImage({
+        file: event.target.files[0],
+        url: reader.result
+      });
+
+    }
+
+  }
+
+  const onAddImage = () => {
+    if(image !== undefined && image !== null){
+
+      if((photos.length >=5 && images.length >= 5) || (images.length + photos.length >=5)){
+
+        setImage(undefined);
+        toast("El limite es 5");
+
+      }else{
+
+        setImages([...images, image]);
+        setImage(undefined);
+
+      }
+      
+
     }
     
 
-  }, [recipe])
-  
 
-  const toEditRecipe = () =>{
+  }
+  const onDeleteImage = (url) =>{
 
-    dispatch(editRecipeThunk(recipe.idRecipe, titulo, descripcion, ingredientes, categoria, pasos, tiempo));
-    setEdit(true);
+    let arrayFilter = images.filter((photoF)=> photoF.url !== url);
+    setImages(arrayFilter);
+
   }
 
+
   return (
-    (recipe.user !== undefined && recipe.user !== null) && edit ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344"}}>
+    (recipe.user !== undefined && recipe.user !== null) && edit ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
@@ -63,16 +132,16 @@ const RecipeDetailItem = ({recipe}) => {
           </Avatar>
         }
         title={recipe.title}
-        subheaderTypographyProps={{color: "#a8add3"}}
-        subheader={`${recipe.user.username ? "por "+ recipe.user.username : ""}`}
-        titleTypographyProps={{color: "#a8add3"}}
+        subheaderTypographyProps={{ color: "#a8add3" }}
+        subheader={`${recipe.user.username ? "por " + recipe.user.username : ""}`}
+        titleTypographyProps={{ color: "#a8add3" }}
         action={
-          <IconButton aria-label='Editar' disabled={disabledEdit} onClick={()=>setEdit(!edit)}>
-            {disabledEdit ? <Edit sx={{color: "#595b6d"}}/> : <Edit sx={{color: "#0b1218"}}/>}
+          <IconButton aria-label='Editar' disabled={disabledEdit} onClick={() => setEdit(!edit)}>
+            {disabledEdit ? <Edit sx={{ color: "#595b6d" }} /> : <Edit sx={{ color: "#0b1218" }} />}
           </IconButton>
         }
       />
-      
+
       <CardContent>
         <Typography variant="body2" color="#a8add3" >
           {recipe.description}
@@ -84,8 +153,8 @@ const RecipeDetailItem = ({recipe}) => {
         </Typography>
       </CardContent>
       <CardContent>
-        <Typography variant="body2" color="#a8add3"fontWeight="bold">
-        Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
+        <Typography variant="body2" color="#a8add3" fontWeight="bold">
+          Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
         </Typography>
       </CardContent>
       <CardContent>
@@ -94,19 +163,37 @@ const RecipeDetailItem = ({recipe}) => {
         </Typography>
       </CardContent>
       <CardContent>
-          <Typography paragraph color="#a8add3">Pasos:</Typography>
-          <Typography paragraph color="#a8add3">
-                {recipe.steps}
-          </Typography>  
-        </CardContent>
-        <CardActions sx={{display: "flex", justifyContent: "end"}}>
-        <IconButton aria-label="Agregar a favoritos">
-          <FavoriteIcon sx={{color: "#0b1218"}}/>
-        </IconButton>
+        <Typography paragraph color="#a8add3">Pasos:</Typography>
+        <Typography paragraph color="#a8add3">
+          {recipe.steps}
+        </Typography>
+      </CardContent>
+      <CardContent sx={{alignItems: "center", justifyContent: "center", alignSelf: "center", justifySelf: "center"}}>
+      {isLoading ? <Loader/> : <ImageList sx={{ width: "%100", height: 200, justifyContent: "center", alignItems: "center" }} cols={3} rowHeight={164}>
+          {recipe.photos.map((photo) => (
+            
+            <ImageListItem key={photo.url}>
+              <img
+                src={photo.url}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                
+                
+              />   
+            </ImageListItem>
+          ))}
+        </ImageList>}
         
+      </CardContent>
+      <CardActions sx={{ display: "flex", justifyContent: "end" }}>
+      {recipe.fav ? <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
+          <FavoriteIcon sx={{color: "#8b9dad"}}/>
+        </IconButton> : <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
+          <FavoriteIcon sx={{color: "#0b1218"}}/>
+        </IconButton>}
       </CardActions>
-      
-    </Card>: (recipe.user !== undefined && recipe.user !== null ) ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344"}}>
+
+    </Card> : (recipe.user !== undefined && recipe.user !== null) ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
@@ -114,47 +201,82 @@ const RecipeDetailItem = ({recipe}) => {
           </Avatar>
         }
         title={recipe.title}
-        titleTypographyProps={{color: "#a8add3"}}
-        subheader={`${recipe.user.username ? "por "+ recipe.user.username : ""}`}
-        subheaderTypographyProps={{color: "#a8add3"}}
+        titleTypographyProps={{ color: "#a8add3" }}
+        subheader={`${recipe.user.username ? "por " + recipe.user.username : ""}`}
+        subheaderTypographyProps={{ color: "#a8add3" }}
         action={
-          <IconButton aria-label='Editar' onClick={()=>setEdit(!edit)}>
-            <Edit sx={{color: "#0b1218"}}/>
+          <IconButton aria-label='Editar' onClick={() => setEdit(!edit)}>
+            <Edit sx={{ color: "#0b1218" }} />
           </IconButton>
         }
       />
       <CardContent>
-      <TextField defaultValue={recipe.title} multiline sx={{width: "100%"}} inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} id="outlined-basic" label="Titulo" variant="outlined" onChange={({target})=>setTitulo(target.value)}/>
+        <TextField defaultValue={recipe.title} multiline sx={{ width: "100%" }} inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} id="outlined-basic" label="Titulo" variant="outlined" onChange={({ target }) => setTitulo(target.value)} />
       </CardContent>
       <CardContent>
-      <TextField defaultValue={recipe.description} multiline sx={{width: "100%"}} inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} id="outlined-basic" label="Descripcion" variant="outlined" onChange={({target})=>setDescripcion(target.value)}/>
+        <TextField defaultValue={recipe.description} multiline sx={{ width: "100%" }} inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} id="outlined-basic" label="Descripcion" variant="outlined" onChange={({ target }) => setDescripcion(target.value)} />
       </CardContent>
       <CardContent>
-      <TextField defaultValue={recipe.category}  sx={{width: "100%"}} id="outlined-basic" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} label="Categoria" variant="outlined" onChange={({target})=>setCategoria(target.value)}/>
+        <TextField defaultValue={recipe.category} sx={{ width: "100%" }} id="outlined-basic" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} label="Categoria" variant="outlined" onChange={({ target }) => setCategoria(target.value)} />
       </CardContent>
       <CardContent>
-      <TextField defaultValue={recipe.preparationTime} sx={{width: "100%"}} id="outlined-basic" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} label="Tiempo de preparacion" variant="outlined" onChange={({target})=>setTiempo(target.value)}/>
+        <TextField defaultValue={recipe.preparationTime} sx={{ width: "100%" }} id="outlined-basic" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} label="Tiempo de preparacion" variant="outlined" onChange={({ target }) => setTiempo(target.value)} />
       </CardContent>
       <CardContent>
-      <TextField defaultValue={recipe.ingredients} sx={{width: "100%"}} id="outlined-basic" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} label="Ingredientes" variant="outlined" onChange={({target})=>setIngredientes(target.value)}/>
+        <TextField defaultValue={recipe.ingredients} sx={{ width: "100%" }} id="outlined-basic" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} label="Ingredientes" variant="outlined" onChange={({ target }) => setIngredientes(target.value)} />
       </CardContent>
+
+      <CardContent>
+        <Typography paragraph color="#a8add3">Pasos:</Typography>
+        <TextField defaultValue={recipe.steps} multiline sx={{ width: "100%" }} id="outlined-basic" label="Pasos" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} variant="outlined" onChange={({ target }) => setPasos(target.value)} />
+      </CardContent>
+      <CardContent sx={{alignItems: "center", justifyContent: "center", alignSelf: "center", justifySelf: "center"}}>
+        <ImageList sx={{ width: "%100", height: 200, justifyContent: "center", alignItems: "center" }} cols={3} rowHeight={164}>
+          {photos.map((photo) => (
+            
+            <ImageListItem key={photo.url}>
+              <img
+                src={photo.url}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                
+                
+              />
+              <Button color='error' onClick={()=>deleteImg(photo)}><DeleteOutline/></Button>   
+            </ImageListItem>
+          ))}
+        </ImageList>
+        {images.length !== 0 && <ImageList sx={{ width: "100%", height: 300}} cols={3} rowHeight={164}>
+        {images.map((item) => (
+          <ImageListItem key={item.file.name}>
+            <img
+              src={item.url}
+              width="300"
+              height="300"
+              loading="lazy"
+            />
+            <Button color='error' onClick={()=>onDeleteImage(item.url)}><DeleteOutline/></Button>  
+          </ImageListItem>
+        ))}
+      </ImageList>}
+        <input accept="image/*" type='file' onChange={event => onChangeFile(event)} />
+      <Button variant="contained" onClick={()=>onAddImage()}><Add/></Button>
       
-      <CardContent>
-          <Typography paragraph color="#a8add3">Pasos:</Typography>
-          <TextField defaultValue={recipe.steps}  multiline sx={{width: "100%"}} id="outlined-basic" label="Pasos" inputProps={{ style: { color: "white" } }} InputLabelProps={{ style: { color: "gray" } }} variant="outlined" onChange={({target})=>setPasos(target.value)}/>
-        </CardContent>
-        <CardActions sx={{display: "flex", justifyContent: "end"}}>
-        <IconButton aria-label="Guardar cambios" onClick={()=>toEditRecipe()}>
-          <Save sx={{color: "#0b1218"}}/>
+      </CardContent>
+      <CardActions sx={{ display: "flex", justifyContent: "end" }}>
+        <IconButton aria-label="Guardar cambios" onClick={() => toEditRecipe()}>
+          <Save sx={{ color: "#0b1218" }} />
         </IconButton>
-        <IconButton aria-label="Agregar a favoritos">
+        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
+          <FavoriteIcon sx={{color: "#8b9dad"}}/>
+        </IconButton> : <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
           <FavoriteIcon sx={{color: "#0b1218"}}/>
-        </IconButton>
-        
-        
+        </IconButton>}
+
+
       </CardActions>
-      
-    </Card> :<Loader/> 
+
+    </Card> : <Loader />
   )
 }
 

@@ -7,7 +7,8 @@ export const authSlice = createSlice({
 
             username: "",
             userId: 0,
-            usersFollowing: []
+            usersFollowing: [],
+            favoriteRecipes: []
 
         }
     },
@@ -39,10 +40,28 @@ export const authSlice = createSlice({
             }
             localStorage.setItem('user', JSON.stringify(state.user));
 
+        },
+        setFavs: (state, action) =>{
+
+            state.user.favoriteRecipes = action.payload.recipes
+
+        },
+        setFavsRecipes: (state, action)=>{
+            let recetaFav = action.payload.recipe;
+            let recetaFind = state.user.favoriteRecipes.find(recipe => recipe.idRecipe === recetaFav.idRecipe);
+            if(!recetaFind){
+                state.user.favoriteRecipes.push(recetaFav);
+            }else{
+
+                let index = state.user.favoriteRecipes.indexOf(recetaFind);
+                state.user.favoriteRecipes.splice(index, 1);
+
+            }
+            localStorage.setItem('user', JSON.stringify(state.user));
         }
     }
 });
 
 
 
-export const { toLoginUser,unLoginUser,setUsersFollowing } = authSlice.actions;
+export const { toLoginUser,unLoginUser,setUsersFollowing, setFavsRecipes,setFavs } = authSlice.actions;

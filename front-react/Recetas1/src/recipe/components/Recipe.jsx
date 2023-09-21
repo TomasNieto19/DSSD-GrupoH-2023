@@ -12,10 +12,14 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { favRecipeThunk } from '../../store/receta/thunksRecipe';
 
 export default function Recipe({ recipe }) {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {user}= useSelector(state=> state.auth);
   let hr = 0;
   let min = 0;
   if (recipe) {
@@ -26,6 +30,12 @@ export default function Recipe({ recipe }) {
 
 
     navigate(`/recipe/${id}`);
+
+  }
+
+  const toFavRecipe = (id, recipe) =>{
+
+    dispatch(favRecipeThunk(id, recipe));
 
   }
 
@@ -70,9 +80,11 @@ export default function Recipe({ recipe }) {
           Ver detalle
         </Typography>
         </Button>
-        <IconButton aria-label="Agregar a favoritos" >
+        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
+          <FavoriteIcon sx={{color: "#8b9dad"}}/>
+        </IconButton> : <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
           <FavoriteIcon sx={{color: "#0b1218"}}/>
-        </IconButton>
+        </IconButton>}
         
       </CardActions>
 

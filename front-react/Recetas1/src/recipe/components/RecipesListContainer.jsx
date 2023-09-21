@@ -9,8 +9,6 @@ const RecipesListContainer = () => {
 
     const dispatch = useDispatch();
   const {isLoading, recipes}= useSelector(state=> state.recipe);
-  console.log(recipes);
-
   useEffect(() => {
     dispatch(getRecipes());
   }, [])
@@ -18,8 +16,8 @@ const RecipesListContainer = () => {
   return (
     <Container sx={{minWidth:'80%', minHeight: '100%'}} >
       
-        {isLoading && <Loader/>}
-        <RecipesList recipes={recipes}/>
+        {isLoading ? <Loader/> : <RecipesList recipes={recipes}/>}
+        
         </Container>
     
   )

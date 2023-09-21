@@ -18,7 +18,9 @@ const pages = [{
     text: "Add Recipe",
     value: "addRecipe"},{
         text: "Users",
-        value: "users"}];
+        value: "users"},
+    {text: "Favorite Recipes",
+value: "favorites"}];
 export const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const handleOpenNavMenu = (event) => {
