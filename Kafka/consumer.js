@@ -4,7 +4,6 @@ const kafka = new KafkaConfig();
 
 export const getKafkaMessages = async (req, res) => {
   
-  //const consumer = kafka.consumer({ groupId: "test" })
   const consumer = kafka.consumer;
 
   try {

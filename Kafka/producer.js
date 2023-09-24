@@ -1,10 +1,10 @@
-import { Kafka } from "kafkajs";
+import { KafkaConfig } from "./KafkaConfig.js";
 
-const kafka = new Kafka({clientId: "DSSD-GrupoH-2023", brokers: ["localhost:9092"]});
+const kafka = new KafkaConfig();
 
 export const produceMessageKafka = async (req, res) => {
 
-  const producer = kafka.producer();
+  const producer = kafka.producer;
   
   try {
 
