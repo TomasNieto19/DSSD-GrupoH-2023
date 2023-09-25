@@ -15,7 +15,7 @@ export const produceMessageKafka = async (req, res) => {
     const message = JSON.stringify(req.body);
    
     // 3 - Envia el mensaje al topico de Kafka
-    await producer.send({topic: "my-topic", messages:[{value: message}]})
+    await producer.send({topic: "my-topic2", messages:[{value: message}]})
    
     // 4 - Responde al cliente
     res.status(200).json({ message: "Mensaje recibido!" });
