@@ -32,10 +32,3 @@ export const qualificationProducer = async (req, res) => {
 
   }
 };
-/*
-REQ EXPECTED:
-{
-  "idRecipe": 1,
-  "score": 5
-}
-*/

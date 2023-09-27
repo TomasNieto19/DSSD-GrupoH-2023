@@ -37,11 +37,3 @@ export const commentsProducer = async (req, res) => {
 
   }
 };
-/*
-REQ EXPECTED:
-{
-  "idUserComment": 1,
-  "idRecipeComment": 2,
-  "comment": "Muy buena la receta"
-}
-*/
