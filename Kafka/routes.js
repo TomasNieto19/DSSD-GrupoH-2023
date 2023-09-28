@@ -5,6 +5,7 @@ import { commentsProducer } from "./Controllers/commentsProducer.js";
 import { qualificationProducer } from "./Controllers/qualificationProducer.js";
 import { favoriteRecipeProducer } from "./Controllers/favoriteRecipeProducer.js";
 import { commentsConsumer } from "./Controllers/commentsConsumer.js";
+import { recipesScoreConsummer } from "./Controllers/recipesScoreConsummer.js";
 
 const router = express.Router();
 
@@ -148,5 +149,25 @@ router.post("/kafka/favoriteRecipe", favoriteRecipeProducer);
  *                     type: string                  
  */
 router.get("/kafka/comments/:idReceta", commentsConsumer);
+
+/**
+ * @swagger
+ * /kafka/recipesScore:
+ *   get:
+ *     summary: Retorna las recetas y su puntaje promedio, de las que se encuentren en el tópico PopularidadReceta.
+ *     responses:
+ *       200:
+ *         description: Comentarios obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string
+ */
+router.get("/kafka/recipesScore", recipesScoreConsummer);
 
 export default router;

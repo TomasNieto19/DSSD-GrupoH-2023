@@ -30,7 +30,7 @@ export const commentsConsumer = async (req, res) => {
             // 5 - Se filtran los mensajes por el id de la receta
             if( JSON.parse(message.value.toString()).idRecipeComment == idRecipeParams ){
 
-                comments.push(JSON.parse(message.value.toString()))
+              comments.push(JSON.parse(message.value.toString()))
 
             }
 
