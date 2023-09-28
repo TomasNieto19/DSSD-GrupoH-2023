@@ -53,11 +53,23 @@ CREATE TABLE `favorite_recipes` (
         REFERENCES recipe (id_recipe)
 );
 
+CREATE TABLE `comments_recipes` (
+    `id_comments_recipes` INT NOT NULL AUTO_INCREMENT,
+    `id_user_comment` INT NOT NULL,
+    `id_recipe_comment` INT NOT NULL,
+    `comment` VARCHAR(16000) NOT NULL,
+    PRIMARY KEY (id_comments_recipes),
+    FOREIGN KEY (id_user_comment)
+        REFERENCES users (id_user),
+    FOREIGN KEY (id_recipe_comment)
+        REFERENCES recipe (id_recipe)
+);
+
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
 
-  INSERT INTO recipe (title, description, ingredients, category, steps, preparation_time, id_user) VALUES
+INSERT INTO recipe (title, description, ingredients, category, steps, preparation_time, id_user) VALUES
   ('Galletas veganas de chocolate',
    'Cookies veganas de textura suave con sabor a chocolate, aroma a naranja y chispas de chocolate negro que se derriten en tu boca.',
    '250 g de harina de trigo\n50 g de cacao en polvo\n140 g de margarina vegetal\n100 g de azúcar blanco\n100 g de azúcar moreno\n½ cucharita de levadura en polvo\nPiel de 4 naranjas\n100 ml de zumo de naranja\n200 g de chocolate negro en barra',
@@ -88,15 +100,20 @@ INSERT INTO users (name, email, username, password) VALUES
    1);
 
 INSERT INTO photo (url, id_recipe) VALUES
-("https://i.imgur.com/I1SyBTh.jpeg", 1),
-("https://i.imgur.com/d2F6BCW.jpeg", 1),
-("https://i.imgur.com/s8z6wDy.jpeg", 2),
-("https://i.imgur.com/CiXw8oo.jpeg", 2), 
-("https://i.imgur.com/aikou9b.jpeg", 3),
-("https://i.imgur.com/JTNYjR5.jpeg", 3), 
-("https://i.imgur.com/JS5eg4D.jpeg", 4),
-("https://i.imgur.com/Hf2Th3u.jpeg", 4);
+  ("https://i.imgur.com/I1SyBTh.jpeg", 1),
+  ("https://i.imgur.com/d2F6BCW.jpeg", 1),
+  ("https://i.imgur.com/s8z6wDy.jpeg", 2),
+  ("https://i.imgur.com/CiXw8oo.jpeg", 2), 
+  ("https://i.imgur.com/aikou9b.jpeg", 3),
+  ("https://i.imgur.com/JTNYjR5.jpeg", 3), 
+  ("https://i.imgur.com/JS5eg4D.jpeg", 4),
+  ("https://i.imgur.com/Hf2Th3u.jpeg", 4);
 
 INSERT INTO follows (id_follower, id_following) VALUES
-(1,2),
-(2,1);
+  (1,2),
+  (2,1);
+
+INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES
+  (1,1,"Muy buena receta"),
+  (1,2,"Excelente comida"),
+  (1,3,"Que rica!");
