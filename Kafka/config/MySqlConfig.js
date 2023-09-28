@@ -3,7 +3,7 @@ import { createConnection } from "mysql";
 const connection = createConnection({
   host: "localhost",
   user: "root",
-  password: "1911",
+  password: "root",
   database: "DSSDGrupoH2023",
 });
 
@@ -31,9 +31,9 @@ export function getUsuarios() {
   connection.end();
 }
 
-// PARA PROBAR, PEGAR ESTO EN EL INDEX.JS Y VER LA RESPUESTA EN LA CONSOLA.
+// PARA PROBAR ALGUN METODO, PEGAR ESTO EN EL INDEX.JS, DESCOMENTAR Y VER LA RESPUESTA EN LA CONSOLA.
 /*
-import { testConexion, getUsuarios } from "./MySqlConfig.js";
-testConexion();
+import { testConexion, getUsuarios } from "./config/MySqlConfig.js";
 getUsuarios();
+testConexion();
 */
