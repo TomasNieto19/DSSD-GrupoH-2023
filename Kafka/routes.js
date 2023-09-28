@@ -1,14 +1,16 @@
 import express from "express";
-import { produceMessageKafka } from "./producer.js";
-import { getKafkaMessages } from "./consumer.js";
-import { commentsProducer } from "./commentsProducer.js";
-import { qualificationProducer } from "./qualificationProducer.js";
+import { produceMessageKafka } from "./Controllers/producer.js";
+import { getKafkaMessages } from "./Controllers/consumer.js";
+import { commentsProducer } from "./Controllers/commentsProducer.js";
+import { qualificationProducer } from "./Controllers/qualificationProducer.js";
+import { favoriteRecipeProducer } from "./Controllers/favoriteRecipeProducer.js";
+import { commentsConsumer } from "./Controllers/commentsConsumer.js";
 
 const router = express.Router();
 
 /**
  * @swagger
- * /Productor:
+ * /kafka/Productor:
  *   post:
  *     summary: Enviar un mensaje a un tópico de Kafka.
  *     requestBody:
@@ -25,11 +27,11 @@ const router = express.Router();
  *       200:
  *         description: Mensaje recibido!
  */
-router.post("/Productor", produceMessageKafka);
+router.post("/kafka/Productor", produceMessageKafka);
 
 /**
  * @swagger
- * /Consumidor:
+ * /kafka/Consumidor:
  *   get:
  *     summary: Lee mensajes de un tópico de Kafka.
  *     responses:
@@ -45,13 +47,13 @@ router.post("/Productor", produceMessageKafka);
  *                   message:
  *                     type: string
  */
-router.get("/Consumidor", getKafkaMessages);
+router.get("/kafka/Consumidor", getKafkaMessages);
 
 /**
  * @swagger
- * /comments:
+ * /kafka/comments:
  *   post:
- *     summary: Envia los comentarios de una receta al tópico de comentarios.
+ *     summary: Envia los comentarios de una receta al tópico de comentarios y +1 al topico de popularidad de la receta.
  *     requestBody:
  *       description: Datos del comentario a enviar.
  *       required: true
@@ -70,13 +72,13 @@ router.get("/Consumidor", getKafkaMessages);
  *       200:
  *         description: Comentario recibido!
  */
-router.post("/comments", commentsProducer);
+router.post("/kafka/comments", commentsProducer);
 
 /**
  * @swagger
- * /qualification:
+ * /kafka/qualification:
  *   post:
- *     summary: Envia la calificación de una receta.
+ *     summary: Envia la calificación de una receta al topico PopularidadReceta.
  *     requestBody:
  *       description: Datos de la calificación a enviar.
  *       required: true
@@ -93,6 +95,58 @@ router.post("/comments", commentsProducer);
  *       200:
  *         description: Calificación recibida!
  */
-router.post("/qualification", qualificationProducer);
+router.post("/kafka/qualification", qualificationProducer);
+
+/**
+ * @swagger
+ * /kafka/favoriteRecipe:
+ *   post:
+ *     summary: Marcar o desmarcar una receta como favorita suma +-1 a la receta y al autor de la receta.
+ *     requestBody:
+ *       description: Datos a enviar.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idRecipe:
+ *                 type: integer
+ *               isFavorited:
+ *                 type: boolean
+ *               usernameRecipeCreator:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Mensaje de favorito recibido!
+ */
+router.post("/kafka/favoriteRecipe", favoriteRecipeProducer);
+
+/**
+ * @swagger
+ * /kafka/comments/{idReceta}:
+ *   get:
+ *     summary: Obtener comentarios de una receta por su ID.
+ *     parameters:
+ *       - in: path
+ *         name: idReceta
+ *         required: true
+ *         description: ID de la receta para la que se desean obtener comentarios.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Comentarios obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string                  
+ */
+router.get("/kafka/comments/:idReceta", commentsConsumer);
 
 export default router;

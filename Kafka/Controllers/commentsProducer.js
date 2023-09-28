@@ -1,4 +1,4 @@
-import { KafkaConfig } from "./KafkaConfig.js";
+import { KafkaConfig } from "../config/KafkaConfig.js";
 
 const kafka = new KafkaConfig();
 
@@ -16,15 +16,15 @@ export const commentsProducer = async (req, res) => {
     const message = JSON.stringify(req.body);
 
     // 3 - Envia el mensaje al topico de Kafka
-    await producer.send({topic: "comments", messages:[{value: message}]})
+    await producer.send({topic: "Comentarios", messages:[{value: message}]})
    
     // 4 - Responde al cliente
     res.status(200).json({ message: "Comentario recibido!" });
 
     // 5 - Envia la popularidad de la receta (Punto 4a parte 2)
-    const messageScore = { idRecipe: req.body.idRecipeComment, score: 1 };
+    const messagePopularidadReceta = { idRecipe: req.body.idRecipeComment, score: 1 };
 
-    await producer.send({topic: "popularity-recipe", messages:[{value: JSON.stringify(messageScore)}]});
+    await producer.send({topic: "PopularidadReceta", messages:[{value: JSON.stringify(messagePopularidadReceta)}]});
 
   } catch (error) { 
 

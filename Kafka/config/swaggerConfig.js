@@ -6,7 +6,7 @@ const options = {
     info: {
       title: "DSSD-GrupoH-2023",
       version: "1.0.0",
-      description: "API Node js + Kafka",
+      description: "API Node js + Apache Kafka",
     },
   },
   apis: ["./routes.js"],

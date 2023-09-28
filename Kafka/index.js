@@ -1,7 +1,7 @@
+import specs from "./config/swaggerConfig.js";
 import swaggerUi from "swagger-ui-express";
 import bodyParser from "body-parser";
 import routes from "./routes.js";
-import specs from "./swagger.js";
 import express from "express";
 
 const app = express();
