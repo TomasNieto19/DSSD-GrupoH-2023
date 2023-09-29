@@ -2,14 +2,6 @@ import { KafkaConfig } from "../config/KafkaConfig.js";
 
 const kafka = new KafkaConfig();
 
-/* BODY EXPECTED
-{
-    idRecipe: 1,
-    isFavorited: true,
-    usernameRecipeCreator: "username"
-}
-*/
-
 // Punto 4c
 export const favoriteRecipeProducer = async (req, res) => {
 
@@ -35,13 +27,10 @@ export const favoriteRecipeProducer = async (req, res) => {
     // 6 - Responde al cliente
     res.status(200).json({ message: "Mensaje popularidad receta recibido!" });
 
+    // VALIDAR CON EL PUNTO 3 (Seba) ( NOMBRE DEL TOPICO Y NOMBRE DE LOS CAMPOS DEL MENSAJE QUE SE ENVIAN A KAFKA username y score?  )
 
-
-
-
-    // VALIDAR CON EL PUNTO 3 ( NOMBRE DEL TOPICO Y NOMBRE DE LOS CAMPOS DEL MENSAJE )
     // 7 - Se crea el mensaje a enviar al topic "PopularidadUsuario" 
-    const messagePopularidadUsuario = { username: req.body.usernameRecipeCreator, score: recetaPuntaje };
+    const messagePopularidadUsuario = { idUser: req.body.userIdCreator, follow: recetaPuntaje };
 
     // 8 - Envia el mensaje al topic "PopularidadUsuario" 
     await producer.send({topic: "PopularidadUsuario", messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});

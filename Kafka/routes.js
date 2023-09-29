@@ -115,8 +115,8 @@ router.post("/kafka/qualification", qualificationProducer);
  *                 type: integer
  *               isFavorited:
  *                 type: boolean
- *               usernameRecipeCreator:
- *                 type: string
+ *               userIdCreator:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Mensaje de favorito recibido!

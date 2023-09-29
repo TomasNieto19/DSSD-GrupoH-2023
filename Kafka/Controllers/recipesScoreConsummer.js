@@ -2,6 +2,7 @@ import { KafkaConfig } from "../config/KafkaConfig.js";
 
 const kafka = new KafkaConfig();
 
+// 4d parte 1
 export const recipesScoreConsummer = async (req, res) => {
   
   const consumer = kafka.consumer;
@@ -12,7 +13,7 @@ export const recipesScoreConsummer = async (req, res) => {
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "PopularidadReceta2", fromBeginning: true})
+    await consumer.subscribe({topic: "PopularidadReceta", fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
     consumer.run({
