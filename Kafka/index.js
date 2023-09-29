@@ -1,14 +1,21 @@
 import express from "express";
+import cors from "cors";
 import bodyParser from "body-parser";
-import { produceMessageKafka } from "./producer.js";
-import { getKafkaMessages } from "./consumer.js";
+import { enviarComentarioKafka, produceMessageKafka } from "./producer.js";
+import { getComments, getFollowersUser} from "./consumer.js";
 
 const app = express();
 
 const jsonParser = bodyParser.json();
 
-app.post('/Productor', jsonParser, produceMessageKafka);
+app.use(cors());
 
-app.get('/Consumidor', getKafkaMessages);
+app.post('/enviarSeguidor', jsonParser, produceMessageKafka);
 
-app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));
+app.get('/traerSeguidores', getFollowersUser);
+
+app.post('/enviarComentario', jsonParser, enviarComentarioKafka);
+
+app.get('/traerComentarios/:id', getComments);
+
+app.listen(8082, () => console.log("\nServer is running on port 8082.\n"));

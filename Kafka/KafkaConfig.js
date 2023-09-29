@@ -7,7 +7,7 @@ class KafkaConfig {
       clientId: "DSSD-GrupoH-2023",
       brokers: ["localhost:9092"]
     });
-    this.producer = this.kafka.producer();
+    this.producer = this.kafka.producer({ groupId: "Consumer" });
     this.consumer = this.kafka.consumer({ groupId: "Consumer" });
   }
 }
