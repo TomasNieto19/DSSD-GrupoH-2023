@@ -27,13 +27,11 @@ export const favoriteRecipeProducer = async (req, res) => {
     // 6 - Responde al cliente
     res.status(200).json({ message: "Mensaje popularidad receta recibido!" });
 
-    // VALIDAR CON EL PUNTO 3 (Seba) ( NOMBRE DEL TOPICO Y NOMBRE DE LOS CAMPOS DEL MENSAJE QUE SE ENVIAN A KAFKA username y score?  )
-
     // 7 - Se crea el mensaje a enviar al topic "PopularidadUsuario" 
     const messagePopularidadUsuario = { idUser: req.body.userIdCreator, follow: recetaPuntaje };
 
     // 8 - Envia el mensaje al topic "PopularidadUsuario" 
-    await producer.send({topic: "PopularidadUsuario", messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});
+    await producer.send({topic: "followersPopularity10", messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});
 
   } catch (error) {
 

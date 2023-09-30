@@ -7,44 +7,41 @@ export const commentsConsumer = async (req, res) => {
   
   const consumer = kafka.consumer;
 
+  const {id} = req.params;
+
   try {
 
     // 1 - Conexion con el servidor de Kafka
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "Comentarios", fromBeginning: true})
+    await consumer.subscribe({topic: "Comentarios1", fromBeginning: true})
 
-    // 3 - Obtiene el id de la receta para obtener los comentarios
-    const idRecipeParams = req.params.idReceta
-
-    // 4 - Se consumen los mensajes del topico comentarios
+    // 3 - Se consumen los mensajes del topico
     consumer.run({
       eachBatchAutoResolve: false,
       eachBatch: async ({ batch }) => {
 
-        let comments = []
+        let messsages = []
 
         for (let message of batch.messages) {
 
-            // 5 - Se filtran los mensajes por el id de la receta
-            if( JSON.parse(message.value.toString()).idRecipeComment == idRecipeParams ){
-
-              comments.push(JSON.parse(message.value.toString()))
-
-            }
+          let messageObj = JSON.parse(message.value.toString());
+      
+          if(messageObj.idRecipeComment == id){
+            messsages.push(messageObj.comment);
+          }
 
         }
-
-        res.json(comments)
-
+        
+        res.json(messsages)
         consumer.disconnect()
       }
     })
     
   } catch (error) {
 
-    console.error("ERROR EN CONSUMER: " + error);
+    console.error("ERROR EN CONSUMER COMENTARIOS DE RECETA POR ID: " + error);
 
   }
 };

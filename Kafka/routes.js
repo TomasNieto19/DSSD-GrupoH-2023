@@ -6,6 +6,8 @@ import { qualificationProducer } from "./Controllers/qualificationProducer.js";
 import { favoriteRecipeProducer } from "./Controllers/favoriteRecipeProducer.js";
 import { commentsConsumer } from "./Controllers/commentsConsumer.js";
 import { recipesScoreConsummer } from "./Controllers/recipesScoreConsummer.js";
+import { sendFollowerProducer } from "./Controllers/sendFollowerProducer.js";
+import { getFollowersUser } from "./Controllers/getFollowersUser.js";
 
 const router = express.Router();
 
@@ -125,7 +127,7 @@ router.post("/kafka/favoriteRecipe", favoriteRecipeProducer);
 
 /**
  * @swagger
- * /kafka/comments/{idReceta}:
+ * /kafka/comments/{id}:
  *   get:
  *     summary: Obtener comentarios de una receta por su ID.
  *     parameters:
@@ -148,7 +150,7 @@ router.post("/kafka/favoriteRecipe", favoriteRecipeProducer);
  *                   comment:
  *                     type: string                  
  */
-router.get("/kafka/comments/:idReceta", commentsConsumer);
+router.get("/kafka/comments/:id", commentsConsumer);
 
 /**
  * @swagger
@@ -169,5 +171,48 @@ router.get("/kafka/comments/:idReceta", commentsConsumer);
  *                     type: string
  */
 router.get("/kafka/recipesScore", recipesScoreConsummer);
+
+/**
+ * @swagger
+ * /kafka/sendFollower:
+ *   post:
+ *     summary: Al seguir o dejar de seguir a un usuario, se envia un mensaje al topico de popularidad de usuario +-1.
+ *     requestBody:
+ *       description: Datos a enviar.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idUser:
+ *                 type: integer
+ *               isFollowed:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Mensajerecibido!
+ */
+router.post("/kafka/sendFollower", sendFollowerProducer);
+
+/**
+ * @swagger
+ * /kafka/followersUser:
+ *   get:
+ *     summary: Retorna la popularidad de los usuarios.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string
+ */
+router.get("/kafka/followersUser", getFollowersUser)
 
 export default router;
