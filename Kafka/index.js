@@ -1,21 +1,18 @@
+import specs from "./config/swaggerConfig.js";
+import swaggerUi from "swagger-ui-express";
+import bodyParser from "body-parser";
+import routes from "./routes.js";
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
-import { enviarComentarioKafka, produceMessageKafka } from "./producer.js";
-import { getComments, getFollowersUser} from "./consumer.js";
 
 const app = express();
 
-const jsonParser = bodyParser.json();
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
+
+app.use(bodyParser.json());
+
+app.use("/", routes);
 
 app.use(cors());
 
-app.post('/enviarSeguidor', jsonParser, produceMessageKafka);
-
-app.get('/traerSeguidores', getFollowersUser);
-
-app.post('/enviarComentario', jsonParser, enviarComentarioKafka);
-
-app.get('/traerComentarios/:id', getComments);
-
-app.listen(8082, () => console.log("\nServer is running on port 8082.\n"));
+app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));
