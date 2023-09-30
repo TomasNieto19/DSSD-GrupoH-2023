@@ -79,6 +79,33 @@ router.post("/kafka/comments", commentsProducer);
 
 /**
  * @swagger
+ * /kafka/comments/{id}:
+ *   get:
+ *     summary: Obtener comentarios de una receta por su ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la receta para la que se desean obtener comentarios.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Comentarios obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string                  
+ */
+router.get("/kafka/comments/:id", commentsConsumer);
+
+/**
+ * @swagger
  * /kafka/qualification:
  *   post:
  *     summary: Envia la calificación de una receta al topico PopularidadReceta.
@@ -124,33 +151,6 @@ router.post("/kafka/qualification", qualificationProducer);
  *         description: Mensaje de favorito recibido!
  */
 router.post("/kafka/favoriteRecipe", favoriteRecipeProducer);
-
-/**
- * @swagger
- * /kafka/comments/{id}:
- *   get:
- *     summary: Obtener comentarios de una receta por su ID.
- *     parameters:
- *       - in: path
- *         name: idReceta
- *         required: true
- *         description: ID de la receta para la que se desean obtener comentarios.
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Comentarios obtenidos correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   comment:
- *                     type: string                  
- */
-router.get("/kafka/comments/:id", commentsConsumer);
 
 /**
  * @swagger

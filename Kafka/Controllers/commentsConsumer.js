@@ -7,7 +7,7 @@ export const commentsConsumer = async (req, res) => {
   
   const consumer = kafka.consumer;
 
-  const {id} = req.params;
+  const id = req.params.id;
 
   try {
 
@@ -15,7 +15,7 @@ export const commentsConsumer = async (req, res) => {
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "Comentarios1", fromBeginning: true})
+    await consumer.subscribe({topic: "Comentarios", fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
     consumer.run({
@@ -27,7 +27,7 @@ export const commentsConsumer = async (req, res) => {
         for (let message of batch.messages) {
 
           let messageObj = JSON.parse(message.value.toString());
-      
+     
           if(messageObj.idRecipeComment == id){
             messsages.push(messageObj.comment);
           }

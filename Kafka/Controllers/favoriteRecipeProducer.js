@@ -31,7 +31,7 @@ export const favoriteRecipeProducer = async (req, res) => {
     const messagePopularidadUsuario = { idUser: req.body.userIdCreator, follow: recetaPuntaje };
 
     // 8 - Envia el mensaje al topic "PopularidadUsuario" 
-    await producer.send({topic: "followersPopularity10", messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});
+    await producer.send({topic: "PopularidadUsuario", messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});
 
   } catch (error) {
 
