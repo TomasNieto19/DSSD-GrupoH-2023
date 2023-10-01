@@ -1,14 +1,18 @@
-import express from "express";
+import specs from "./config/swaggerConfig.js";
+import swaggerUi from "swagger-ui-express";
 import bodyParser from "body-parser";
-import { produceMessageKafka } from "./producer.js";
-import { getKafkaMessages } from "./consumer.js";
+import routes from "./routes.js";
+import express from "express";
+import cors from "cors";
 
 const app = express();
 
-const jsonParser = bodyParser.json();
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
 
-app.post('/Productor', jsonParser, produceMessageKafka);
+app.use(bodyParser.json());
 
-app.get('/Consumidor', getKafkaMessages);
+app.use("/", routes);
+
+app.use(cors());
 
 app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));

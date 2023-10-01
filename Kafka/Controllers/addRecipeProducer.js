@@ -1,11 +1,13 @@
-import { KafkaConfig } from "./KafkaConfig.js";
+import { KafkaConfig } from "../config/KafkaConfig.js";
 
 const kafka = new KafkaConfig();
 
-export const produceMessageKafka = async (req, res) => {
+export const addRecipeProducer = async (req, res) => {
+    
   const producer = kafka.producer;
 
   try {
+    
     // 1 - Conexión con el servidor de Kafka
     await producer.connect();
 
@@ -23,14 +25,19 @@ export const produceMessageKafka = async (req, res) => {
     const message = JSON.stringify(recipeInfo);
 
     // 4 - Enviar el mensaje al tópico de Kafka "Novedades"
-    await producer.send({ topic: "newnovedades", messages: [{ value: message }] });
+    await producer.send({topic: "Novedades", messages: [{ value: message }]});
 
     // 5 - Responder al cliente
     res.status(200).json({ message: "La receta se ha publicado con éxito!" });
+
   } catch (error) {
+
     console.error("ERROR EN PRODUCER: " + error);
+
   } finally {
+
     // 6 - Desconexión del servidor Kafka
     await producer.disconnect();
+
   }
 };
