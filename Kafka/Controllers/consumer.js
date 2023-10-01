@@ -19,15 +19,15 @@ export const getKafkaMessages = async (req, res) => {
       eachBatchAutoResolve: false,
       eachBatch: async ({ batch }) => {
 
-        let messsages = []
+        let messages = []
 
         for (let message of batch.messages) {
 
-          messsages.push(JSON.parse(message.value.toString()))
+          messages.push(JSON.parse(message.value.toString()))
 
         }
 
-        res.json(messsages)
+        res.json(messages)
 
         consumer.disconnect()
       }

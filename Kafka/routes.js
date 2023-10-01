@@ -8,6 +8,8 @@ import { commentsConsumer } from "./Controllers/commentsConsumer.js";
 import { recipesScoreConsummer } from "./Controllers/recipesScoreConsummer.js";
 import { sendFollowerProducer } from "./Controllers/sendFollowerProducer.js";
 import { getFollowersUser } from "./Controllers/getFollowersUser.js";
+import { addRecipeProducer } from "./Controllers/addRecipeProducer.js";
+import { recipesConsumer } from "./Controllers/recipesConsumer.js";
 
 const router = express.Router();
 
@@ -214,5 +216,50 @@ router.post("/kafka/sendFollower", sendFollowerProducer);
  *                     type: string
  */
 router.get("/kafka/followersUser", getFollowersUser)
+
+/**
+ * @swagger
+ * /kafka/addRecipe:
+ *   post:
+ *     summary: Al añadir una receta nueva, se envia un mensaje al topico Novedades.
+ *     requestBody:
+ *       description: Datos a enviar.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               recipeTitle:
+ *                 type: string
+ *               firstPhotoUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Mensajerecibido!
+ */
+router.post("/kafka/addRecipe", addRecipeProducer)
+
+/**
+ * @swagger
+ * /kafka/recipes:
+ *   get:
+ *     summary: Retorna las recetas del topico Novedades.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string
+ */
+router.get("/kafka/recipes", recipesConsumer)
 
 export default router;
