@@ -2,6 +2,7 @@ import { KafkaConfig } from "../config/KafkaConfig.js";
 
 const kafka = new KafkaConfig();
 
+// Punto 1
 export const recipesConsumer = async (req, res) => {
 
   const consumer = kafka.consumer;

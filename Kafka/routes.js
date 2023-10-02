@@ -10,6 +10,7 @@ import { sendFollowerProducer } from "./Controllers/sendFollowerProducer.js";
 import { getFollowersUser } from "./Controllers/getFollowersUser.js";
 import { addRecipeProducer } from "./Controllers/addRecipeProducer.js";
 import { recipesConsumer } from "./Controllers/recipesConsumer.js";
+import { lastRecipesConsumer } from "./Controllers/lastRecipesConsumer.js";
 
 const router = express.Router();
 
@@ -102,7 +103,7 @@ router.post("/kafka/comments", commentsProducer);
  *                 type: object
  *                 properties:
  *                   comment:
- *                     type: string                  
+ *                     type: string
  */
 router.get("/kafka/comments/:id", commentsConsumer);
 
@@ -215,7 +216,7 @@ router.post("/kafka/sendFollower", sendFollowerProducer);
  *                   comment:
  *                     type: string
  */
-router.get("/kafka/followersUser", getFollowersUser)
+router.get("/kafka/followersUser", getFollowersUser);
 
 /**
  * @swagger
@@ -240,7 +241,7 @@ router.get("/kafka/followersUser", getFollowersUser)
  *       200:
  *         description: Mensajerecibido!
  */
-router.post("/kafka/addRecipe", addRecipeProducer)
+router.post("/kafka/addRecipe", addRecipeProducer);
 
 /**
  * @swagger
@@ -260,6 +261,26 @@ router.post("/kafka/addRecipe", addRecipeProducer)
  *                   comment:
  *                     type: string
  */
-router.get("/kafka/recipes", recipesConsumer)
+router.get("/kafka/recipes", recipesConsumer);
+
+/**
+ * @swagger
+ * /kafka/lastRecipes:
+ *   get:
+ *     summary: Retorna las ultimas 5 recetas del topico Novedades.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string
+ */
+router.get("/kafka/lastRecipes", lastRecipesConsumer);
 
 export default router;
