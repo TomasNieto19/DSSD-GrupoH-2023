@@ -10,12 +10,15 @@ import { sendFollowerProducer } from "./Controllers/sendFollowerProducer.js";
 import { getFollowersUser } from "./Controllers/getFollowersUser.js";
 import { voteNotVote } from "./Controllers/voteNotVoteConsumer.js";
 import { recipesScoreConsummerId } from "./Controllers/recipesScoreConsummerId.js";
+import { addRecipeProducer } from "./Controllers/addRecipeProducer.js";
+import { recipesConsumer } from "./Controllers/recipesConsumer.js";
+import { lastRecipesConsumer } from "./Controllers/lastRecipesConsumer.js";
 
 const router = express.Router();
 
 /**
  * @swagger
- * /kafka/Productor:
+ * /kafka/Productor
  *   post:
  *     summary: Enviar un mensaje a un tópico de Kafka.
  *     requestBody:
@@ -102,7 +105,7 @@ router.post("/kafka/comments", commentsProducer);
  *                 type: object
  *                 properties:
  *                   comment:
- *                     type: string                  
+ *                     type: string
  */
 router.get("/kafka/comments/:id", commentsConsumer);
 
@@ -217,7 +220,72 @@ router.post("/kafka/sendFollower", sendFollowerProducer);
  *                   comment:
  *                     type: string
  */
-router.get("/kafka/followersUser", getFollowersUser)
+router.get("/kafka/followersUser", getFollowersUser);
+
+/**
+ * @swagger
+ * /kafka/addRecipe:
+ *   post:
+ *     summary: Al añadir una receta nueva, se envia un mensaje al topico Novedades.
+ *     requestBody:
+ *       description: Datos a enviar.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               recipeTitle:
+ *                 type: string
+ *               firstPhotoUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Mensajerecibido!
+ */
+router.post("/kafka/addRecipe", addRecipeProducer);
+
+/**
+ * @swagger
+ * /kafka/recipes:
+ *   get:
+ *     summary: Retorna las recetas del topico Novedades.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string
+ */
+router.get("/kafka/recipes", recipesConsumer);
+
+/**
+ * @swagger
+ * /kafka/lastRecipes:
+ *   get:
+ *     summary: Retorna las ultimas 5 recetas del topico Novedades.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   comment:
+ *                     type: string
+ */
+router.get("/kafka/lastRecipes", lastRecipesConsumer);
 
 /**
  * @swagger
