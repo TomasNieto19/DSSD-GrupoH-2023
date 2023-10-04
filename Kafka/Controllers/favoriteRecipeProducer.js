@@ -16,10 +16,10 @@ export const favoriteRecipeProducer = async (req, res) => {
     const isFavorited = req.body.isFavorited;
 
     // 3 - Determina el puntaje a enviar al topic "PopularidadReceta"
-    const recetaPuntaje = isFavorited ? 1 : -1;
+    const recetaPuntaje = !isFavorited ? 1 : -1;
 
     // 4 - Se crea el mensaje a enviar al topic "PopularidadReceta" 
-    const messagePopularidadReceta = { idRecipe: req.body.idRecipeComment, score: recetaPuntaje };
+    const messagePopularidadReceta = { idRecipe: req.body.idRecipe, score: recetaPuntaje };
 
     // 5 - Envia el mensaje al topic "PopularidadReceta" 
     await producer.send({topic: "PopularidadReceta", messages:[{value: JSON.stringify(messagePopularidadReceta)}]});
