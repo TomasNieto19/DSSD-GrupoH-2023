@@ -18,7 +18,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /kafka/Productor
+ * /kafka/Productor:
  *   post:
  *     summary: Enviar un mensaje a un tópico de Kafka.
  *     requestBody:
