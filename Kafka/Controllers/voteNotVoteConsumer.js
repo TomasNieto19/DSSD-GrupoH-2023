@@ -3,11 +3,12 @@ import { KafkaConfig } from "../config/KafkaConfig.js";
 const kafka = new KafkaConfig();
 
 // Punto 4d
-export const commentsConsumer = async (req, res) => {
+export const voteNotVote = async (req, res) => {
   
   const consumer = kafka.consumer;
 
-  const id = req.params.id;
+  const idUser = req.params.idUser;
+  const idRecipe = req.params.idRecipe;
 
   try {
 
@@ -15,21 +16,21 @@ export const commentsConsumer = async (req, res) => {
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "Comentarios", fromBeginning: true})
+    await consumer.subscribe({topic: "PopularidadReceta", fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
     consumer.run({
       eachBatchAutoResolve: false,
       eachBatch: async ({ batch }) => {
 
-        let messsages = []
+        let messsages = {vote: false}
 
         for (let message of batch.messages) {
 
           let messageObj = JSON.parse(message.value.toString());
      
-          if(messageObj.idRecipeComment == id){
-            messsages.push(messageObj);
+          if(messageObj.idUser == idUser && messageObj.idRecipe == idRecipe){
+            messsages = {vote: true};
           }
 
         }

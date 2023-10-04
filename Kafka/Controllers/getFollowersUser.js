@@ -41,7 +41,7 @@ export const getFollowersUser = async (req, res) => {
             messsages.push(messageObj);
           }
         }
-
+        messsages.sort((a, b) => b.follow - a.follow)
         res.json(messsages);
         consumer.disconnect();
 

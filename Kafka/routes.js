@@ -8,6 +8,8 @@ import { commentsConsumer } from "./Controllers/commentsConsumer.js";
 import { recipesScoreConsummer } from "./Controllers/recipesScoreConsummer.js";
 import { sendFollowerProducer } from "./Controllers/sendFollowerProducer.js";
 import { getFollowersUser } from "./Controllers/getFollowersUser.js";
+import { voteNotVote } from "./Controllers/voteNotVoteConsumer.js";
+import { recipesScoreConsummerId } from "./Controllers/recipesScoreConsummerId.js";
 
 const router = express.Router();
 
@@ -117,6 +119,8 @@ router.get("/kafka/comments/:id", commentsConsumer);
  *           schema:
  *             type: object
  *             properties:
+ *               idUser: 
+ *                 type: integer
  *               idRecipe:
  *                 type: integer
  *               score:
@@ -214,5 +218,49 @@ router.post("/kafka/sendFollower", sendFollowerProducer);
  *                     type: string
  */
 router.get("/kafka/followersUser", getFollowersUser)
+
+/**
+ * @swagger
+ * /kafka/getVoteNotVote/{idUser}/{idRecipe}:
+ *   get:
+ *     summary: Retorna si el usuario ya puntuó.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   vote:
+ *                     type: boolean
+ */
+
+router.get("/kafka/getVoteNotVote/:idUser/:idRecipe", voteNotVote);
+
+/**
+ * @swagger
+ * /kafka/recipesScoreId/{id}:
+ *   get:
+ *     summary: Retorna la puntuacion promedio de una receta por id.
+ *     responses:
+ *       200:
+ *         description: .
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   idRecipe:
+ *                     type: integer
+ *                   averageScore:
+ *                     type: integer
+ */
+
+router.get("/kafka/recipesScoreId/:id", recipesScoreConsummerId);
 
 export default router;
