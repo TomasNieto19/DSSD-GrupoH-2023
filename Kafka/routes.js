@@ -18,9 +18,9 @@ const router = express.Router();
 
 /**
  * @swagger
- * /kafka/Productor
+ * /kafka/Productor:
  *   post:
- *     summary: Enviar un mensaje a un tópico de Kafka.
+ *     summary: Envia un mensaje a un tópico de Kafka.
  *     requestBody:
  *       description: Datos del mensaje a enviar.
  *       required: true
@@ -76,6 +76,8 @@ router.get("/kafka/Consumidor", getKafkaMessages);
  *                 type: integer
  *               comment:
  *                 type: string
+ *               idUserRecipeCreator:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Comentario recibido!
@@ -122,7 +124,7 @@ router.get("/kafka/comments/:id", commentsConsumer);
  *           schema:
  *             type: object
  *             properties:
- *               idUser: 
+ *               idUser:
  *                 type: integer
  *               idRecipe:
  *                 type: integer
@@ -305,7 +307,6 @@ router.get("/kafka/lastRecipes", lastRecipesConsumer);
  *                   vote:
  *                     type: boolean
  */
-
 router.get("/kafka/getVoteNotVote/:idUser/:idRecipe", voteNotVote);
 
 /**
@@ -328,7 +329,6 @@ router.get("/kafka/getVoteNotVote/:idUser/:idRecipe", voteNotVote);
  *                   averageScore:
  *                     type: integer
  */
-
 router.get("/kafka/recipesScoreId/:id", recipesScoreConsummerId);
 
 export default router;

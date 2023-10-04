@@ -23,7 +23,7 @@ export const qualificationProducer = async (req, res) => {
 
   } catch (error) { 
 
-    console.error("ERROR EN PRODUCTOR COMENTARIOS: " + error);
+    console.error("ERROR EN PRODUCTOR CALIFICACION DE RECETA: " + error);
 
   } finally {
     
