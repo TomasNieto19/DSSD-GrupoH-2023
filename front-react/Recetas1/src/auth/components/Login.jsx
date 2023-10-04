@@ -1,10 +1,11 @@
 import { Google } from '@mui/icons-material'
 import { Button, Grid, Link, TextField, Typography } from '@mui/material'
 import { Link as RouterLink, useNavigate} from 'react-router-dom'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AuthLayout from './layout/AuthLayout'
 import { loginUserThunk } from '../../store/auth/thunksAuth'
 import { useDispatch } from 'react-redux'
+import { getUsers } from '../../store/user/thunksUser'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Login = () => {
   const toRecipes = () =>{
 
     dispatch(loginUserThunk(username, password));
+    dispatch(getUsers());
     navigate("/");
 
   }

@@ -1,7 +1,7 @@
-import { imgurApi, recetasApi } from "../../api/api";
+import { imgurApi, kafkaApi, recetasApi } from "../../api/api";
 import { setFavs, setFavsRecipes } from "../auth/authSlice";
 
-import { addRecipe, editRecipe, isLoadingRecipes, setFav, setLoading, setRecipeDetail, setRecipes } from "./recipeSlice"
+import { addCommentToList, addRecipe, editRecipe, isLoadingRecipes, setFav, setLoading, setRecipeDetail, setRecipes, setScore } from "./recipeSlice"
 
 export const getRecipes = () => {
 
@@ -13,18 +13,21 @@ export const getRecipes = () => {
 
         const { data } = await recetasApi.get("/recipes");
         const { recipes } = data;
-        
+        const {data: dataScores, status} = await kafkaApi.get("/kafka/recipesScore");
+        console.log(dataScores);
         
         let recipesData = recipes.map((recipe)=>{
 
             let recipeFav = favoriteRecipes.find((recipeFav) => recipeFav.idRecipe === recipe.idRecipe);
-
+            let recipeScore = dataScores.find((recipeScore)=> recipeScore.idRecipe === recipe.idRecipe);
+            let averageScore = recipeScore ? recipeScore.averageScore : 0;
             if(recipeFav){
 
               return{
 
                 ...recipe,
-                "fav": true
+                "fav": true,
+                "averageScore": averageScore
 
               }
       
@@ -33,7 +36,8 @@ export const getRecipes = () => {
               return{
 
                 ...recipe,
-                "fav": false
+                "fav": false,
+                "averageScore": averageScore
 
               }
 
@@ -96,6 +100,9 @@ export const getRecipeByRecipeId = (id) => {
         const {favoriteRecipes} = user;
         dispatch(isLoadingRecipes());
         const { data } = await recetasApi.get(`/recipe/${id}`);
+        const {data: commentarys, status} = await kafkaApi.get(`/kafka/comments/${id}`);
+        const {data: dataScore, status: statusScore} = await kafkaApi.get(`/kafka/recipesScoreId/${id}`);
+        const averageScore = dataScore.length !== 0 ? dataScore[0].averageScore : 0;
         let favEnviar;
         let fav = favoriteRecipes.find((favRecipe)=> favRecipe.idRecipe === data.idRecipe);
         if(fav){
@@ -103,7 +110,9 @@ export const getRecipeByRecipeId = (id) => {
           favEnviar = {
 
             ...data,
-            "fav": true
+            "commentarys": commentarys,
+            "fav": true,
+            "averageScore": averageScore
 
           }
 
@@ -112,7 +121,9 @@ export const getRecipeByRecipeId = (id) => {
           favEnviar = {
 
             ...data,
-            "fav": false
+            "commentarys": commentarys,
+            "fav": false,
+            "averageScore": averageScore
 
           }
 
@@ -182,6 +193,23 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
         }
       
     }
+  }
+
+  export const setCommentsThunk = (idUser, idRecipe, comment) =>{
+
+    return async (dispatch, getState) =>{
+
+      let sendKafka = {
+        "idUserComment": idUser,
+        "idRecipeComment": idRecipe,
+        "comment": comment
+      }
+
+      const {data, status} = await kafkaApi.post('/kafka/comments', sendKafka);
+      dispatch(addCommentToList(sendKafka));
+
+    }
+
   }
 
 export const editRecipeThunk = (id, titulo, descripcion, ingredientes, categoria, pasos, tiempo, photos, images) => {
@@ -298,6 +326,37 @@ export const getFavRecipes = () =>{
             dispatch(setFavs({recipes: favsMapped}));
 
         }
+
+  }
+
+}
+
+export const setScoreThunk = (idUser, idRecipe, score) => {
+
+  return async(dispatch, getState) =>{ 
+
+  let body = {
+
+    idUser,
+    idRecipe,
+    score
+
+  }
+
+  const {data, status} = await kafkaApi.post('/kafka/qualification', body);
+  }
+
+}
+
+export const setScoreInRecipe = (idRecipe)=>{
+
+  return async(dispatch, getState) =>{ 
+  
+    const {data, status} = await kafkaApi.get(`/kafka/recipesScoreId/${idRecipe}`);
+
+    const averageScore = data.length !== 0 ? data[0].averageScore : 0;
+
+    dispatch(setScore(averageScore))
 
   }
 

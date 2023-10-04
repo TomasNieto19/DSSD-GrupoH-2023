@@ -20,7 +20,11 @@ const pages = [{
         text: "Users",
         value: "users"},
     {text: "Favorite Recipes",
-value: "favorites"}];
+value: "favorites"},
+{text: "Popular Users",
+value: "popularUsers"},
+{text: "Popular Recipes",
+value: "popularRecipes"}];
 export const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const handleOpenNavMenu = (event) => {

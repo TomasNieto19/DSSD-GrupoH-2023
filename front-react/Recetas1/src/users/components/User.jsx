@@ -5,7 +5,7 @@ import { red } from '@mui/material/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFollowThunk } from '../../store/user/thunksUser';
 
-const User = ({user}) => {
+const User = ({user, type}) => {
 
     const {user: userLogged}= useSelector(state=>state.auth)
     const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const User = ({user}) => {
     }
   return (
     <>
-    <Card sx={{ maxWidth: 350, display: "flex", flexDirection: "column", padding: 2, backgroundColor: "#223344" }}>
+    <Card sx={{ minWidth: 300,justifyContent: "center",alignItems: "center", display: "flex", flexDirection: "column", padding: 2, backgroundColor: "#223344" }}>
       <Avatar sx={{ bgcolor: "#2D4356", width: 150, height: 150, alignSelf: "center"}} aria-label="avatar">
             <Typography fontSize={80}>{user.username ? (user.username).charAt(0) : "U"}</Typography>
           </Avatar>
@@ -30,7 +30,12 @@ const User = ({user}) => {
           Nombre completo: {user.name}
         </Typography>
       </CardContent>
-      <CardActions sx={{alignSelf: "center"}}>
+      {type === "popularUsers" && <CardContent sx={{alignSelf: "center"}}>
+        <Typography variant="body2" color="#a8add3" fontWeight="bold">
+          Seguidores: {user.followers}
+        </Typography>
+      </CardContent>}
+      {type !== "popularUsers" && <CardActions sx={{alignSelf: "center"}}>
       
         {!user.followed ? <Button variant='contained' sx={{backgroundColor: "black"}} onClick={()=> toFollow()}>
           <Typography>Seguir</Typography>
@@ -38,7 +43,7 @@ const User = ({user}) => {
           <Typography>Dejar de seguir</Typography>
         </Button>}
         
-      </CardActions>
+      </CardActions>}
       
 
     </Card>

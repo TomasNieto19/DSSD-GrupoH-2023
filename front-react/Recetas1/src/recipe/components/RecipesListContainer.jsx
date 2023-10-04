@@ -4,6 +4,7 @@ import { getRecipes } from '../../store/receta/thunksRecipe';
 import { Container} from '@mui/material';
 import { RecipesList } from './RecipesList';
 import Loader from '../../utils/components/Loader';
+import { getUsers } from '../../store/user/thunksUser';
 
 const RecipesListContainer = () => {
 
@@ -11,6 +12,7 @@ const RecipesListContainer = () => {
   const {isLoading, recipes}= useSelector(state=> state.recipe);
   useEffect(() => {
     dispatch(getRecipes());
+    dispatch(getUsers());
   }, [])
 
   return (

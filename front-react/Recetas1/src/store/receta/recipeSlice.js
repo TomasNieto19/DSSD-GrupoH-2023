@@ -39,7 +39,8 @@ export const recipeSlice = createSlice({
         },
         setRecipeDetail: (state, action)=>{
 
-            state.recipeDetail = action.payload.recipe;
+            state.recipeDetail = action.payload.recipe
+            console.log(action.payload.recipe.commentarys);
 
         },
         editRecipe: (state, action) =>{
@@ -55,10 +56,20 @@ export const recipeSlice = createSlice({
             state.recipes[index].preparationTime = recipeEdit.preparationTime;
             state.recipeDetail = recipeEdit;
 
+        },
+        addCommentToList: (state, action) =>{
+            console.log(action.payload);
+            state.recipeDetail.commentarys.push(action.payload)
+
+        },
+        setScore: (state, action) =>{
+
+            state.recipeDetail.averageScore = action.payload;
+
         }
     }
 });
 
 
 
-export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav} = recipeSlice.actions;
+export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore} = recipeSlice.actions;

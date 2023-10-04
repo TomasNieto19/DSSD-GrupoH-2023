@@ -1,13 +1,15 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, IconButton, ImageList, ImageListItem, TextField, Typography } from '@mui/material';
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Rating, TextField, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import Loader from '../../utils/components/Loader';
-import { Add, DeleteOutline, Edit, Save } from '@mui/icons-material';
+import { Add, DeleteOutline, Edit, House, Save, Send } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { editRecipeThunk, favRecipeThunk } from '../../store/receta/thunksRecipe';
+import { editRecipeThunk, favRecipeThunk, setCommentsThunk, setScoreInRecipe, setScoreThunk } from '../../store/receta/thunksRecipe';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
+import { addCommentToList } from '../../store/receta/recipeSlice';
+import { kafkaApi } from '../../api/api';
 
 const RecipeDetailItem = ({ recipe }) => {
   let hr = 0;
@@ -17,7 +19,10 @@ const RecipeDetailItem = ({ recipe }) => {
     hr = recipe.preparationTime > 60 ? Math.round(recipe.preparationTime / 60) : 0;
     min = recipe.preparationTime - (hr * 60);
   }
+  const [commentary, setCommentary] = useState();
+  const [value, setValue] = useState(recipe.averageScore);
   const [edit, setEdit] = useState(true);
+  const {users} = useSelector(state=>state.user);
   const { isLoading,recipeDetail } = useSelector(state => state.recipe)
   const { user } = useSelector(state => state.auth)
   const [titulo, setTitulo] = useState();
@@ -31,6 +36,7 @@ const RecipeDetailItem = ({ recipe }) => {
   const [disabledEdit, setDisabledEdit] = useState();
   const [photos, setPhotos] = useState([]);
   const [images, setImages] = useState([]);
+  const [disabledVote, setDisabledVote] = useState(false);
   const [image, setImage] = useState();
 
   const toFavRecipe = (id, recipe) =>{
@@ -40,6 +46,7 @@ const RecipeDetailItem = ({ recipe }) => {
   }
 
   useEffect(() => {
+    verify(user.userId, recipe.idRecipe);
     setImages([]);
     setImage(undefined);
     if (recipe !== null || recipe !== undefined) {
@@ -55,7 +62,7 @@ const RecipeDetailItem = ({ recipe }) => {
         setDisabledEdit(false);
       }
     }
-
+    console.log(recipe.averageScore)
     setPhotos(recipe.photos)
 
   }, [recipe])
@@ -66,7 +73,14 @@ const RecipeDetailItem = ({ recipe }) => {
     setPhotos(arrayFilter);
   }
 
+  const verify = async(idUser, recipeId) =>{
 
+    const {data, status} = await kafkaApi.get(`/kafka/getVoteNotVote/${idUser}/${recipeId}`)
+    const {vote} = data;
+    console.log(vote);
+    setDisabledVote(vote);
+
+  }
 
   const toEditRecipe = () => {
     if((photos.length >=2 && images.length >= 2) || (images.length + photos.length >=2)){
@@ -122,9 +136,36 @@ const RecipeDetailItem = ({ recipe }) => {
 
   }
 
+  const addCommentary = () =>{
+
+    dispatch(setCommentsThunk(user.userId, recipe.idRecipe,commentary));
+    setCommentary(' ');
+  }
+  
+  const toVote = (value) =>{
+    dispatch(setScoreThunk(user.userId, recipe.idRecipe, value));
+    setValue(value);
+    setDisabledVote(true);
+    if(recipe.averageScore === 0){
+
+      dispatch(setScoreInRecipe(recipe.idRecipe));
+
+    }
+    
+
+  }
+
+  const handleEnterPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addCommentary();
+    }
+  };
+
 
   return (
-    (recipe.user !== undefined && recipe.user !== null) && edit ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
+    
+(recipe.user !== undefined && recipe.user !== null) && edit ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
@@ -141,7 +182,7 @@ const RecipeDetailItem = ({ recipe }) => {
           </IconButton>
         }
       />
-
+      {console.log(recipe)}
       <CardContent>
         <Typography variant="body2" color="#a8add3" >
           {recipe.description}
@@ -168,6 +209,25 @@ const RecipeDetailItem = ({ recipe }) => {
           {recipe.steps}
         </Typography>
       </CardContent>
+      {disabledEdit && <CardContent sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        {!disabledVote && <Rating
+        value={value}
+        defaultValue={0}
+        onChange={(event, newValue) => {
+          toVote(newValue);
+        }}
+        size='large'
+      />}
+      {recipe.averageScore !== 0 && 
+      <Rating
+      value={recipe.averageScore}
+      readOnly
+      size='large'
+    />}
+
+      
+      </CardContent>}
+      
       <CardContent sx={{alignItems: "center", justifyContent: "center", alignSelf: "center", justifySelf: "center"}}>
       {isLoading ? <Loader/> : <ImageList sx={{ width: "%100", height: 200, justifyContent: "center", alignItems: "center" }} cols={3} rowHeight={164}>
           {recipe.photos.map((photo) => (
@@ -186,13 +246,50 @@ const RecipeDetailItem = ({ recipe }) => {
         
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "end" }}>
-      {recipe.fav ? <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
-          <FavoriteIcon sx={{color: "#8b9dad"}}/>
-        </IconButton> : <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
-          <FavoriteIcon sx={{color: "#0b1218"}}/>
+      {recipe.fav ? <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
+        {disabledEdit && <FavoriteIcon sx={{color: "#8b9dad"}}/>}
+        </IconButton> : <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
+        {disabledEdit && <FavoriteIcon sx={{ color: "#0b1218" }}/>}
         </IconButton>}
       </CardActions>
+      <CardContent>
+      <Typography paragraph color="#a8add3">Comentarios:</Typography>
+      <TextField multiline sx={{ width: "100%" }} id="outlined-basic" onKeyDown={handleEnterPress} InputProps={{style:{color:"white"},
+    endAdornment: (
+      <IconButton onClick={()=>addCommentary()}>
+        <Send sx={{color: "#a8add3"}}/>
+      </IconButton>
+    ),
+  }} placeholder='Ingrese un comentario...' variant="outlined" value={commentary} onChange={({ target }) => setCommentary(target.value)} />
+      </CardContent>
+      <CardContent>
+      {recipe.commentarys.map((commentary)=>{
+        let userFind = users.find((user)=> user.idUser === commentary.idUserComment);
+        return <Card sx={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "space-around",
+          flexDirection: "column",
+          backgroundColor: "#223344",
+          marginBottom: "10px",
+          border: 1,
+          borderColor: "#a8add3"
+        }}>
+          <CardHeader
+        avatar={
+          <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
+            {userFind.username ? (userFind.username).charAt(0) : "U"}
+          </Avatar>
+        }
+        subheaderTypographyProps={{ color: "#a8add3" }}
+        subheader={`${userFind.username ? "por " + userFind.username : ""}`}
+        titleTypographyProps={{ color: "#a8add3" }}
+      />
+          <Typography sx={{padding: 2}} color={"white"}>{commentary.comment}</Typography>
+          </Card>
 
+      })}
+      </CardContent>
     </Card> : (recipe.user !== undefined && recipe.user !== null) ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
       <CardHeader
         avatar={
@@ -267,10 +364,10 @@ const RecipeDetailItem = ({ recipe }) => {
         <IconButton aria-label="Guardar cambios" onClick={() => toEditRecipe()}>
           <Save sx={{ color: "#0b1218" }} />
         </IconButton>
-        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
-          <FavoriteIcon sx={{color: "#8b9dad"}}/>
-        </IconButton> : <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
-          <FavoriteIcon sx={{color: "#0b1218"}}/>
+        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
+        {disabledEdit && <FavoriteIcon sx={{color: "#8b9dad"}}/>}
+        </IconButton> : <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
+        {disabledEdit && <FavoriteIcon sx={{ color: "#0b1218" }}/>}
         </IconButton>}
 
 

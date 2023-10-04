@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, Rating } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { favRecipeThunk } from '../../store/receta/thunksRecipe';
 
@@ -19,13 +19,25 @@ export default function Recipe({ recipe }) {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [disabledEdit, setDisabledEdit] = useState();
   const {user}= useSelector(state=> state.auth);
+  console.log(recipe);
+  
+  const [averageScore, setAverageScore] = useState(recipe.averageScore);
   let hr = 0;
   let min = 0;
   if (recipe) {
     hr = recipe.preparationTime > 60 ? Math.round(recipe.preparationTime / 60) : 0;
     min = recipe.preparationTime - (hr * 60);
   }
+  useEffect(() => {
+    if (recipe.user && recipe.user.userId !== user.userId) {
+      setDisabledEdit(true);
+    } else {
+      setDisabledEdit(false);
+    }
+  }, [])
+  
   const toRecipeDetalle = (id) => {
 
 
@@ -40,7 +52,7 @@ export default function Recipe({ recipe }) {
   }
 
   return (
-    <Card sx={{ maxWidth: 350, backgroundColor: "#223344" }}>
+    <Card sx={{ maxWidth: 350, backgroundColor: "#223344"}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
@@ -75,15 +87,18 @@ export default function Recipe({ recipe }) {
           {recipe.steps}
         </Typography>
       </CardContent>
+      <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      {recipe.averageScore !== 0 && <Rating name="read-only" value={averageScore} readOnly size='large'/>}
+      </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "space-between", paddingRight: 1, paddingLeft: 1}}>
       <Button sx={{textTransform: 'lowercase'}} onClick={()=>toRecipeDetalle(recipe.idRecipe)}><Typography>
           Ver detalle
         </Typography>
         </Button>
-        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
-          <FavoriteIcon sx={{color: "#8b9dad"}}/>
-        </IconButton> : <IconButton aria-label="Agregar a favoritos" onClick={()=>toFavRecipe(user.userId, recipe)}>
-          <FavoriteIcon sx={{color: "#0b1218"}}/>
+        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
+        {disabledEdit && <FavoriteIcon sx={{color: "#8b9dad"}}/>}
+        </IconButton> : <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
+        {disabledEdit && <FavoriteIcon sx={{ color: "#0b1218" }}/>}
         </IconButton>}
         
       </CardActions>
