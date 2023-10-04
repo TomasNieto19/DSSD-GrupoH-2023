@@ -10,11 +10,12 @@ const RecipesListContainer = () => {
 
     const dispatch = useDispatch();
   const {isLoading, recipes}= useSelector(state=> state.recipe);
+  
   useEffect(() => {
     dispatch(getRecipes());
     dispatch(getUsers());
   }, [])
-
+  console.log(recipes);
   return (
     <Container sx={{minWidth:'80%', minHeight: '100%'}} >
       
