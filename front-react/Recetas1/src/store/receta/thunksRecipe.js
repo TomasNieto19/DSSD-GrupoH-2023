@@ -1,7 +1,7 @@
 import { imgurApi, kafkaApi, recetasApi } from "../../api/api";
 import { setFavs, setFavsRecipes } from "../auth/authSlice";
 
-import { addCommentToList, addRecipe, editRecipe, isLoadingRecipes, setFav, setLoading, setRecipeDetail, setRecipes, setScore } from "./recipeSlice"
+import { addCommentToList, addRecipe, editRecipe, isLoadingRecipes, setFav, setLoading, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
 
 export const getRecipes = () => {
 
@@ -60,16 +60,19 @@ export const getRecipesByUserId = (id) => {
         dispatch(isLoadingRecipes());
 
         const { data } = await recetasApi.get(`/userRecipes/${id}`);
+        const {data: dataScores, status} = await kafkaApi.get("/kafka/recipesScore");
         const recipesMapped = data.recipes.map((favRecipe)=>{
-
           let recipeFav = favoriteRecipes.find((recipeFav) => recipeFav.idRecipe === favRecipe.idRecipe);
-
+          
+          let recipeScore = dataScores.find((recipeScore)=> recipeScore.idRecipe === favRecipe.idRecipe);
+          let averageScore = recipeScore ? recipeScore.averageScore : 0;
             if(recipeFav){
 
               return{
 
                 ...favRecipe,
-                "fav": true
+                "fav": true,
+                "averageScore": averageScore
 
               }
       
@@ -78,7 +81,8 @@ export const getRecipesByUserId = (id) => {
               return{
 
                 ...favRecipe,
-                "fav": false
+                "fav": false,
+                "averageScore": averageScore
 
               }
 
@@ -185,7 +189,9 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
               "userId": user.userId,
               "username": user.username
             },
-            "photos": photos
+            "photos": photos,
+            "averageScore": 0,
+            "commentarys": []
           
         }
   
@@ -195,24 +201,26 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
     }
   }
 
-  export const setCommentsThunk = (idUser, idRecipe, comment) =>{
+  export const setCommentsThunk = (idUser, recipe, comment) =>{
 
     return async (dispatch, getState) =>{
 
       let sendKafka = {
         "idUserComment": idUser,
-        "idRecipeComment": idRecipe,
-        "comment": comment
+        "idRecipeComment": recipe.idRecipe,
+        "comment": comment,
+        "idUserRecipeCreator": recipe.user.userId
       }
 
       const {data, status} = await kafkaApi.post('/kafka/comments', sendKafka);
+      console.log(data);
       dispatch(addCommentToList(sendKafka));
 
     }
 
   }
 
-export const editRecipeThunk = (id, titulo, descripcion, ingredientes, categoria, pasos, tiempo, photos, images) => {
+export const editRecipeThunk = (recipe, titulo, descripcion, ingredientes, categoria, pasos, tiempo, photos, images) => {
     return async (dispatch, getState) => {
 
       const photosURL = [];
@@ -236,7 +244,7 @@ export const editRecipeThunk = (id, titulo, descripcion, ingredientes, categoria
         const {user} = auth;
         const bodyPost = {
           "recipe": {
-            "idRecipe": id,
+            "idRecipe": recipe.idRecipe,
             "title": titulo,
             "description": descripcion,
             "ingredients": ingredientes,
@@ -252,7 +260,7 @@ export const editRecipeThunk = (id, titulo, descripcion, ingredientes, categoria
         }
         const bodyState = {
           
-            "idRecipe": id,
+            "idRecipe": recipe.idRecipe,
             "title": titulo,
             "description": descripcion,
             "ingredients": ingredientes,
@@ -263,7 +271,9 @@ export const editRecipeThunk = (id, titulo, descripcion, ingredientes, categoria
               "userId": user.userId,
               "username": user.username
             },
-            "photos": photosFinal
+            "photos": photosFinal,
+            "commentarys": recipe.commentarys,
+            "averageScore": recipe.averageScore
           
         }
         
@@ -276,20 +286,34 @@ export const editRecipeThunk = (id, titulo, descripcion, ingredientes, categoria
 
 }
 
-export const favRecipeThunk = (id, recipe) =>{
-
-  return async (dispatch, getState) =>{
-
-      const {data, status} = await recetasApi.post(`/favoriteAction?idUser=${id}&idRecipe=${recipe.idRecipe}`);
-      if(status === 200){
-        dispatch(setFav({id: recipe.idRecipe}));
-        dispatch(setFavsRecipes({recipe: recipe}));
-
+export const favRecipeThunk = (id, recipe) => {
+  return async (dispatch, getState) => {
+    try {
+      const { data, status } = await recetasApi.post(`/favoriteAction?idUser=${id}&idRecipe=${recipe.idRecipe}`);
+      if (status === 200) {
+        const body = {
+          "idRecipe": recipe.idRecipe,
+          "isFavorited": recipe.fav,
+          "userIdCreator": recipe.user.userId
+        };
+        const { data: dataFavRecipe, status: statusFavRecipe } = await kafkaApi.post(`/kafka/favoriteRecipe`, body);
+        if (statusFavRecipe === 200) {
+          const { data: dataScore, status: statusScore } = await kafkaApi.get(`/kafka/recipesScoreId/${recipe.idRecipe}`);
+          if (statusScore === 200) {
+            console.log(dataScore);
+            // Ahora puedes realizar la actualización del estado
+            dispatch(setFav({ id: recipe.idRecipe }));
+            dispatch(setFavsRecipes({ recipe: recipe }));
+            dispatch(setScoreRecipes({ score: dataScore[0].averageScore, idRecipe: recipe.idRecipe }));
+          }
+        }
       }
-
-  }
-
-}
+    } catch (error) {
+      // Maneja cualquier error que pueda ocurrir en las llamadas asincrónicas
+      console.error("Error en favRecipeThunk:", error);
+    }
+  };
+};
 
 export const getFavRecipes = () =>{
 
@@ -299,16 +323,21 @@ export const getFavRecipes = () =>{
         const {user} = auth;
         const {favoriteRecipes} = user;
         const { data, status: statusFavs } = await recetasApi.get(`/favoriteRecipes/${user.userId}`);
+        const {data: dataScores, status} = await kafkaApi.get("/kafka/recipesScore");
+        
         if(statusFavs === 200){
             let favsMapped = data.favoriteRecipes.map((recipe)=>{
                 let favFind = favoriteRecipes.find(recipeFav => recipeFav.idRecipe === recipe.idRecipe);
+                let recipeScore = dataScores.find((recipeScore)=> recipeScore.idRecipe === recipe.idRecipe);
+                let averageScore = recipeScore ? recipeScore.averageScore : 0;
 
                 if(favFind){
 
                     return {
 
                         ...recipe,
-                        "fav": true
+                        "fav": true,
+                        "averageScore": averageScore
     
                     }
 
@@ -316,7 +345,8 @@ export const getFavRecipes = () =>{
                     return {
 
                       ...recipe,
-                      "fav": false
+                      "fav": false,
+                      "averageScore": averageScore
     
                     }
                 }

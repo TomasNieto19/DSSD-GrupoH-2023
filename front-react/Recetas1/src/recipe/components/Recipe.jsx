@@ -15,14 +15,14 @@ import { Button, Rating } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { favRecipeThunk } from '../../store/receta/thunksRecipe';
 
-export default function Recipe({ recipe }) {
-
+export default function Recipe({ recipe, type }) {
+  console.log(type)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [disabledEdit, setDisabledEdit] = useState();
-  const {user}= useSelector(state=> state.auth);
+  const { user } = useSelector(state => state.auth);
   console.log(recipe);
-  
+
   const [averageScore, setAverageScore] = useState(recipe.averageScore);
   let hr = 0;
   let min = 0;
@@ -37,7 +37,7 @@ export default function Recipe({ recipe }) {
       setDisabledEdit(false);
     }
   }, [])
-  
+
   const toRecipeDetalle = (id) => {
 
 
@@ -45,63 +45,84 @@ export default function Recipe({ recipe }) {
 
   }
 
-  const toFavRecipe = (id, recipe) =>{
+  const toFavRecipe = (id, recipe) => {
 
     dispatch(favRecipeThunk(id, recipe));
 
   }
 
   return (
-    <Card sx={{ maxWidth: 350, backgroundColor: "#223344"}}>
-      <CardHeader
+
+    <Card sx={{ maxWidth: 350, backgroundColor: "#223344" }}>
+      {type === "popularRecipes" ? <><CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
             {recipe.user.username ? (recipe.user.username).charAt(0) : "U"}
           </Avatar>
         }
-        titleTypographyProps={{color: "#a8add3"}}
+        titleTypographyProps={{ color: "#a8add3" }}
         title={recipe.title}
-        subheaderTypographyProps={{color: "#a8add3"}}
-        subheader={`${recipe.user.username? "por " + recipe.user.username : ""}`}
-      />
+        subheaderTypographyProps={{ color: "#a8add3" }}
+        subheader={`${recipe.user.username ? "por " + recipe.user.username : ""}`}
+      /><CardContent>
+          <Typography variant="body2" color="#a8add3">
+            {recipe.description}
+          </Typography>
+        </CardContent>
+        <CardContent sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <Typography variant="body2" color="white">
+            Puntaje promedio: {recipe.averageScore.toFixed(2)}
+          </Typography>
+        </CardContent>
+        </> : <><CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
+              {recipe.user.username ? (recipe.user.username).charAt(0) : "U"}
+            </Avatar>
+          }
+          titleTypographyProps={{ color: "#a8add3" }}
+          title={recipe.title}
+          subheaderTypographyProps={{ color: "#a8add3" }}
+          subheader={`${recipe.user.username ? "por " + recipe.user.username : ""}`}
+        />
 
-      <CardContent>
-        <Typography variant="body2" color="#a8add3">
-          {recipe.description}
-        </Typography>
-      </CardContent>
-      <CardContent>
-        <Typography variant="body2" color="#a8add3" fontWeight="bold">
-          Categoria: {recipe.category}
-        </Typography>
-      </CardContent>
-      <CardContent>
-        <Typography variant="body2" color="#a8add3" fontWeight="bold">
-          Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
-        </Typography>
-      </CardContent>
+        <CardContent>
+          <Typography variant="body2" color="#a8add3">
+            {recipe.description}
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <Typography variant="body2" color="#a8add3" fontWeight="bold">
+            Categoria: {recipe.category}
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <Typography variant="body2" color="#a8add3" fontWeight="bold">
+            Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
+          </Typography>
+        </CardContent>
 
-      <CardContent>
-        <Typography paragraph color={"#a8add3"}>Pasos:</Typography>
-        <Typography paragraph color={"#a8add3"}>
-          {recipe.steps}
-        </Typography>
-      </CardContent>
-      <CardContent sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-      {recipe.averageScore !== 0 && <Rating name="read-only" value={averageScore} readOnly size='large'/>}
-      </CardContent>
-      <CardActions sx={{ display: "flex", justifyContent: "space-between", paddingRight: 1, paddingLeft: 1}}>
-      <Button sx={{textTransform: 'lowercase'}} onClick={()=>toRecipeDetalle(recipe.idRecipe)}><Typography>
-          Ver detalle
-        </Typography>
-        </Button>
-        {recipe.fav ? <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
-        {disabledEdit && <FavoriteIcon sx={{color: "#8b9dad"}}/>}
-        </IconButton> : <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={()=>toFavRecipe(user.userId, recipe)}>
-        {disabledEdit && <FavoriteIcon sx={{ color: "#0b1218" }}/>}
-        </IconButton>}
-        
-      </CardActions>
+        <CardContent>
+          <Typography paragraph color={"#a8add3"}>Pasos:</Typography>
+          <Typography paragraph color={"#a8add3"}>
+            {recipe.steps}
+          </Typography>
+        </CardContent>
+        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {recipe.averageScore !== 0 && <Typography color={"white"}>Puntaje promedio: {recipe.averageScore.toFixed(2)}</Typography>}
+        </CardContent>
+        <CardActions sx={{ display: "flex", justifyContent: "space-between", paddingRight: 1, paddingLeft: 1 }}>
+          <Button sx={{ textTransform: 'lowercase' }} onClick={() => toRecipeDetalle(recipe.idRecipe)}><Typography>
+            Ver detalle
+          </Typography>
+          </Button>
+          {recipe.fav ? <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={() => toFavRecipe(user.userId, recipe)}>
+            {disabledEdit && <FavoriteIcon sx={{ color: "#8b9dad" }} />}
+          </IconButton> : <IconButton aria-label="Agregar a favoritos" disabled={!disabledEdit} onClick={() => toFavRecipe(user.userId, recipe)}>
+            {disabledEdit && <FavoriteIcon sx={{ color: "#0b1218" }} />}
+          </IconButton>}
+
+        </CardActions></>}
 
     </Card>
   );

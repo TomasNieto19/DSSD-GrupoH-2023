@@ -84,7 +84,7 @@ const RecipeDetailItem = ({ recipe }) => {
 
   const toEditRecipe = () => {
     if((photos.length >=2 && images.length >= 2) || (images.length + photos.length >=2)){
-    dispatch(editRecipeThunk(recipe.idRecipe, titulo, descripcion, ingredientes, categoria, pasos, tiempo, photos, images));
+    dispatch(editRecipeThunk(recipe, titulo, descripcion, ingredientes, categoria, pasos, tiempo, photos, images));
     setEdit(true);
     }else{
 
@@ -138,7 +138,7 @@ const RecipeDetailItem = ({ recipe }) => {
 
   const addCommentary = () =>{
 
-    dispatch(setCommentsThunk(user.userId, recipe.idRecipe,commentary));
+    dispatch(setCommentsThunk(user.userId, recipe,commentary));
     setCommentary(' ');
   }
   
@@ -146,11 +146,11 @@ const RecipeDetailItem = ({ recipe }) => {
     dispatch(setScoreThunk(user.userId, recipe.idRecipe, value));
     setValue(value);
     setDisabledVote(true);
-    if(recipe.averageScore === 0){
+    
 
       dispatch(setScoreInRecipe(recipe.idRecipe));
 
-    }
+    
     
 
   }
@@ -209,8 +209,8 @@ const RecipeDetailItem = ({ recipe }) => {
           {recipe.steps}
         </Typography>
       </CardContent>
-      {disabledEdit && <CardContent sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-        {!disabledVote && <Rating
+      {<CardContent sx={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+        {!disabledVote && disabledEdit && <Rating
         value={value}
         defaultValue={0}
         onChange={(event, newValue) => {
@@ -219,11 +219,7 @@ const RecipeDetailItem = ({ recipe }) => {
         size='large'
       />}
       {recipe.averageScore !== 0 && 
-      <Rating
-      value={recipe.averageScore}
-      readOnly
-      size='large'
-    />}
+      <Typography color={"white"}>Puntaje promedio: {recipe.averageScore.toFixed(2)}</Typography>}
 
       
       </CardContent>}

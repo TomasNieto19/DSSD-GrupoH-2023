@@ -66,10 +66,20 @@ export const recipeSlice = createSlice({
 
             state.recipeDetail.averageScore = action.payload;
 
+        },
+        setScoreRecipes: (state, action) =>{
+
+            let idRecipe = action.payload.idRecipe;
+            let scoreAverage = action.payload.score;
+            let recipeFind = state.recipes.find(recipe => recipe.idRecipe === idRecipe);
+            let index = state.recipes.indexOf(recipeFind);
+            state.recipes[index].averageScore = scoreAverage;
+            state.recipeDetail.averageScore = scoreAverage;
+
         }
     }
 });
 
 
 
-export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore} = recipeSlice.actions;
+export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore, setScoreRecipes} = recipeSlice.actions;

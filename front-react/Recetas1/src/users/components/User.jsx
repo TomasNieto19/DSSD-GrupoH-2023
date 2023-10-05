@@ -32,7 +32,7 @@ const User = ({user, type}) => {
       </CardContent>
       {type === "popularUsers" && <CardContent sx={{alignSelf: "center"}}>
         <Typography variant="body2" color="#a8add3" fontWeight="bold">
-          Seguidores: {user.followers}
+          Puntaje: {user.followers}
         </Typography>
       </CardContent>}
       {type !== "popularUsers" && <CardActions sx={{alignSelf: "center"}}>
