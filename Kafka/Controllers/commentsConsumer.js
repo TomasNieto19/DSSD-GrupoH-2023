@@ -9,6 +9,8 @@ export const commentsConsumer = async (req, res) => {
 
   const id = req.params.id;
 
+  let messagesReceived = false;
+
   try {
 
     // 1 - Conexion con el servidor de Kafka
@@ -35,14 +37,17 @@ export const commentsConsumer = async (req, res) => {
         }
         
         res.json(messsages)
+        messagesReceived = true;
         consumer.disconnect()
       }
     })
 
     setTimeout(() => {
-      consumer.disconnect()
-      return res.status(204).json({message: "No hay elementos en el topico."});
-    }, 2000);
+      if (!messagesReceived) {
+        consumer.disconnect();
+        res.status(204).json({ message: "No hay elementos en el tópico." });
+      }
+    }, process.env.TIMEOUT);
     
   } catch (error) {
 

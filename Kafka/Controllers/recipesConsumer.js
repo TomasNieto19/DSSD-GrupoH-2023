@@ -7,6 +7,8 @@ export const recipesConsumer = async (req, res) => {
 
   const consumer = kafka.consumer;
 
+  let messagesReceived = false;
+
   try {
     
     // 1 - Conexión con el servidor de Kafka
@@ -29,14 +31,18 @@ export const recipesConsumer = async (req, res) => {
         // Responder al cliente con los mensajes
         res.json(messages);
 
+        messagesReceived = true;
+
         consumer.disconnect();
       },
     });
     
     setTimeout(() => {
-      consumer.disconnect()
-      return res.status(204).json({message: "No hay elementos en el topico."});
-    }, 2000);
+      if (!messagesReceived) {
+        consumer.disconnect();
+        res.status(204).json({ message: "No hay elementos en el tópico." });
+      }
+    }, process.env.TIMEOUT);
 
   } catch (error) {
 

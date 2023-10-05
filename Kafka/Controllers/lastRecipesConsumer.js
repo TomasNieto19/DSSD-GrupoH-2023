@@ -10,6 +10,8 @@ export const lastRecipesConsumer = async (req, res) => {
   // Almacena las últimas 5 recetas
   let lastFiveRecipes = [];
 
+  let messagesReceived = false;
+
   try {
 
     // 1 - Conexion con el servidor de Kafka
@@ -38,14 +40,17 @@ export const lastRecipesConsumer = async (req, res) => {
 
         // Enviar las últimas 5 recetas al cliente
         res.json(lastFiveRecipes);
+        messagesReceived = true;
         consumer.disconnect();
       },
     });
 
     setTimeout(() => {
-      consumer.disconnect()
-      return res.status(204).json({message: "No hay elementos en el topico."});
-    }, 2000);
+      if (!messagesReceived) {
+        consumer.disconnect();
+        res.status(204).json({ message: "No hay elementos en el tópico." });
+      }
+    }, process.env.TIMEOUT);
     
   } catch (error) {
 

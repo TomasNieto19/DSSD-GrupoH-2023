@@ -7,6 +7,8 @@ export const getFollowersUser = async (req, res) => {
 
   const consumer = kafka.consumer;
 
+  let messagesReceived = false;
+
   try {
     // 1 - Conexion con el servidor de Kafka
     await consumer.connect();
@@ -43,15 +45,18 @@ export const getFollowersUser = async (req, res) => {
         }
         messsages.sort((a, b) => b.follow - a.follow)
         res.json(messsages);
+        messagesReceived = true;
         consumer.disconnect();
 
       },
     });
 
     setTimeout(() => {
-      consumer.disconnect()
-      return res.status(204).json({message: "No hay elementos en el topico."});
-    }, 2000);
+      if (!messagesReceived) {
+        consumer.disconnect();
+        res.status(204).json({ message: "No hay elementos en el tópico." });
+      }
+    }, process.env.TIMEOUT);
     
   } catch (error) {
 

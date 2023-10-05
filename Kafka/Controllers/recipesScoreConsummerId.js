@@ -8,6 +8,8 @@ export const recipesScoreConsummerId = async (req, res) => {
   const consumer = kafka.consumer;
 
   const {id} = req.params
+
+  let messagesReceived = false; 
   
   try {
 
@@ -35,14 +37,18 @@ export const recipesScoreConsummerId = async (req, res) => {
 
         res.json(recipesAverageScore)
 
+        messagesReceived = true; 
+
         consumer.disconnect()
       }
     })
     
     setTimeout(() => {
-      consumer.disconnect()
-      return res.status(204).json({message: "No hay elementos en el topico."});
-    }, 2000);
+      if (!messagesReceived) {
+        consumer.disconnect();
+        res.status(204).json({ message: "No hay elementos en el tópico." });
+      }
+    }, process.env.TIMEOUT);
     
   } catch (error) {
 
