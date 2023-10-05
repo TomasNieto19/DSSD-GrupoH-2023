@@ -47,6 +47,12 @@ export const getFollowersUser = async (req, res) => {
 
       },
     });
+
+    setTimeout(() => {
+      consumer.disconnect()
+      return res.status(204).json({message: "No hay elementos en el topico."});
+    }, 2000);
+    
   } catch (error) {
 
     console.error("ERROR EN CONSUMER DE POPULARIDAD USUARIO: " + error);

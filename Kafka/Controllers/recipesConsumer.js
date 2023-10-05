@@ -32,6 +32,11 @@ export const recipesConsumer = async (req, res) => {
         consumer.disconnect();
       },
     });
+    
+    setTimeout(() => {
+      consumer.disconnect()
+      return res.status(204).json({message: "No hay elementos en el topico."});
+    }, 2000);
 
   } catch (error) {
 

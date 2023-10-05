@@ -54,6 +54,16 @@ router.post("/kafka/Productor", produceMessageKafka);
  *                 properties:
  *                   message:
  *                     type: string
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/Consumidor", getKafkaMessages);
 
@@ -108,6 +118,16 @@ router.post("/kafka/comments", commentsProducer);
  *                 properties:
  *                   comment:
  *                     type: string
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/comments/:id", commentsConsumer);
 
@@ -178,6 +198,16 @@ router.post("/kafka/favoriteRecipe", favoriteRecipeProducer);
  *                 properties:
  *                   comment:
  *                     type: string
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/recipesScore", recipesScoreConsummer);
 
@@ -221,6 +251,16 @@ router.post("/kafka/sendFollower", sendFollowerProducer);
  *                 properties:
  *                   comment:
  *                     type: string
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/followersUser", getFollowersUser);
 
@@ -266,6 +306,16 @@ router.post("/kafka/addRecipe", addRecipeProducer);
  *                 properties:
  *                   comment:
  *                     type: string
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/recipes", recipesConsumer);
 
@@ -286,6 +336,16 @@ router.get("/kafka/recipes", recipesConsumer);
  *                 properties:
  *                   comment:
  *                     type: string
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/lastRecipes", lastRecipesConsumer);
 
@@ -306,6 +366,16 @@ router.get("/kafka/lastRecipes", lastRecipesConsumer);
  *                 properties:
  *                   vote:
  *                     type: boolean
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/getVoteNotVote/:idUser/:idRecipe", voteNotVote);
 
@@ -314,6 +384,13 @@ router.get("/kafka/getVoteNotVote/:idUser/:idRecipe", voteNotVote);
  * /kafka/recipesScoreId/{id}:
  *   get:
  *     summary: Retorna la puntuacion promedio de una receta por id.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la receta para la que se desean obtener el puntaje promedio.
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: .
@@ -328,6 +405,16 @@ router.get("/kafka/getVoteNotVote/:idUser/:idRecipe", voteNotVote);
  *                     type: integer
  *                   averageScore:
  *                     type: integer
+ *       204:
+ *         description: Envia mensaje cuando no hay ningun elemento en el topico que se está leyendo.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: No hay elementos en el topico.
  */
 router.get("/kafka/recipesScoreId/:id", recipesScoreConsummerId);
 
