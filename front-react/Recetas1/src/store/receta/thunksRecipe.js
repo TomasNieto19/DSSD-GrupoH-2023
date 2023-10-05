@@ -201,17 +201,19 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
     }
   }
 
-  export const setCommentsThunk = (idUser, idRecipe, comment) =>{
+  export const setCommentsThunk = (idUser, recipe, comment) =>{
 
     return async (dispatch, getState) =>{
 
       let sendKafka = {
         "idUserComment": idUser,
-        "idRecipeComment": idRecipe,
-        "comment": comment
+        "idRecipeComment": recipe.idRecipe,
+        "comment": comment,
+        "idUserRecipeCreator": recipe.user.userId
       }
 
       const {data, status} = await kafkaApi.post('/kafka/comments', sendKafka);
+      console.log(data);
       dispatch(addCommentToList(sendKafka));
 
     }

@@ -138,7 +138,7 @@ const RecipeDetailItem = ({ recipe }) => {
 
   const addCommentary = () =>{
 
-    dispatch(setCommentsThunk(user.userId, recipe.idRecipe,commentary));
+    dispatch(setCommentsThunk(user.userId, recipe,commentary));
     setCommentary(' ');
   }
   
