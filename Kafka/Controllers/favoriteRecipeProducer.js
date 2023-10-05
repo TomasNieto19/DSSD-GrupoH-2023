@@ -22,7 +22,7 @@ export const favoriteRecipeProducer = async (req, res) => {
     const messagePopularidadReceta = { idRecipe: req.body.idRecipe, score: recetaPuntaje };
 
     // 5 - Envia el mensaje al topic "PopularidadReceta" 
-    await producer.send({topic: "PopularidadReceta", messages:[{value: JSON.stringify(messagePopularidadReceta)}]});
+    await producer.send({topic: process.env.POPULARIDAD_RECETA, messages:[{value: JSON.stringify(messagePopularidadReceta)}]});
 
     // 6 - Responde al cliente
     res.status(200).json({ message: "Mensaje popularidad receta recibido!" });
@@ -31,7 +31,7 @@ export const favoriteRecipeProducer = async (req, res) => {
     const messagePopularidadUsuario = { idUser: req.body.userIdCreator, follow: recetaPuntaje };
 
     // 8 - Envia el mensaje al topic "PopularidadUsuario" 
-    await producer.send({topic: "PopularidadUsuario", messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});
+    await producer.send({topic: process.env.POPULARIDAD_USUARIO, messages:[{value: JSON.stringify(messagePopularidadUsuario)}]});
 
   } catch (error) {
 

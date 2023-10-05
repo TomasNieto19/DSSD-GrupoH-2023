@@ -16,7 +16,7 @@ export const qualificationProducer = async (req, res) => {
     const message = JSON.stringify(req.body);
 
     // 3 - Envia el mensaje al topico de Kafka
-    await producer.send({topic: "PopularidadReceta", messages:[{value: message}]})
+    await producer.send({topic: process.env.POPULARIDAD_RECETA, messages:[{value: message}]})
    
     // 4 - Responde al cliente
     res.status(200).json({ message: "Calificacion recibida!" });

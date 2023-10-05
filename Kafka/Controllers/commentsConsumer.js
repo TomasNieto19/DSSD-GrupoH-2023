@@ -15,7 +15,7 @@ export const commentsConsumer = async (req, res) => {
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "Comentarios", fromBeginning: true})
+    await consumer.subscribe({topic: process.env.COMENTARIOS, fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
     consumer.run({

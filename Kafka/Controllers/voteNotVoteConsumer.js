@@ -16,7 +16,7 @@ export const voteNotVote = async (req, res) => {
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "PopularidadReceta", fromBeginning: true})
+    await consumer.subscribe({topic: process.env.POPULARIDAD_RECETA, fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
     consumer.run({

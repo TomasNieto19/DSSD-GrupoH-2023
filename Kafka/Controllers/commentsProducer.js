@@ -18,7 +18,7 @@ export const commentsProducer = async (req, res) => {
     const message = JSON.stringify({ idUserComment, idRecipeComment, comment });
 
     // 3 - Envia el mensaje al topico de Kafka
-    await producer.send({topic: "Comentarios", messages:[{value: message}]})
+    await producer.send({topic: process.env.COMENTARIOS, messages:[{value: message}]})
    
     // Reestriccion por si el usuario que comenta es el mismo que creo la receta, no cuenta para el cálculo de popularidad
     if( idUserComment == idUserRecipeCreator ) {
@@ -32,7 +32,7 @@ export const commentsProducer = async (req, res) => {
     // 5 - Envia la popularidad de la receta (Punto 4a parte 2)
     const messagePopularidadReceta = { idRecipe: idRecipeComment, score: 1 };
 
-    await producer.send({topic: "PopularidadReceta", messages:[{value: JSON.stringify(messagePopularidadReceta)}]});
+    await producer.send({topic: process.env.POPULARIDAD_RECETA, messages:[{value: JSON.stringify(messagePopularidadReceta)}]});
 
   } catch (error) { 
 

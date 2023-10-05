@@ -26,7 +26,7 @@ export const addRecipeProducer = async (req, res) => {
     const message = JSON.stringify(recipeInfo);
 
     // 4 - Enviar el mensaje al tópico de Kafka "Novedades"
-    await producer.send({topic: "Novedades", messages: [{ value: message }]});
+    await producer.send({topic: process.env.NOVEDADES, messages: [{ value: message }]});
 
     // 5 - Responder al cliente
     res.status(200).json({ message: "La receta se ha publicado con éxito!" });

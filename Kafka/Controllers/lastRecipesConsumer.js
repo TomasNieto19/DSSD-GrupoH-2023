@@ -16,7 +16,7 @@ export const lastRecipesConsumer = async (req, res) => {
     await consumer.connect();
 
     // 2 - Se suscripción al tópico de Kafka, desde el principio
-    await consumer.subscribe({ topic: "Novedades", fromBeginning: true });
+    await consumer.subscribe({ topic: process.env.NOVEDADES, fromBeginning: true });
 
     // 3 - Se consumen los mensajes del tópico
     consumer.run({

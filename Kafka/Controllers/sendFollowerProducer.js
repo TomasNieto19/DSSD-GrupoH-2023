@@ -39,7 +39,7 @@ export const sendFollowerProducer = async (req, res) => {
     }
    
     // 3 - Envia el mensaje al topico de Kafka
-    await producer.send({topic: "PopularidadUsuario", messages:[{value: JSON.stringify(newMessage)}]})
+    await producer.send({topic: process.env.POPULARIDAD_USUARIO, messages:[{value: JSON.stringify(newMessage)}]})
    
     // 4 - Responde al cliente
     res.status(200).json({ message: "Mensaje popularidad de usuario recibido!" });

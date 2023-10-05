@@ -6,16 +6,16 @@ const kafka = new KafkaConfig();
 export const recipesScoreConsummerId = async (req, res) => {
   
   const consumer = kafka.consumer;
-  console.log(req.params.id);
+
   const {id} = req.params
-    console.log(id);
+  
   try {
 
     // 1 - Conexion con el servidor de Kafka
     await consumer.connect();
     
     // 2 - Se suscripcion al topico de Kafka, desde el principio
-    await consumer.subscribe({topic: "PopularidadReceta", fromBeginning: true})
+    await consumer.subscribe({topic: process.env.POPULARIDAD_RECETA, fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
     consumer.run({
@@ -25,7 +25,7 @@ export const recipesScoreConsummerId = async (req, res) => {
         let recipes = []
 
         for (let recipe of batch.messages) {
-           
+           console.log(recipe.value.toString())
           recipes.push(JSON.parse(recipe.value.toString()))
 
         }
@@ -52,7 +52,7 @@ export const recipesScoreConsummerId = async (req, res) => {
 };
 
 function calcularPuntajePromedioDeRecetas(recipes, id) {
-    console.log(id);
+
   const puntajesTotalesPorReceta = recipes.reduce((result, item) => {
 
     const { idRecipe, score } = item;
