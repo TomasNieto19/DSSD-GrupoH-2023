@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SOAP CLIENT DSSD-GrupoH-2023",
+    "description": "Python + Flask + SudsClient + Swagger",
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/soap/saludo": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Obtener un saludo",
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/saludar": {
+      "post": {
+        "tags": ["Endpoints"],
+        "summary": "Saludar a un usuario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nombre": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
