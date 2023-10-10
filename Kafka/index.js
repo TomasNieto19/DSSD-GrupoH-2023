@@ -1,3 +1,4 @@
+import { saveCommentsInMySQL } from "./Functions/saveCommentsInMySQL.js";
 import specs from "./config/swaggerConfig.js";
 import swaggerUi from "swagger-ui-express";
 import bodyParser from "body-parser";
@@ -17,5 +18,9 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(bodyParser.json());
 
 app.use("/", routes);
+
+
+setInterval(saveCommentsInMySQL, 60 * 1000); // (60 segundos * 1000 ms)
+
 
 app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));

@@ -1,3 +1,4 @@
+import { getCommentsFromMySQL } from "../config/MySqlConfig.js";
 import { KafkaConfig } from "../config/KafkaConfig.js";
 
 const kafka = new KafkaConfig();
@@ -10,8 +11,11 @@ export const commentsConsumer = async (req, res) => {
   const id = req.params.id;
 
   let messagesReceived = false;
+ 
+ try {
 
-  try {
+    // Trae los comentarios de la base de datos
+    let messages = await getCommentsFromMySQL(id);
 
     // 1 - Conexion con el servidor de Kafka
     await consumer.connect();
@@ -24,23 +28,27 @@ export const commentsConsumer = async (req, res) => {
       eachBatchAutoResolve: false,
       eachBatch: async ({ batch }) => {
 
-        let messsages = []
-
         for (let message of batch.messages) {
 
           let messageObj = JSON.parse(message.value.toString());
      
           if(messageObj.idRecipeComment == id){
-            messsages.push(messageObj);
+            messages.push(messageObj);
           }
 
         }
         
-        res.json(messsages)
+        res.json(messages)
         messagesReceived = true;
         consumer.disconnect()
       }
     })
+
+    if(messages.length != 0){
+      res.json(messages)
+      messagesReceived = true;
+      consumer.disconnect()
+    }
 
     setTimeout(() => {
       if (!messagesReceived) {
