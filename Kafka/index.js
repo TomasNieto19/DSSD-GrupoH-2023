@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use("/", routes);
 
 
-//setInterval(saveCommentsInMySQL, 60 * 1000); // (60 segundos * 1000 ms)
+setInterval(saveCommentsInMySQL, 60 * 1000); // (60 segundos * 1000 ms)
 
 
 app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));

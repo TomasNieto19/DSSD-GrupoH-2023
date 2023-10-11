@@ -1,11 +1,11 @@
 import { KafkaConfig } from "../config/KafkaConfig.js";
 
-const kafka = new KafkaConfig();
-
 // Punto 2
 export const lastRecipesConsumer = async (req, res) => {
 
-  const consumer = kafka.consumer;
+  const kafka = new KafkaConfig();
+  
+  const consumer = kafka.createConsumer();
 
   // Almacena las últimas 5 recetas
   let lastFiveRecipes = [];
