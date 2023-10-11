@@ -62,7 +62,6 @@ const RecipeDetailItem = ({ recipe }) => {
         setDisabledEdit(false);
       }
     }
-    console.log(recipe.averageScore)
     setPhotos(recipe.photos)
 
   }, [recipe])
@@ -77,7 +76,6 @@ const RecipeDetailItem = ({ recipe }) => {
 
     const {data, status} = await kafkaApi.get(`/kafka/getVoteNotVote/${idUser}/${recipeId}`)
     const {vote} = data;
-    console.log(vote);
     setDisabledVote(vote);
 
   }
@@ -182,7 +180,6 @@ const RecipeDetailItem = ({ recipe }) => {
           </IconButton>
         }
       />
-      {console.log(recipe)}
       <CardContent>
         <Typography variant="body2" color="#a8add3" >
           {recipe.description}

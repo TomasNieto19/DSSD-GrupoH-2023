@@ -5,7 +5,7 @@ const kafka = new KafkaConfig();
 // Punto 4d
 export const commentsConsumer = async (req, res) => {
   
-  const consumer = kafka.consumer;
+  const consumer = kafka.createConsumer();
 
   const id = req.params.id;
 

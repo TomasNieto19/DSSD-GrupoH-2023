@@ -10,9 +10,7 @@ export const RecipesList = ({recipes, type}) => {
     
       <Grid container padding={10}>
       {recipes.map((recipe)=>{
-        console.log("LA RECIPE",recipe)
-        return <Grid xs={12} md={4} padding={3} key={recipe.idRecipe} item={true}><Recipe recipe={recipe} type={type} key={recipe.idRecipe}/></Grid>
-
+        return <Grid xs={12} md={4} padding={3} key={recipe.idRecipe} item={true}><Recipe recipe={recipe} key={recipe.idRecipe} type={type}/></Grid>
       })}
       </Grid>
    

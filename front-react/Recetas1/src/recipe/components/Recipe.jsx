@@ -16,12 +16,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { favRecipeThunk } from '../../store/receta/thunksRecipe';
 
 export default function Recipe({ recipe, type }) {
-  console.log(type)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [disabledEdit, setDisabledEdit] = useState();
   const { user } = useSelector(state => state.auth);
-  console.log(recipe);
 
   const [averageScore, setAverageScore] = useState(recipe.averageScore);
   let hr = 0;
@@ -54,7 +52,7 @@ export default function Recipe({ recipe, type }) {
   return (
 
     <Card sx={{ maxWidth: 350, backgroundColor: "#223344" }}>
-      {type === "popularRecipes" ? <><CardHeader
+      {type === "popularRecipes" && <><CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
             {recipe.user.username ? (recipe.user.username).charAt(0) : "U"}
@@ -74,7 +72,8 @@ export default function Recipe({ recipe, type }) {
             Puntaje promedio: {recipe.averageScore.toFixed(2)}
           </Typography>
         </CardContent>
-        </> : <><CardHeader
+        </>}
+        {!type && <><CardHeader
           avatar={
             <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
               {recipe.user.username ? (recipe.user.username).charAt(0) : "U"}
@@ -123,6 +122,25 @@ export default function Recipe({ recipe, type }) {
           </IconButton>}
 
         </CardActions></>}
+        {type === "lastFiveRecipes" && <><CardHeader
+        avatar={
+          <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">
+            {recipe.username ? (recipe.username).charAt(0) : "U"}
+          </Avatar>
+        }
+        titleTypographyProps={{ color: "#a8add3" }}
+        title={recipe.recipeTitle}
+        subheaderTypographyProps={{ color: "#a8add3" }}
+        subheader={`${recipe.username ? "por " + recipe.username: ""}`}
+      /><CardContent sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <img
+                src={recipe.firstPhotoUrl.url}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                style={{ width: '200px', height: '150px' }}
+              />
+        </CardContent>
+        </>}
 
     </Card>
   );

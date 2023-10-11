@@ -1,11 +1,11 @@
 import { KafkaConfig } from "../config/KafkaConfig.js";
 
-const kafka = new KafkaConfig();
-
 // Punto 4d
 export const voteNotVote = async (req, res) => {
   
-  const consumer = kafka.consumer;
+  const kafka = new KafkaConfig();
+  
+  const consumer = kafka.createConsumer();
 
   const idUser = req.params.idUser;
 

@@ -1,7 +1,7 @@
 import { recetasApi } from "../../api/api";
 import { kafkaApi } from "../../api/api";
 import { setUsersFollowing } from "../auth/authSlice";
-import { setFollow, setUsers } from "./userSlice";
+import { popularUsersLoading, setFollow, setPopularUsers, setUsers } from "./userSlice";
 
 export const getUsers = () => {
 
@@ -30,7 +30,6 @@ export const getUsers = () => {
 export const setFollowThunk = (id, user) =>{
 
     return async (dispatch, getState) => {
-        console.log(user);
         const {idUser, followed} = user;
         const {data, status} = await recetasApi.post(`/followAction?idFollower=${id}&idFollowing=${idUser}`);
         if(status === 200){
@@ -46,6 +45,38 @@ export const setFollowThunk = (id, user) =>{
 
         }
         
+
+    }
+
+}
+
+export const getPopularUsers = () =>{
+
+    return async (dispatch, getState) =>{
+        dispatch(popularUsersLoading());
+        let dataMapped = [];
+        const {data, status} = await kafkaApi.get("/kafka/followersUser");
+        const {data: dataUsers, status: statusUsers} = await recetasApi.get("/users");
+        if(status === 200 && data.length !== 0){
+
+            dataMapped = data.map(userPop=>{
+                
+                let dataFind = dataUsers.users.find((user) => user.idUser === userPop.idUser );
+                if(dataFind && userPop.follow !== 0){
+                    
+                return {
+
+                    "idUser": userPop.idUser,
+                    "followers": userPop.follow,
+                    "username": dataFind.username,
+                    "name": dataFind.name
+
+                }
+                }
+            }
+            ).filter((user)=> user!== undefined && user!==null)
+        }
+        dispatch(setPopularUsers({users: dataMapped}))
 
     }
 

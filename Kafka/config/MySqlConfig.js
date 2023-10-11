@@ -19,21 +19,33 @@ export function testConexion() {
   connection.end();
 }
 
-export function getUsuarios() {
-  connection.query("SELECT * FROM users", (err, rows) => {
-    if (err) {
-      console.error("Error al ejecutar la consulta:", err);
-    } else {
-      console.log("Resultados de la consulta:", rows);
-    }
-  });
+export function getCommentsFromMySQL(recipeId) {
   
-  connection.end();
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM comments_recipes WHERE id_recipe_comment = ?";
+
+    connection.query(sql, [recipeId], (err, rows) => {
+      if (err) {
+        console.error("Error al ejecutar la consulta:", sql, err);
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
 }
 
-// PARA PROBAR ALGUN METODO, PEGAR ESTO EN EL INDEX.JS, DESCOMENTAR Y VER LA RESPUESTA EN LA CONSOLA.
-/*
-import { testConexion, getUsuarios } from "./config/MySqlConfig.js";
-getUsuarios();
-testConexion();
-*/
+
+export function saveCommentInMySQL(comment, callback) {
+
+  const sql = "INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES (?, ?, ?)";
+
+  connection.query(sql, [comment.idUserComment, comment.idRecipeComment, comment.comment], (err, result) => {
+    if (err) {
+      console.error("Error al ejecutar el INSERT:", sql, err);
+      callback(err, null);
+    } else {
+      callback(null, result);
+    }
+  });
+}

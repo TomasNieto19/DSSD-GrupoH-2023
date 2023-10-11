@@ -16,12 +16,10 @@ const MyRecipesContainer = () => {
         dispatch(getRecipesByUserId(user.userId));
 
     }, [user])
-
   return (
     <Container sx={{minWidth:'80%', minHeight: '100%', padding: 10}} >
       <Typography variant='h3'>My Recipes</Typography>
-        {isLoading && <Loader/>}
-    {recipes && recipes.length !== 0 ? <RecipesList recipes={recipes}/>: <RecipeNotFound/>}
+        {isLoading ? <Loader/> : (recipes && recipes.length !== 0) ? <RecipesList recipes={recipes}/>: <RecipeNotFound/>}
     </Container>
   )
 }

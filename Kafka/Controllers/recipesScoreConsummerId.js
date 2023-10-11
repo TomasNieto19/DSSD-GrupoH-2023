@@ -1,11 +1,11 @@
 import { KafkaConfig } from "../config/KafkaConfig.js";
 
-const kafka = new KafkaConfig();
-
 // Punto 4d parte 1
 export const recipesScoreConsummerId = async (req, res) => {
   
-  const consumer = kafka.consumer;
+  const kafka = new KafkaConfig();
+  
+  const consumer = kafka.createConsumer();
 
   const {id} = req.params
 

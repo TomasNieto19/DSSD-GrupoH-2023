@@ -4,8 +4,11 @@ export const recipeSlice = createSlice({
     name: 'recipe',
     initialState: {
         isLoading: false,
+        isLoadingFive: false,
         recipes: [],
-        recipeDetail: {}
+        recipeDetail: {},
+        lastFiveRecipes: [],
+        popularRecipes: []
        
     },
     reducers: {
@@ -16,6 +19,22 @@ export const recipeSlice = createSlice({
 
             state.isLoading = false;
             state.recipes = action.payload.recipes;
+
+        },
+        setLoadingFive: (state,action)=>{
+
+            state.isLoadingFive = action.payload;
+
+        },
+        addRecipeFive: (state, action) =>{
+
+            state.lastFiveRecipes.push(action.payload);
+            if(state.lastFiveRecipes.length > 5){
+
+                state.lastFiveRecipes.shift();
+
+            }
+            state.isLoadingFive = false;
 
         },
         setLoading: (state, action)=>{
@@ -40,7 +59,6 @@ export const recipeSlice = createSlice({
         setRecipeDetail: (state, action)=>{
 
             state.recipeDetail = action.payload.recipe
-            console.log(action.payload.recipe.commentarys);
 
         },
         editRecipe: (state, action) =>{
@@ -58,9 +76,8 @@ export const recipeSlice = createSlice({
 
         },
         addCommentToList: (state, action) =>{
-            console.log(action.payload);
             state.recipeDetail.commentarys.push(action.payload)
-
+            state.recipeDetail.commentarys = state.recipeDetail.commentarys.reverse()
         },
         setScore: (state, action) =>{
 
@@ -76,10 +93,21 @@ export const recipeSlice = createSlice({
             state.recipes[index].averageScore = scoreAverage;
             state.recipeDetail.averageScore = scoreAverage;
 
+        },
+        setLastFiveRecipes: (state, action) =>{
+
+            state.lastFiveRecipes = action.payload;
+            state.isLoadingFive = false;
+
+        },
+        setPopularRecipes: (state, action) => {
+            state.popularRecipes = action.payload;
+            state.isLoading = false;
         }
     }
 });
 
 
 
-export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore, setScoreRecipes} = recipeSlice.actions;
+export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore, setScoreRecipes, 
+    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes} = recipeSlice.actions;

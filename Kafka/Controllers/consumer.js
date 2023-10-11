@@ -1,10 +1,10 @@
 import { KafkaConfig } from "../config/KafkaConfig.js";
 
-const kafka = new KafkaConfig();
-
 export const getKafkaMessages = async (req, res) => {
   
-  const consumer = kafka.consumer;
+  const kafka = new KafkaConfig();
+  
+  const consumer = kafka.createConsumer();
 
   let messagesReceived = false;
 

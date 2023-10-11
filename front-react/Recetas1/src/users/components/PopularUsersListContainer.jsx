@@ -4,13 +4,14 @@ import { getPopularUsers } from '../../store/popularUsers/popularUsersThunk';
 import { Container, Typography } from '@mui/material';
 import UsersList from './UsersList';
 import Loader from '../../utils/components/Loader';
+import UsersNotFound from './UsersNotFound';
 
 const PopularUsersListContainer = () => {
 
     const dispatch = useDispatch();
-    const {popularUsers, isLoading} = useSelector(state=>state.popularUsers);
+    const {popularUsers, isLoading} = useSelector(state=>state.user);
     const {user} = useSelector(state=>state.auth)
-    let filter = popularUsers.filter(userFilter => userFilter.idUser !== user.userId)
+    let filter = popularUsers.length !== 0 ? popularUsers.filter(userFilter => userFilter.idUser !== user.userId) : []
 
     useEffect(() => {
       
@@ -22,7 +23,7 @@ const PopularUsersListContainer = () => {
   return (
     <Container sx={{minWidth:'80%', minHeight: '100%', padding: 5}} >
         <Typography variant='h3'>Popular Users</Typography>
-    {isLoading ? <Loader/> : <UsersList users={filter} type={"popularUsers"}/>}
+    {isLoading ? <Loader/> : popularUsers && filter.length !== 0 ? <UsersList users={filter} type={"popularUsers"}/> : <UsersNotFound/>}
     </Container>
   )
 }
