@@ -100,6 +100,21 @@ export function updateRecipePopularityInMySQL(recipeId, newScore, callback) {
     });
 }
 
+export function getUsersPopularityFromMySQL() {
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM popularity_users";
+
+    connection.query(sql, (err, rows) => {
+      if (err) {
+        console.error("Error al ejecutar la consulta:", sql, err);
+        reject(err);
+      } else if (Array.isArray(rows) && rows.length > 0) {
+        resolve(rows);
+      } 
+    });
+  });
+}
+
 export function saveCommentInMySQL(comment, callback) {
   const sql = "INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES (?, ?, ?)";
 

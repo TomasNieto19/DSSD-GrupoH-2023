@@ -1,4 +1,5 @@
 import { KafkaConfig } from "../config/KafkaConfig.js";
+import { getUsersPopularityFromMySQL } from "../config/MySqlConfig.js";
 
 // Punto 4d parte 2
 export const getFollowersUser = async (req, res) => {
@@ -8,6 +9,8 @@ export const getFollowersUser = async (req, res) => {
   const consumer = kafka.createConsumer();
 
   let messagesReceived = false;
+
+  const usersScoreDB = await getUsersPopularityFromMySQL();
 
   try {
     // 1 - Conexion con el servidor de Kafka
@@ -28,11 +31,11 @@ export const getFollowersUser = async (req, res) => {
           let messageObj = JSON.parse(message.value.toString());
           let usuarioEncontrado = false;
 
-          for (let i = 0; i < messsages.length; i++) {
+          for (const element of messsages) {
 
-            if (messsages[i].idUser === messageObj.idUser) {
+            if (element.idUser === messageObj.idUser) {
 
-              messsages[i].follow += messageObj.follow;
+              element.follow += messageObj.follow;
               usuarioEncontrado = true;
               
             }
@@ -43,7 +46,20 @@ export const getFollowersUser = async (req, res) => {
             messsages.push(messageObj);
           }
         }
+
         messsages.sort((a, b) => b.follow - a.follow)
+
+        // Convierte el array de usuarios en un mapa, donde la clave es el id del usuario y el valor es el score
+        const scoreMap = {};
+        usersScoreDB.forEach(user => {
+          scoreMap[user.id_user] = user.score;
+        });
+
+        // Suma el score de la base de datos al score calculado
+        messsages.forEach(user => {
+          user.follow += scoreMap[user.idUser];
+        });
+        
         res.json(messsages);
         messagesReceived = true;
         consumer.disconnect();
