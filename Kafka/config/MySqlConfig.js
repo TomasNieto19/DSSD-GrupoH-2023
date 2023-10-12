@@ -3,7 +3,7 @@ import { createConnection } from "mysql";
 const connection = createConnection({
   host: "localhost",
   user: "root",
-  password: "root",
+  password: "1911",
   database: "DSSDGrupoH2023",
 });
 
@@ -114,6 +114,22 @@ export function getUsersPopularityFromMySQL() {
     });
   });
 }
+
+export function updateUserPopularityInMySQL(userId, newScore, callback) {
+      
+  const sql = "UPDATE popularity_users SET score = ? WHERE id_user = ?";
+
+  connection.query(sql, [newScore, userId], (err, result) => {
+    if (err) {
+      console.error("Error al actualizar la puntuación del usuario:", sql, err);
+      callback(err, null);
+    } else {
+      callback(null, result);
+    }
+  });
+
+}
+
 
 export function saveCommentInMySQL(comment, callback) {
   const sql = "INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES (?, ?, ?)";

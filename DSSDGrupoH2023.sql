@@ -87,8 +87,8 @@ CREATE TABLE `popularity_users` (
 );
 
 INSERT INTO popularity_users (id_user, score) VALUES
-  (1,10),
-  (2,20);
+  (1,1),
+  (2,1);
 
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
