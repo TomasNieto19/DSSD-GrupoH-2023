@@ -1,17 +1,14 @@
-import { getRecipePopularityFromMySQL } from "../config/MySqlConfig.js"
+import { updateRecipePopularityInMySQL } from "../config/MySqlConfig.js";
 import { KafkaConfig } from "../config/KafkaConfig.js";
 
-// Punto 4d parte 1
-export const recipesScoreConsummerId = async (req, res) => {
+export const savePopularityRecipesInMySQL = async () => {
   
   const kafka = new KafkaConfig();
   
   const consumer = kafka.createConsumer();
 
-  const {id} = req.params
+  let messagesReceived = false;
 
-  let messagesReceived = false; 
-  
   try {
 
     // 1 - Conexion con el servidor de Kafka
@@ -28,35 +25,39 @@ export const recipesScoreConsummerId = async (req, res) => {
         let recipes = []
 
         for (let recipe of batch.messages) {
-           console.log(recipe.value.toString())
+           
+          messagesReceived = true; 
+
           recipes.push(JSON.parse(recipe.value.toString()))
 
         }
         
-        // 4 - Se calcula el puntaje promedio de las recetas y retorna un array con las recetas y su puntaje promedio
-        const recipesAverageScore = calcularPuntajePromedioDeRecetas(recipes, id);
-
-        // 5 - Se obtiene el puntaje de la receta desde la base de datos
-        const recipeScoreDataBase = await getRecipePopularityFromMySQL(id);
-
-        // 6 - Se suma el puntaje de la receta desde la base de datos al puntaje promedio de la receta
-        recipesAverageScore[0].averageScore+=recipeScoreDataBase;
-
-        res.json(recipesAverageScore)
-
-        messagesReceived = true; 
-
         consumer.disconnect()
+
+        // 4 - Se calcula el puntaje promedio de las recetas y retorna un array con las recetas y su puntaje promedio
+        const recipesAverageScore = calcularPuntajePromedioDeRecetas(recipes);
+
+        recipesAverageScore.forEach(recipe => {
+
+            // 5 - Se actualiza el puntaje de la receta en la base de datos
+            updateRecipePopularityInMySQL(recipe.idRecipe, recipe.averageScore, (err, result) => {
+                if (err) {
+                console.error("Error al actualizar el puntaje de la receta:", err);
+                } else {
+                console.log("Puntaje de la receta actualizado con éxito:", result);
+                }
+            });
+
+        });
       }
     })
     
     setTimeout(() => {
       if (!messagesReceived) {
         consumer.disconnect();
-        res.status(204).json({ message: "No hay elementos en el tópico." });
       }
     }, process.env.TIMEOUT);
-    
+
   } catch (error) {
 
     console.error("ERROR EN CONSUMER: " + error);
@@ -64,7 +65,7 @@ export const recipesScoreConsummerId = async (req, res) => {
   }
 };
 
-function calcularPuntajePromedioDeRecetas(recipes, id) {
+function calcularPuntajePromedioDeRecetas(recipes) {
 
   const puntajesTotalesPorReceta = recipes.reduce((result, item) => {
 
@@ -92,16 +93,12 @@ function calcularPuntajePromedioDeRecetas(recipes, id) {
 
   resultadoFinal.forEach(recipeItem => {
 
-    let recipe;
-
-    if(recipeItem.idRecipe == id){
-        recipe = {
-            idRecipe: recipeItem.idRecipe,
-            averageScore: recipeItem.score / recipeItem.elements
-          };
-    }
-    if(recipe){recetasPromedio.push(recipe);}
+    const recipe = {
+      idRecipe: recipeItem.idRecipe,
+      averageScore: recipeItem.score / recipeItem.elements
+    };
     
+    recetasPromedio.push(recipe);
 
   });
 

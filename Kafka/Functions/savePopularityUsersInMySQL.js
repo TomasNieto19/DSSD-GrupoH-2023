@@ -1,8 +1,9 @@
+
 import { KafkaConfig } from "../config/KafkaConfig.js";
-import { getUsersPopularityFromMySQL } from "../config/MySqlConfig.js";
+import { getUsersPopularityFromMySQL, updateUserPopularityInMySQL } from "../config/MySqlConfig.js";
 
 // Punto 4d parte 2
-export const getFollowersUser = async (req, res) => {
+export const savePopularityUsersInMySQL = async () => {
 
   const kafka = new KafkaConfig();
   
@@ -55,12 +56,26 @@ export const getFollowersUser = async (req, res) => {
           scoreMap[user.id_user] = user.score;
         });
 
+        console.log(scoreMap);
+        console.log(messsages);
+
         // Suma el score de la base de datos al score calculado
         messsages.forEach(user => {
+
           user.follow += scoreMap[user.idUser];
+
+            // Guarda el score en la base de datos
+            updateUserPopularityInMySQL(user.idUser, user.follow, (err, result) => {
+              if (err) {
+                console.error("Error al actualizar la popularidad del usuario:", err);
+              } else {
+                console.log("Popularidad del usuario actualizada:", result);
+              }
+            });
         });
         
-        res.json(messsages);
+        console.log(messsages);
+
         messagesReceived = true;
         consumer.disconnect();
 
@@ -70,13 +85,12 @@ export const getFollowersUser = async (req, res) => {
     setTimeout(() => {
       if (!messagesReceived) {
         consumer.disconnect();
-        res.status(204).json({ message: "No hay elementos en el tópico." });
       }
     }, process.env.TIMEOUT);
     
   } catch (error) {
 
-    console.error("ERROR EN CONSUMER DE POPULARIDAD USUARIO: " + error);
+    console.error("ERROR EN CONSUMER DE POPULARIDAD USUARIO QUE GUARDA EN LA BD: " + error);
 
   }
 };

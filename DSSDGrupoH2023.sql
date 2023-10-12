@@ -65,6 +65,31 @@ CREATE TABLE `comments_recipes` (
         REFERENCES recipe (id_recipe)
 );
 
+CREATE TABLE `popularity_recipes` (
+    `id_recipe` INT NOT NULL,
+    `score` INT NOT NULL,
+    PRIMARY KEY (id_recipe),
+    FOREIGN KEY (id_recipe)
+        REFERENCES recipe (id_recipe)
+);
+
+INSERT INTO popularity_recipes (id_recipe, score) VALUES
+  (1,10),
+  (2,20),
+  (3,30);
+  
+CREATE TABLE `popularity_users` (
+  `id_user` INT NOT NULL,
+  `score` INT NOT NULL,
+  PRIMARY KEY (id_user),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+
+INSERT INTO popularity_users (id_user, score) VALUES
+  (1,1),
+  (2,1);
+
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
