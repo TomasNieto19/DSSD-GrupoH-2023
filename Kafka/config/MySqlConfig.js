@@ -59,7 +59,6 @@ export function updateRecipePopularityInMySQL(recipeId, newScore, callback) {
 
       // Si el puntaje calculo es = al que ya estaba guardado, no se hace nada
       if (existingScore === newScore) {
-        console.log("\n\n IGUALES AJJAJAJ" + "\n\n");
         callback(null, null);
         return;
       }
