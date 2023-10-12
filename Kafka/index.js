@@ -6,6 +6,7 @@ import routes from "./routes.js";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { savePopularityRecipesInMySQL } from "./Functions/savePopularityRecipesInMySQL.js";
 
 dotenv.config();
 
@@ -19,8 +20,8 @@ app.use(bodyParser.json());
 
 app.use("/", routes);
 
+// savePopularityRecipesInMySQL();
 
-setInterval(saveCommentsInMySQL, 60 * 1000); // (60 segundos * 1000 ms)
-
+//setInterval(saveCommentsInMySQL, 60 * 1000); // (60 segundos * 1000 ms)
 
 app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));

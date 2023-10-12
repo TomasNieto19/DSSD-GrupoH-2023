@@ -20,7 +20,6 @@ export function testConexion() {
 }
 
 export function getCommentsFromMySQL(recipeId) {
-  
   return new Promise((resolve, reject) => {
     let sql = "SELECT * FROM comments_recipes WHERE id_recipe_comment = ?";
 
@@ -35,17 +34,86 @@ export function getCommentsFromMySQL(recipeId) {
   });
 }
 
+export function getRecipePopularityFromMySQL(recipeId) {
+  return new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM popularity_recipes WHERE id_recipe = ?";
+
+    connection.query(sql, [recipeId], (err, rows) => {
+      if (err) {
+        console.error("Error al ejecutar la consulta:", sql, err);
+        reject(err);
+      } else if (Array.isArray(rows) && rows.length > 0) {
+        resolve(rows[0].score);
+      } else {
+        resolve(0);
+      }
+    });
+  });
+}
+
+export function updateRecipePopularityInMySQL(recipeId, newScore, callback) {
+
+  // Se obtiene el puntaje de la receta de la base de datos
+  getRecipePopularityFromMySQL(recipeId)
+    .then((existingScore) => {
+
+      // Si el puntaje calculo es = al que ya estaba guardado, no se hace nada
+      if (existingScore === newScore) {
+        console.log("\n\n IGUALES AJJAJAJ" + "\n\n");
+        callback(null, null);
+        return;
+      }
+
+      let sql;
+
+      if (existingScore > 0) {
+
+        // Si ya tiene puntaje guardado, se suma al calculado y se guarda
+        const updatedScore = existingScore + newScore;
+
+        sql = "UPDATE popularity_recipes SET score = ? WHERE id_recipe = ?";
+
+        connection.query(sql, [updatedScore, recipeId], (err, result) => {
+          if (err) {
+            console.error("Error al actualizar la popularidad:", sql, err);
+            callback(err, null);
+          } else {
+            callback(null, result);
+          }
+        });
+
+        // En caso de que no haya popularidad para la receta, se inserta
+      } else {
+        sql = "INSERT INTO popularity_recipes (id_recipe, score) VALUES (?, ?)";
+
+        connection.query(sql, [recipeId, newScore], (err, result) => {
+          if (err) {
+            console.error("Error al insertar la popularidad:", sql, err);
+            callback(err, null);
+          } else {
+            callback(null, result);
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      callback(err, null);
+    });
+}
 
 export function saveCommentInMySQL(comment, callback) {
-
   const sql = "INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES (?, ?, ?)";
 
-  connection.query(sql, [comment.idUserComment, comment.idRecipeComment, comment.comment], (err, result) => {
-    if (err) {
-      console.error("Error al ejecutar el INSERT:", sql, err);
-      callback(err, null);
-    } else {
-      callback(null, result);
+  connection.query(
+    sql,
+    [comment.idUserComment, comment.idRecipeComment, comment.comment],
+    (err, result) => {
+      if (err) {
+        console.error("Error al ejecutar el INSERT:", sql, err);
+        callback(err, null);
+      } else {
+        callback(null, result);
+      }
     }
-  });
+  );
 }
