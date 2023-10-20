@@ -1,7 +1,7 @@
-import { imgurApi, kafkaApi, recetasApi } from "../../api/api";
+import { imgurApi, kafkaApi, recetasApi, restApi } from "../../api/api";
 import { setFavs, setFavsRecipes } from "../auth/authSlice";
 
-import { addCommentToList, addRecipe, addRecipeFive, editRecipe, isLoadingRecipes, setFav, setLastFiveRecipes, setLoading, setLoadingFive, setPopularRecipes, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
+import { addCommentToList, addRecipe, addRecipeFive, editRecipe, isLoadingRecipes, setDraftDetail, setDrafts, setFav, setLastFiveRecipes, setLoading, setLoadingFive, setPopularRecipes, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
 
 export const getRecipes = () => {
 
@@ -398,6 +398,55 @@ export const getPopularRecipes = () => {
       popularRecipesData.sort((a, b) => b.averageScore - a.averageScore)
     }
     dispatch(setPopularRecipes(popularRecipesData));
+
+  }
+
+}
+
+export const setCSVFile = (dataCSV) => {
+
+  return async (dispatch, getState) => {
+
+    if(dataCSV && dataCSV.length !== 0){
+
+      for(const draft of dataCSV ){
+
+        const { data, status } = await restApi.post("/rest/postDraft", draft);
+        console.log(data, status);
+
+      }
+
+    }
+    
+
+  }
+
+}
+
+export const getDraftsThunk = () =>{
+
+  return async (dispatch, getState) => {
+    dispatch(isLoadingRecipes());
+    const { data, status } = await restApi.get("/rest/getDrafts");
+    if(status === 200){
+
+      dispatch(setDrafts(data));
+
+    }
+
+  }
+
+}
+
+export const getDraftById = (id) =>{
+
+  return async (dispatch, getState) => {
+    const { data, status } = await restApi.get(`/rest/getDraftId/${id}`);
+    if(status === 200){
+
+      dispatch(setDraftDetail(data));
+
+    }
 
   }
 

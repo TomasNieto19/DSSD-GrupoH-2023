@@ -24,9 +24,12 @@ export default function Recipe({ recipe, type }) {
   const [averageScore, setAverageScore] = useState(recipe.averageScore);
   let hr = 0;
   let min = 0;
-  if (recipe) {
+  if (recipe && recipe.preparationTime) {
     hr = recipe.preparationTime > 60 ? Math.round(recipe.preparationTime / 60) : 0;
     min = recipe.preparationTime - (hr * 60);
+  }else if(recipe && recipe.preparation_time){
+    hr = recipe.preparation_time > 60 ? Math.round(recipe.preparation_time / 60) : 0;
+    min = recipe.preparation_time - (hr * 60);
   }
   useEffect(() => {
     if (recipe.user && recipe.user.userId !== user.userId) {
@@ -46,6 +49,12 @@ export default function Recipe({ recipe, type }) {
   const toFavRecipe = (id, recipe) => {
 
     dispatch(favRecipeThunk(id, recipe));
+
+  }
+
+  const toDraftDetalle = (id) =>{
+
+    navigate(`/draft/${id}`);
 
   }
 
@@ -73,6 +82,31 @@ export default function Recipe({ recipe, type }) {
           </Typography>
         </CardContent>
         </>}
+        {type === "draftList" && <><CardHeader
+          titleTypographyProps={{ color: "#a8add3" }}
+          title={recipe.title}
+        />
+        <CardContent>
+          <Typography variant="body2" color="#a8add3">
+            {recipe.description}
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <Typography variant="body2" color="#a8add3" fontWeight="bold">
+            Categoria: {recipe.category}
+          </Typography>
+        </CardContent>
+        <CardContent>
+          <Typography variant="body2" color="#a8add3" fontWeight="bold">
+            Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
+          </Typography>
+        </CardContent>
+        <CardActions sx={{display: "flex", justifyContent: "end"}}>
+        <Button sx={{ textTransform: 'lowercase' }} onClick={() => toDraftDetalle(recipe.id_draft)}><Typography>
+            Completar / Editar
+          </Typography>
+          </Button>
+          </CardActions></>};
         {!type && <><CardHeader
           avatar={
             <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">

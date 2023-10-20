@@ -16,6 +16,10 @@ export const kafkaApi = axios.create({
     baseURL: "http://localhost:8080"
 })
 
+export const restApi = axios.create({
+    baseURL:"http://localhost:8080"
+})
+
 const headersKafka = {
 
     'Access-Control-Allow-Origin' : '*'

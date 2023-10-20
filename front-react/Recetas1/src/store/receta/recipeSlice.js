@@ -8,7 +8,9 @@ export const recipeSlice = createSlice({
         recipes: [],
         recipeDetail: {},
         lastFiveRecipes: [],
-        popularRecipes: []
+        popularRecipes: [],
+        drafts: [],
+        draftDetail: {}
        
     },
     reducers: {
@@ -103,6 +105,17 @@ export const recipeSlice = createSlice({
         setPopularRecipes: (state, action) => {
             state.popularRecipes = action.payload;
             state.isLoading = false;
+        },
+        setDrafts: (state, action) =>{
+
+            state.drafts = action.payload;
+            state.isLoading = false;
+
+        },
+        setDraftDetail: (state, action)=>{
+
+            state.draftDetail = action.payload;
+
         }
     }
 });
@@ -110,4 +123,4 @@ export const recipeSlice = createSlice({
 
 
 export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore, setScoreRecipes, 
-    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes} = recipeSlice.actions;
+    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes, setDrafts, setDraftDetail} = recipeSlice.actions;
