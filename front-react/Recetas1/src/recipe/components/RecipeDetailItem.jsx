@@ -19,6 +19,7 @@ const RecipeDetailItem = ({ recipe }) => {
     hr = recipe.preparationTime > 60 ? Math.round(recipe.preparationTime / 60) : 0;
     min = recipe.preparationTime - (hr * 60);
   }
+  console.log(recipe);
   const [commentary, setCommentary] = useState();
   const [value, setValue] = useState(recipe.averageScore);
   const [edit, setEdit] = useState(true);

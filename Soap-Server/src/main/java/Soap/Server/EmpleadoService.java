@@ -18,4 +18,6 @@ public interface EmpleadoService {
     @WebMethod(operationName = "postEmpleado")
     @WebResult(name = "ResultadoOperacion")
 	String postEmpleado(@WebParam(name = "nombreEmpleado") String nombreEmpleado);
+    
+    
 }

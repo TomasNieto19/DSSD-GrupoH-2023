@@ -32,10 +32,13 @@ CREATE TABLE `recipe` (
 CREATE TABLE `photo` (
     `id_photo` INT NOT NULL AUTO_INCREMENT,
     `url` VARCHAR(16000) NOT NULL,
-    `id_recipe` INT NOT NULL,
+    `id_recipe` INT,
+    `id_draft` INT,
     PRIMARY KEY (`id_photo`),
     FOREIGN KEY (`id_recipe`)
-        REFERENCES `recipe` (`id_recipe`)
+        REFERENCES `recipe` (`id_recipe`),
+	FOREIGN KEY (`id_draft`)
+		REFERENCES `drafts` (`id_draft`)
 );
 
 CREATE TABLE `follows` (
@@ -102,6 +105,7 @@ CREATE TABLE `messages` (
 ############### INSERTS DE PRUEBA ###############
 
 
+
 INSERT INTO popularity_recipes (id_recipe, score) VALUES
   (1,10),
   (2,20),
@@ -110,6 +114,28 @@ INSERT INTO popularity_recipes (id_recipe, score) VALUES
 INSERT INTO popularity_users (id_user, score) VALUES
   (1,1),
   (2,1);
+
+
+CREATE TABLE `drafts` (
+  `id_draft` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(7500) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `preparation_time` int DEFAULT NULL,
+  `id_user` int NOT NULL,
+  `ingredients` varchar(2000) DEFAULT NULL,
+  `steps` varchar(2000) DEFAULT NULL,
+  PRIMARY KEY (`id_draft`),
+  FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
+);
+  
+CREATE TABLE `popularity_users` (
+  `id_user` INT NOT NULL,
+  `score` INT NOT NULL,
+  PRIMARY KEY (id_user),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
 
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
@@ -144,6 +170,15 @@ INSERT INTO recipe (title, description, ingredients, category, steps, preparatio
    '1. Cortar los filetes por la mitad si fuera necesario y retirar el exceso de grasa.\n2. Picar el perejil y el ajo lo más pequeño posible.\n3. Batir los huevos en un plato hondo y añadir perejil, ajo, sal y pimienta.\n4. En un plato llano, colocar el pan rallado.\n5. Pasar los filetes por pan, luego por huevo, y nuevamente por pan.\n6. Calentar abundante aceite en una sartén u olla ancha.\n7. Freír las milanesas por ambos lados hasta que estén doradas. Una vez listas, colocar sobre un papel absorbente.',
    50,
    1);
+   
+INSERT INTO popularity_recipes (id_recipe, score) VALUES
+  (1,10),
+  (2,20),
+  (3,30);
+
+INSERT INTO popularity_users (id_user, score) VALUES
+  (1,1),
+  (2,1);
 
 INSERT INTO photo (url, id_recipe) VALUES
   ("https://i.imgur.com/I1SyBTh.jpeg", 1),
@@ -163,3 +198,41 @@ INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUE
   (1,1,"Muy buena receta"),
   (1,2,"Excelente comida"),
   (1,3,"Que rica!");
+  
+CREATE TABLE `recipe_book` (
+  `id_recipe_book` INT NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_user` INT NOT NULL, -- seria el id del usuario que lo creo
+  PRIMARY KEY (id_recipe_book),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+
+INSERT INTO recipe_book (name,id_user) values
+("Recetario 1",1),
+("Recetario 2",1);
+
+ CREATE TABLE `recipe_in_recipeBook` (
+   `id` INT NOT NULL auto_increment,
+  `id_recipe_book` INT NOT NULL,
+  `id_recipe` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_recipe_book)
+      REFERENCES recipe_book (id_recipe_book),
+  FOREIGN KEY (id_recipe)
+      REFERENCES recipe (id_recipe)
+);
+
+INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
+(1,1),
+(1,2),
+(2,1);
+
+ CREATE TABLE `moderator` (
+  `id` INT NOT NULL auto_increment,
+  `id_user` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+
