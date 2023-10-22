@@ -142,3 +142,40 @@ INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUE
   (1,1,"Muy buena receta"),
   (1,2,"Excelente comida"),
   (1,3,"Que rica!");
+  
+CREATE TABLE `recipe_book` (
+  `id_recipe_book` INT NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_user` INT NOT NULL, -- seria el id del usuario que lo creo
+  PRIMARY KEY (id_recipe_book),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+
+INSERT INTO recipe_book (name,id_user) values
+("Recetario 1",1),
+("Recetario 2",1);
+
+ CREATE TABLE `recipe_in_recipeBook` (
+   `id` INT NOT NULL auto_increment,
+  `id_recipe_book` INT NOT NULL,
+  `id_recipe` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_recipe_book)
+      REFERENCES recipe_book (id_recipe_book),
+  FOREIGN KEY (id_recipe)
+      REFERENCES recipe (id_recipe)
+);
+
+INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
+(1,1),
+(1,2),
+(2,1);
+
+ CREATE TABLE `moderator` (
+  `id` INT NOT NULL auto_increment,
+  `id_user` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);

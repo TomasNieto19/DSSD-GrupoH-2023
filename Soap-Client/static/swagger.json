@@ -52,6 +52,235 @@
           }
         }
       }
+    },
+    "/soap/agregarRecetario": {
+      "post": {
+        "tags": ["Endpoints"],
+        "summary": "Agregar Recetario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "iduser": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/traerTodosRecetarios": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Traer todos los recetarios",
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/traerRecetarioPorId/{id}": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Traer todos los recetarios",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del recetario a recuperar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/deleteRecipeBook/{id}": {
+      "delete": {
+        "tags": ["Endpoints"],
+        "summary": "Borrar recetarios por id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del recetario a eliminar"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/addRecipeInRecipeBook": {
+      "post": {
+        "tags": ["Endpoints"],
+        "summary": "Agregar Receta en recetario",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idRecipeBook": {
+                    "type": "number"
+                  },
+                  "idRecipe": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/getRecipeInRecipeBookById/{idRecipeBook}": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Traer recetas del recetario",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idRecipeBook",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del recetario a traer con las recetas"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/deleteRecipefromRecipeBook/{idRecipeBook}&{idRecipe}": {
+      "delete": {
+        "tags": ["Endpoints"],
+        "summary": "Borrar receta del recetario por id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idRecipeBook",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del recetario"
+          },
+          {
+            "in": "path",
+            "name": "idRecipe",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID de la receta"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operación completada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/userIsModerator/{idUser}": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Saber si un usuario es Moderador o no",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUser",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del usuario que queres saber si es moderador o no"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
+    
   }
 }
