@@ -1,6 +1,8 @@
 import express from "express";
 import { methodPost } from "./Controllers/methodPost.js";
 import { methodGet } from "./Controllers/methodGet.js";
+import { enviarMensaje } from "./Controllers/enviarMensaje.js";
+import { leerMensajes } from "./Controllers/recibirMensaje.js";
 
 const router = express.Router();
 
@@ -44,5 +46,49 @@ router.post("/rest/post", methodPost);
  *                     type: string
  */
 router.get("/rest/get", methodGet);
+
+/**
+ * @swagger
+ * /rest/enviar:
+ *   post:
+ *     summary: envia un mensaje.
+ *     responses:
+ *       200:
+ *         description: envia un mensaje
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   destinatario:
+ *                     type: string
+ *                   mensaje:
+ *                     type: string
+ *                   asunto:
+ *                     type: string
+ */
+router.post("/rest/enviar", enviarMensaje);
+
+/**
+ * @swagger
+ * /rest/leer:
+ *   get:
+ *     summary: Lee un mensaje.
+ *     responses:
+ *       200:
+ *         description: Lee un mensaje
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ */
+router.get("/rest/leer", leerMensajes);
 
 export default router;
