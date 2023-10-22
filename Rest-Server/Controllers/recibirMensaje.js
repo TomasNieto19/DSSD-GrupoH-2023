@@ -13,7 +13,7 @@ export async function leerMensajes() {
             return [];
         }
     } catch (error) {
-        // Manejar errores de red u otros errores
+        // Manejar errores de red 
         console.error('Error al obtener mensajes:', error);
         return [];
     }
