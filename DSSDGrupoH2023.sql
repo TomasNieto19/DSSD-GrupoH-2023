@@ -157,7 +157,7 @@ INSERT INTO recipe_book (name,id_user) values
 ("Recetario 2",1);
 
  CREATE TABLE `recipe_in_recipeBook` (
-  -- `id` INT NOT NULL auto_increment,
+   `id` INT NOT NULL auto_increment,
   `id_recipe_book` INT NOT NULL,
   `id_recipe` INT NOT NULL,-- la receta que voy a agregar
   PRIMARY KEY (id),
@@ -169,6 +169,13 @@ INSERT INTO recipe_book (name,id_user) values
 
 INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
 (1,1),
-(1,2)
+(1,2),
+(2,1);
 
-select * from recipe_in_recipebook
+ CREATE TABLE `moderator` (
+  `id` INT NOT NULL auto_increment,
+  `id_user` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);

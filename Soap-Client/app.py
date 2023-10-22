@@ -114,6 +114,11 @@ def deleteRecipefromRecipeBook(idRecipeBook,idRecipe):
 
     return jsonify(result)
 
+@app.route('/soap/userIsModerator/<int:idUser>', methods=['GET'])
+def userIsModerator(idUser):
+    result = client.service.userIsModerator(idUser)
+    return jsonify(result)
+
 if __name__ == '__main__':
     print("\n\nFLASK APP EN 8085: http://localhost:8085/swagger" + "\n\n")
     app.run(port=8085)

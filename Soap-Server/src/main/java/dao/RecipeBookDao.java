@@ -190,4 +190,33 @@ public class RecipeBookDao {
 		}
 		return res;
 	}
+	// ----------------Moderator----------------
+	public boolean userIsModerator(int id_user) {
+		
+	    boolean res = false; 
+	    EntityManager em = JPAUtil.getEMF().createEntityManager();
+
+	    try {
+	        em.getTransaction().begin();
+
+	        String sql = "SELECT * FROM moderator WHERE id_user = :id_user";
+	        Query query = em.createNativeQuery(sql);
+	        query.setParameter("id_user", id_user);
+
+	        List<Object[]> results = query.getResultList();
+	        
+	        if (!results.isEmpty()) {
+	            res = true; // Si se encuentra al menos un moderador, establecemos res a true
+	        }
+
+	        em.getTransaction().commit();
+	    } catch (Exception e) {
+	        res=false;
+	    } finally {
+	        em.close();
+	    }
+
+	    return res;
+	}
+
 }

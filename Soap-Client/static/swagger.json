@@ -253,6 +253,33 @@
           }
         }
       }
+    },
+    "/soap/userIsModerator/{idUser}": {
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Saber si un usuario es Moderador o no",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUser",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del usuario que queres saber si es moderador o no"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
     }
     
   }
