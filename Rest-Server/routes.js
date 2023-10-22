@@ -1,11 +1,10 @@
 import express from "express";
-import {  methodPost } from "./Controllers/methodPost.js";
-import {  methodGet } from "./Controllers/methodGet.js";
+import { methodPost } from "./Controllers/methodPost.js";
+import { methodGet } from "./Controllers/methodGet.js";
 import { enviarMensaje } from "./Controllers/enviarMensaje.js";
 import { leerMensajes } from "./Controllers/recibirMensaje.js";
 
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -50,8 +49,8 @@ router.get("/rest/get", methodGet);
 
 /**
  * @swagger
- * /rest/get:
- *   get:
+ * /rest/enviar:
+ *   post:
  *     summary: envia un mensaje.
  *     responses:
  *       200:
@@ -63,14 +62,18 @@ router.get("/rest/get", methodGet);
  *               items:
  *                 type: object
  *                 properties:
- *                   message:
+ *                   destinatario:
+ *                     type: string
+ *                   mensaje:
+ *                     type: string
+ *                   asunto:
  *                     type: string
  */
 router.post("/rest/enviar", enviarMensaje);
 
 /**
  * @swagger
- * /rest/get:
+ * /rest/leer:
  *   get:
  *     summary: Lee un mensaje.
  *     responses:
@@ -87,7 +90,5 @@ router.post("/rest/enviar", enviarMensaje);
  *                     type: string
  */
 router.get("/rest/leer", leerMensajes);
-
-
 
 export default router;
