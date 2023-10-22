@@ -176,7 +176,7 @@ public class RecipeBookDao {
 			
 			String jpql2 = "DELETE Recipe_in_RecipeBook rp WHERE rp.id_recipe_book = :id_recipe_book AND rp.id_recipe = :id_recipe";
 			
-			Query query2 = em.createQuery(jpql2);//se rompe aca
+			Query query2 = em.createQuery(jpql2);
 			query2.setParameter("id_recipe_book", id_recipe_book);
 			query2.setParameter("id_recipe", id_recipe);
 			query2.executeUpdate();

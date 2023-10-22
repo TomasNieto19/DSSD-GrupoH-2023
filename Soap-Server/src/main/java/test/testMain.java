@@ -39,6 +39,8 @@ public class testMain {
 		
 		//System.out.println(RecipeBookDao.getInstance().deleteRecipefromRecipeBook(1, 2));
 		
+		//System.out.println(RecipeBookDao.getInstance().getRecipeInRecipeBookById(1));
+		
 	}
 
 }
