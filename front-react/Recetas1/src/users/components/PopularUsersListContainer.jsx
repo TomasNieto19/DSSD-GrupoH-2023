@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getPopularUsers } from '../../store/popularUsers/popularUsersThunk';
 import { Container, Typography } from '@mui/material';
 import UsersList from './UsersList';
 import Loader from '../../utils/components/Loader';
 import UsersNotFound from './UsersNotFound';
+import { getPopularUsers } from '../../store/user/thunksUser';
 
 const PopularUsersListContainer = () => {
 

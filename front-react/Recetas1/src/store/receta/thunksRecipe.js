@@ -1,7 +1,8 @@
-import { imgurApi, kafkaApi, recetasApi } from "../../api/api";
+import { toast } from "react-toastify";
+import { imgurApi, kafkaApi, recetasApi, restApi } from "../../api/api";
 import { setFavs, setFavsRecipes } from "../auth/authSlice";
 
-import { addCommentToList, addRecipe, addRecipeFive, editRecipe, isLoadingRecipes, setFav, setLastFiveRecipes, setLoading, setLoadingFive, setPopularRecipes, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
+import { addCommentToList, addRecipe, addRecipeFive, deleteDraftState, editRecipe, isLoadingRecipes, setDraftDetail, setDrafts, setFav, setLastFiveRecipes, setLoading, setLoadingCSV, setLoadingFive, setPopularRecipes, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
 
 export const getRecipes = () => {
 
@@ -83,6 +84,7 @@ export const getRecipeByRecipeId = (id) => {
     dispatch(isLoadingRecipes());
     const { data } = await recetasApi.get(`/recipe/${id}`);
     let { data: commentarys, status } = await kafkaApi.get(`/kafka/comments/${id}`);
+    console.log(commentarys)
     const { data: dataScore, status: statusScore } = await kafkaApi.get(`/kafka/recipesScoreId/${id}`)
     let averageScore;
     if (statusScore === 200) {
@@ -102,26 +104,33 @@ export const getRecipeByRecipeId = (id) => {
   }
 }
 
-export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pasos, tiempo, images) => {
+export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pasos, tiempo, images, photosCargadas) => {
   return async (dispatch, getState) => {
+    console.log("las fotos cargadas", photosCargadas);
+    let fotosCargadas;
     const photos = [];
-    for (const image of images) {
-      dispatch(setLoading(true));
-      dispatch(setLoadingFive(true));
-      const { data: dataImg, status: statusImg } = await imgurApi.post("/3/image", image.file, {
-        headers: { 'Authorization': 'Client-ID f65efd43d7c6ecd' }
-      });
-
-      if (statusImg === 200) {
-        const { data: dataUrl } = dataImg;
-        const data = { url: dataUrl.link };
-        photos.push(data);
+    if(images && images.length !== 0 && !images[0].file){
+      fotosCargadas = images;
+    }else{
+      for (const image of images) {
+        dispatch(setLoading(true));
+        dispatch(setLoadingFive(true));
+        const { data: dataImg, status: statusImg } = await imgurApi.post("/3/image", image.file, {
+          headers: { 'Authorization': 'Client-ID b87bf9175769490' }
+        });
+  
+        if (statusImg === 200) {
+          const { data: dataUrl } = dataImg;
+          const data = { url: dataUrl.link };
+          photos.push(data);
+        }else{
+          console.log(data);
+        }
       }
     }
-    dispatch(setLoading(false));
+    let fotosFinal = fotosCargadas ? [...photosCargadas, ...fotosCargadas] : [...photosCargadas, ...photos] 
     const { auth } = getState();
     const { user } = auth;
-
     const bodyPost = {
       "recipe": {
         "title": titulo,
@@ -135,9 +144,9 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
           "name": user.username
         }
       },
-      "photos": photos
+      "photos": fotosFinal
     }
-
+    console.log("estoy estoy enviando: ", bodyPost);
     const { data, status } = await recetasApi.post("/addRecipe", bodyPost);
     if (status === 200 && data.idRecipe !== 0) {
       const bodyState = {
@@ -153,7 +162,7 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
           "userId": user.userId,
           "username": user.username
         },
-        "photos": photos,
+        "photos": fotosFinal,
         "averageScore": 0,
         "commentarys": []
 
@@ -162,7 +171,7 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
 
         "username": user.username,
         "recipeTitle": titulo,
-        "firstPhotoUrl": photos[0]
+        "firstPhotoUrl": fotosFinal[0]
 
       }
       const { data: dataAdd, status: statusAdd } = await kafkaApi.post(`kafka/addRecipe`, bodyAddKafka);
@@ -170,6 +179,16 @@ export const addRecipeThunk = (titulo, descripcion, ingredientes, categoria, pas
 
         dispatch(addRecipe({ recipe: bodyState }));
         dispatch(addRecipeFive(bodyAddKafka));
+        toast.success("La receta fue agregada correctamente",{
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        })
       }
     }
 
@@ -253,7 +272,16 @@ export const editRecipeThunk = (recipe, titulo, descripcion, ingredientes, categ
 
     const { data } = await recetasApi.put("/edit", bodyPost)
     dispatch(editRecipe({ recipe: bodyState }));
-
+    toast.success("La receta fue editada correctamente",{
+      position: "bottom-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    })
 
 
   }
@@ -398,6 +426,148 @@ export const getPopularRecipes = () => {
       popularRecipesData.sort((a, b) => b.averageScore - a.averageScore)
     }
     dispatch(setPopularRecipes(popularRecipesData));
+
+  }
+
+}
+
+export const setCSVFile = (dataCSV) => {
+
+  return async (dispatch, getState) => {
+    setLoadingCSV(true);
+    if(dataCSV && dataCSV.length !== 0){
+
+      for(const draft of dataCSV ){
+
+        const { data, status } = await restApi.post("/rest/postDraft", draft);
+        console.log(data, status);
+
+      }
+
+    }
+    toast.success("CSV Subido correctamente",{
+      position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    })
+    setLoadingCSV(false);
+
+  }
+
+}
+
+export const getDraftsThunk = () =>{
+
+  return async (dispatch, getState) => {
+    dispatch(isLoadingRecipes());
+    const { data, status } = await restApi.get("/rest/getDrafts");
+    if(status === 200){
+
+      dispatch(setDrafts(data));
+
+    }
+
+  }
+
+}
+
+export const getDraftById = (id) =>{
+
+  return async (dispatch, getState) => {
+    dispatch(setLoading(true))
+    const { data, status } = await restApi.get(`/rest/getDraftId/${id}`);
+    if(status === 200){
+      let dataState = {
+        ...data,
+        id_draft: parseInt(id)
+      }
+      dispatch(setDraftDetail(dataState));
+
+    }
+
+  }
+
+}
+
+export const updateDraft = (id, draftUpdate, photos, images) => {
+
+  return async (dispatch, getState) => {
+    dispatch(setLoading(true));
+    const urlPhotos = [];
+    for (const image of images) {
+      const { data: dataImg, status: statusImg } = await imgurApi.post("/3/image", image.file, {
+        headers: { 'Authorization': 'Client-ID f65efd43d7c6ecd' }
+      });
+
+      if (statusImg === 200) {
+        const { data: dataUrl } = dataImg;
+        const data = { url: dataUrl.link };
+        urlPhotos.push(data);
+      }
+    }
+    let finalPhotos = [...photos, ...urlPhotos]
+    let draftUpdateWithPhotos = {
+
+      ...draftUpdate,
+      finalPhotos
+
+    }
+    const { data, status } = await restApi.put(`/rest/putDraft/${id}`, draftUpdateWithPhotos);
+    let draftToUpdate = {
+      ...draftUpdate,
+      "id_draft": id,
+      finalPhotos
+    }
+    if(status === 200){
+      dispatch(setDraftDetail(draftToUpdate));
+      let message = "Se guardaron correctamente los datos";
+      toast.success(message, {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    });
+    }else{
+      let message = "Error al intentar guardar los cambios.";
+      toast.error(message, {
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    })
+    }
+  }
+}
+
+export const deleteDraft = (id) => {
+
+  return async (dispatch, getState) => {
+    const { data, status } = await restApi.delete(`/rest/deleteDraft/${parseInt(id)}`);
+    if(status === 200){
+      toast.success("El borrador eliminado",{
+        position: "bottom-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      })
+    }
 
   }
 

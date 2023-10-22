@@ -28,10 +28,13 @@ CREATE TABLE `recipe` (
 CREATE TABLE `photo` (
     `id_photo` INT NOT NULL AUTO_INCREMENT,
     `url` VARCHAR(16000) NOT NULL,
-    `id_recipe` INT NOT NULL,
+    `id_recipe` INT,
+    `id_draft` INT,
     PRIMARY KEY (`id_photo`),
     FOREIGN KEY (`id_recipe`)
-        REFERENCES `recipe` (`id_recipe`)
+        REFERENCES `recipe` (`id_recipe`),
+	FOREIGN KEY (`id_draft`)
+		REFERENCES `drafts` (`id_draft`)
 );
 
 CREATE TABLE `follows` (
@@ -73,10 +76,18 @@ CREATE TABLE `popularity_recipes` (
         REFERENCES recipe (id_recipe)
 );
 
-INSERT INTO popularity_recipes (id_recipe, score) VALUES
-  (1,10),
-  (2,20),
-  (3,30);
+CREATE TABLE `drafts` (
+  `id_draft` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(7500) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `preparation_time` int DEFAULT NULL,
+  `id_user` int NOT NULL,
+  `ingredients` varchar(2000) DEFAULT NULL,
+  `steps` varchar(2000) DEFAULT NULL,
+  PRIMARY KEY (`id_draft`),
+  FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
+);
   
 CREATE TABLE `popularity_users` (
   `id_user` INT NOT NULL,
@@ -85,11 +96,6 @@ CREATE TABLE `popularity_users` (
   FOREIGN KEY (id_user)
       REFERENCES users (id_user)
 );
-
-INSERT INTO popularity_users (id_user, score) VALUES
-  (1,1),
-  (2,1);
-
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
@@ -123,6 +129,15 @@ INSERT INTO recipe (title, description, ingredients, category, steps, preparatio
    '1. Cortar los filetes por la mitad si fuera necesario y retirar el exceso de grasa.\n2. Picar el perejil y el ajo lo más pequeño posible.\n3. Batir los huevos en un plato hondo y añadir perejil, ajo, sal y pimienta.\n4. En un plato llano, colocar el pan rallado.\n5. Pasar los filetes por pan, luego por huevo, y nuevamente por pan.\n6. Calentar abundante aceite en una sartén u olla ancha.\n7. Freír las milanesas por ambos lados hasta que estén doradas. Una vez listas, colocar sobre un papel absorbente.',
    50,
    1);
+   
+INSERT INTO popularity_recipes (id_recipe, score) VALUES
+  (1,10),
+  (2,20),
+  (3,30);
+
+INSERT INTO popularity_users (id_user, score) VALUES
+  (1,1),
+  (2,1);
 
 INSERT INTO photo (url, id_recipe) VALUES
   ("https://i.imgur.com/I1SyBTh.jpeg", 1),

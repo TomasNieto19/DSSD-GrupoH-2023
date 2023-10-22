@@ -1,17 +1,20 @@
 import { Add, DeleteOutline, Label } from '@mui/icons-material'
-import { Button, Container, ImageList, ImageListItem, TextField, Typography } from '@mui/material'
+import { Button, Container, ImageList, ImageListItem, TextField, Typography} from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { addRecipeThunk } from '../../store/receta/thunksRecipe'
+import { addRecipeThunk, setCSVFile } from '../../store/receta/thunksRecipe'
 import { recetasApi } from '../../api/api'
 import { toast } from 'react-toastify'
+import Papa from 'papaparse';
 
 
 export const AddRecipe = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {user}= useSelector(state=> state.auth);
+  const {isLoadingCSV}= useSelector(state=> state.recipe);
   const [titulo, setTitulo] = useState();
   const [descripcion, setDescripcion] = useState();
   const [ingredientes, setIngredientes] = useState();
@@ -20,11 +23,12 @@ export const AddRecipe = () => {
   const [tiempo, setTiempo] = useState();
   const [images, setImages] = useState([]);
   const [image, setImage] = useState();
+  const [dataCSV, setDataCSV] = useState([]);
 
   const toInicio = () => {
     if(images.length >= 2){
 
-      dispatch(addRecipeThunk(titulo, descripcion, ingredientes, categoria, pasos, tiempo, images));
+      dispatch(addRecipeThunk(titulo, descripcion, ingredientes, categoria, pasos, tiempo, images, []));
       navigate("/");
     }else{
 
@@ -36,6 +40,36 @@ export const AddRecipe = () => {
     
 
   }
+
+  const toDraft = () =>{
+
+    navigate("/drafts")
+
+  }
+
+  	const onChangeFileCSV = event =>{
+      let csvsRecipes;
+      var file = event.target.files[0];
+      Papa.parse(file, {
+        complete: function(results) {
+          csvsRecipes = results.data.map(recipe=>{
+            return{
+
+              titulo: recipe.titulo,
+              descripcion: recipe.descripcion,
+              categoria: recipe.categoria,
+              tiempoDePreparacion: parseInt(recipe["tiempo de preparacion"]),
+              id_user: parseInt(user.userId)
+
+            }
+
+          })
+          setDataCSV(csvsRecipes);
+        }, header: true
+      });
+      
+    }
+
   const onChangeFile = event => {
     var file = event.target.files[0];
     let reader = new FileReader();
@@ -79,6 +113,12 @@ export const AddRecipe = () => {
 
 
   }
+  
+  const sendCSVData = () =>{
+    console.log(dataCSV)
+    dispatch(setCSVFile(dataCSV))
+
+  }
 
   return (
     <Container sx={{ display: "flex", flexDirection: "column", gap: 3, padding: 5}}>
@@ -106,8 +146,13 @@ export const AddRecipe = () => {
           </ImageListItem>
         ))}
       </ImageList>}
-
       <Button variant='contained' sx={{ width: "20%", alignSelf: "end" }} onClick={toInicio}>Agregar</Button>
+      <Typography component="h1" fontSize={40}>Agregar recetas desde CSV</Typography>
+      <Container sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+      <input accept=".csv" type='file' onChange={event => onChangeFileCSV(event)} />
+      <Button variant="contained" onClick={()=>sendCSVData()}>ENVIAR CSV</Button>
+      <Button variant="contained" onClick={()=>toDraft()}>IR A BORRADORES</Button>
+      </Container>
 
     </Container>
   )
