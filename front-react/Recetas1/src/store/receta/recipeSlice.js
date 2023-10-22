@@ -5,6 +5,7 @@ export const recipeSlice = createSlice({
     initialState: {
         isLoading: false,
         isLoadingFive: false,
+        isLoadingCSV: false,
         recipes: [],
         recipeDetail: {},
         lastFiveRecipes: [],
@@ -56,6 +57,7 @@ export const recipeSlice = createSlice({
         addRecipe: (state, action)=>{
 
             state.recipes.push(action.payload.recipe);
+            state.isLoading = false;
 
         },
         setRecipeDetail: (state, action)=>{
@@ -115,7 +117,16 @@ export const recipeSlice = createSlice({
         setDraftDetail: (state, action)=>{
 
             state.draftDetail = action.payload;
+            state.isLoading = false;
 
+        },
+        deleteDraftState: (state, action)=>{
+            let idDraft = action.payload;
+            let filterArray = state.drafts.filter(draft => draft.id_draft !== idDraft);
+            state.drafts = filterArray;
+        },
+        setLoadingCSV: (state, action) =>{
+            state.isLoadingCSV = action.payload;
         }
     }
 });
@@ -123,4 +134,4 @@ export const recipeSlice = createSlice({
 
 
 export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore, setScoreRecipes, 
-    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes, setDrafts, setDraftDetail} = recipeSlice.actions;
+    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes, setDrafts, setDraftDetail,deleteDraftState, setLoadingCSV} = recipeSlice.actions;

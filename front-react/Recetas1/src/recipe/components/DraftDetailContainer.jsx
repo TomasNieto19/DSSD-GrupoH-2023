@@ -5,10 +5,11 @@ import { getDraftById } from '../../store/receta/thunksRecipe';
 import { useParams } from 'react-router-dom';
 import DraftItem from './DraftItem';
 import { Container } from '@mui/material';
+import Loader from '../../utils/components/Loader';
 
 const DraftDetailContainer = () => {
     const {id} = useParams();
-    const {draftDetail} = useSelector(state => state.recipe);
+    const {draftDetail, isLoading} = useSelector(state => state.recipe);
     const dispatch = useDispatch();
     useEffect(() => {
       dispatch(getDraftById(id));
@@ -17,7 +18,7 @@ const DraftDetailContainer = () => {
 
   return (
     <Container sx={{display: "flex", justifyContent: "center", padding: 10}}>
-        <DraftItem draft={draftDetail}/>
+        {isLoading ? <Loader/>: <DraftItem draft={draftDetail}/>}
     </Container>
   )
 }

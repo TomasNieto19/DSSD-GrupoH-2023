@@ -15,8 +15,10 @@ export const commentsConsumer = async (req, res) => {
  try {
 
     // Trae los comentarios de la base de datos
-    let messages = await getCommentsFromMySQL(id);
+    let commentsDB = await getCommentsFromMySQL(id);
 
+    let messages = passageDBtoJSON(commentsDB);
+      
     // 1 - Conexion con el servidor de Kafka
     await consumer.connect();
     
@@ -24,7 +26,7 @@ export const commentsConsumer = async (req, res) => {
     await consumer.subscribe({topic: process.env.COMENTARIOS, fromBeginning: true})
 
     // 3 - Se consumen los mensajes del topico
-    consumer.run({
+    await consumer.run({
       eachBatchAutoResolve: false,
       eachBatch: async ({ batch }) => {
 
@@ -44,12 +46,6 @@ export const commentsConsumer = async (req, res) => {
       }
     })
 
-    if(messages.length != 0){
-      res.json(messages)
-      messagesReceived = true;
-      consumer.disconnect()
-    }
-
     setTimeout(() => {
       if (!messagesReceived) {
         consumer.disconnect();
@@ -57,9 +53,22 @@ export const commentsConsumer = async (req, res) => {
       }
     }, process.env.TIMEOUT);
     
+    
   } catch (error) {
 
     console.error("ERROR EN CONSUMER COMENTARIOS DE RECETA POR ID: " + error);
 
   }
 };
+
+function passageDBtoJSON(messagesDB){
+
+  let messages = messagesDB.map(row => ({
+
+    idUserComment: row.id_user_comment,
+    idRecipeComment: row.id_recipe_comment,
+    comment: row.comment
+  }));
+
+  return messages;
+}

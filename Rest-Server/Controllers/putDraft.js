@@ -12,8 +12,7 @@ export const putDraft = async (req, res) => {
         console.error("Error al intentar insertar el borrador: ", err);
 
       }else{
-
-        res.json({id_draft: result});
+        res.json({result});
 
       }
 

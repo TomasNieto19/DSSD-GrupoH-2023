@@ -10,7 +10,6 @@ const DraftListContainer = () => {
 
     const dispatch = useDispatch();
     const {drafts, isLoading} = useSelector(state=> state.recipe);
-    console.log(drafts);
     useEffect(() => {
         dispatch(getDraftsThunk());
     }, [])

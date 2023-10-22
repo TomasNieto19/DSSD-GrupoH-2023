@@ -13,7 +13,7 @@ export const imgurApi = axios.create({
 })
 
 export const kafkaApi = axios.create({
-    baseURL: "http://localhost:8080"
+    baseURL: "http://localhost:8083"
 })
 
 export const restApi = axios.create({

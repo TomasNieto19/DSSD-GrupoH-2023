@@ -28,10 +28,13 @@ CREATE TABLE `recipe` (
 CREATE TABLE `photo` (
     `id_photo` INT NOT NULL AUTO_INCREMENT,
     `url` VARCHAR(16000) NOT NULL,
-    `id_recipe` INT NOT NULL,
+    `id_recipe` INT,
+    `id_draft` INT,
     PRIMARY KEY (`id_photo`),
     FOREIGN KEY (`id_recipe`)
-        REFERENCES `recipe` (`id_recipe`)
+        REFERENCES `recipe` (`id_recipe`),
+	FOREIGN KEY (`id_draft`)
+		REFERENCES `drafts` (`id_draft`)
 );
 
 CREATE TABLE `follows` (
@@ -75,10 +78,10 @@ CREATE TABLE `popularity_recipes` (
 
 CREATE TABLE `drafts` (
   `id_draft` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `description` varchar(7500) NOT NULL,
-  `category` varchar(255) NOT NULL,
-  `preparation_time` int NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(7500) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `preparation_time` int DEFAULT NULL,
   `id_user` int NOT NULL,
   `ingredients` varchar(2000) DEFAULT NULL,
   `steps` varchar(2000) DEFAULT NULL,

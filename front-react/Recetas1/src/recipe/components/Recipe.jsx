@@ -101,6 +101,16 @@ export default function Recipe({ recipe, type }) {
             Tiempo de preparación: {hr == 0 ? "" : hr + "hr."} {min + "min"}.
           </Typography>
         </CardContent>
+        {recipe.ingredients && <CardContent>
+          <Typography variant="body2" color="#a8add3" fontWeight="bold">
+            Ingredientes: {recipe.ingredients}
+          </Typography>
+        </CardContent>}
+        {recipe.steps && <CardContent>
+          <Typography variant="body2" color="#a8add3" fontWeight="bold">
+            Pasos: {recipe.steps}
+          </Typography>
+        </CardContent>}
         <CardActions sx={{display: "flex", justifyContent: "end"}}>
         <Button sx={{ textTransform: 'lowercase' }} onClick={() => toDraftDetalle(recipe.id_draft)}><Typography>
             Completar / Editar

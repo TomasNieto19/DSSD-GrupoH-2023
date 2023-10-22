@@ -5,6 +5,7 @@ import { getDrafts } from "./Controllers/getDrafts.js";
 import { postDraft } from "./Controllers/postDraft.js";
 import { getDraftsId } from "./Controllers/getDraftId.js";
 import { putDraft } from "./Controllers/putDraft.js";
+import { deleteDraft } from "./Controllers/deleteDraft.js";
 
 
 const router = express.Router();
@@ -127,6 +128,25 @@ router.get("/rest/getDraftId/:id", getDraftsId);
  *                     type: string
  */
 router.put("/rest/putDraft/:id", putDraft);
+/**
+ * @swagger
+ * /rest/postDraft:
+ *   post:
+ *     summary: Lee un mensaje.
+ *     responses:
+ *       200:
+ *         description: Lee un mensaje
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ */
+router.delete("/rest/deleteDraft/:id", deleteDraft);
 
 
 export default router;
