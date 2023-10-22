@@ -170,5 +170,28 @@ INSERT INTO recipe_book (name,id_user) values
 INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
 (1,1),
 (1,2)
+;
+CREATE TABLE `moderator` (
+  -- `id` INT NOT NULL auto_increment,
+  `id_moderator` INT NOT NULL AUTO_INCREMENT,
+  `id_user` INT NOT NULL,-- usuarios
+  PRIMARY KEY (id_moderator),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+INSERT INTO moderator values (1,1);
 
-select * from recipe_in_recipebook
+CREATE TABLE `recipe_has_report` (
+  `id_report` INT NOT NULL AUTO_INCREMENT,
+  `id_recipe` INT NOT NULL,
+  `reason` varchar(100)NOT NULL,
+  `is_reason` boolean,
+  PRIMARY KEY (id_report),
+  FOREIGN KEY (id_recipe)
+      REFERENCES recipe (id_recipe)
+);
+
+INSERT INTO recipe_has_report values (1,1,"Peligroso", true);
+
+select * from recipe_has_report;
+select * from recipe;

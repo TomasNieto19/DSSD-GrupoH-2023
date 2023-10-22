@@ -52,6 +52,115 @@
           }
         }
       }
+    },
+    "/soap/agregarDenuncia":{
+      "post":{
+        "tags": ["Endpoints"],
+        "summary": "Agregar Denuncias",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_recipe": {
+                    "type": "number"
+                  },
+                  "reason":{
+                    "type" : "string"
+                  },
+                  "is_reason":{
+                    "type" : "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/traerTodasDenuncias":{
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Traer todas las denuncias",
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/ignorarDenuncia/{id_report}": {
+      "put": {
+        "summary": "Ignorar una denuncia",
+        "description": "Marca una denuncia como ignorada.",
+        "parameters": [
+          {
+            "name": "id_report",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Denuncia ignorada exitosamente"
+          },
+          "404": {
+            "description": "Denuncia no encontrada"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/soap/eliminarReceta/{id_recipe}": {
+      "delete": {
+        "summary": "Eliminar una receta",
+        "description": "Elimina una receta de informe por ID de receta.",
+        "parameters": [
+          {
+            "name": "id_recipe",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receta eliminada exitosamente"
+          },
+          "404": {
+            "description": "Receta no encontrada"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
     }
   }
 }
