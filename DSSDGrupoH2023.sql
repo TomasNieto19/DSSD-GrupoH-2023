@@ -2,6 +2,10 @@ create database DSSDGrupoH2023;
 
 use DSSDGrupoH2023;
 
+
+############### CREAR TABLAS ###############
+
+
 CREATE TABLE `users` (
     `id_user` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
@@ -72,19 +76,36 @@ CREATE TABLE `popularity_recipes` (
     FOREIGN KEY (id_recipe)
         REFERENCES recipe (id_recipe)
 );
+  
+CREATE TABLE `popularity_users` (
+    `id_user` INT NOT NULL,
+    `score` INT NOT NULL,
+    PRIMARY KEY (id_user),
+    FOREIGN KEY (id_user)
+        REFERENCES users (id_user)
+);
+
+CREATE TABLE `messages` (
+    id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
+    id_remitente INT,
+    id_destinatario INT,
+    asunto VARCHAR(255) NOT NULL,
+    mensaje VARCHAR(255) NOT NULL,
+    respuesta VARCHAR(255) DEFAULT NULL,
+    FOREIGN KEY (id_remitente)
+        REFERENCES users (id_user),
+    FOREIGN KEY (id_destinatario)
+        REFERENCES users (id_user)
+);
+
+
+############### INSERTS DE PRUEBA ###############
+
 
 INSERT INTO popularity_recipes (id_recipe, score) VALUES
   (1,10),
   (2,20),
   (3,30);
-  
-CREATE TABLE `popularity_users` (
-  `id_user` INT NOT NULL,
-  `score` INT NOT NULL,
-  PRIMARY KEY (id_user),
-  FOREIGN KEY (id_user)
-      REFERENCES users (id_user)
-);
 
 INSERT INTO popularity_users (id_user, score) VALUES
   (1,1),

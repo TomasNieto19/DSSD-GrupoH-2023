@@ -1,16 +1,17 @@
-import express from "express";
-import { methodPost } from "./Controllers/methodPost.js";
-import { methodGet } from "./Controllers/methodGet.js";
+import { responderMensaje } from "./Controllers/responderMensaje.js";
 import { enviarMensaje } from "./Controllers/enviarMensaje.js";
-import { leerMensajes } from "./Controllers/recibirMensaje.js";
+import { leerMensajes } from "./Controllers/leerMensajes.js";
+import express from "express";
 
 const router = express.Router();
 
+// Endpoints pertenecientes al punto 3 -> Correo Interno
+
 /**
  * @swagger
- * /rest/post:
+ * /rest/enviarMensaje:
  *   post:
- *     summary: Envia un mensaje al server REST
+ *     summary: Se envia un mensaje a otro usuario.
  *     requestBody:
  *       description: Datos del mensaje a enviar.
  *       required: true
@@ -19,76 +20,84 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               message:
+ *               idRemitente:
+ *                 type: integer
+ *               idDestinatario:
+ *                 type: integer
+ *               asunto:
+ *                 type: string
+ *               mensaje:
  *                 type: string
  *     responses:
  *       200:
- *         description: Mensaje recibido!
+ *         description: Mensaje enviado!
+ *       500:
+ *         description: Error al enviar el mensaje!.
  */
-router.post("/rest/post", methodPost);
+router.post("/rest/enviarMensaje", enviarMensaje);
 
 /**
  * @swagger
- * /rest/get:
+ * /rest/leerMensajes/{idUser}:
  *   get:
- *     summary: Lee un mensaje.
+ *     summary: Trae los mensajes de un usuario
+ *     parameters:
+ *       - in: path
+ *         name: idUser
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: El id del usuario
  *     responses:
  *       200:
- *         description: Lee un mensaje
+ *         description: Mensajes obtenidos correctamente.
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 type: object
  *                 properties:
- *                   message:
- *                     type: string
- */
-router.get("/rest/get", methodGet);
-
-/**
- * @swagger
- * /rest/enviar:
- *   post:
- *     summary: envia un mensaje.
- *     responses:
- *       200:
- *         description: envia un mensaje
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   destinatario:
- *                     type: string
- *                   mensaje:
- *                     type: string
+ *                   idMensaje:
+ *                     type: integer
+ *                   idRemitente:
+ *                     type: integer
+ *                   idDestinatario:
+ *                     type: integer
  *                   asunto:
- *                     type: string
+ *                    type: string
+ *                   mensaje:
+ *                    type: string
+ *                   respuesta:
+ *                    type: string
+ *       500:
+ *         description: Error al obtener los mensajes.
  */
-router.post("/rest/enviar", enviarMensaje);
+router.get("/rest/leerMensajes/:idUser", leerMensajes);
 
 /**
  * @swagger
- * /rest/leer:
- *   get:
- *     summary: Lee un mensaje.
+ * /rest/responderMensaje:
+ *   post:
+ *     summary: Responde a un mensaje.
+ *     requestBody:
+ *       description: Datos para responder el mensaje.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idMensaje:
+ *                 type: integer
+ *               respuesta:
+ *                 type: string
  *     responses:
  *       200:
- *         description: Lee un mensaje
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   message:
- *                     type: string
+ *         description: Mensaje respondido!
+ *       500:
+ *         description: Error al enviar el mensaje!
  */
-router.get("/rest/leer", leerMensajes);
+router.post("/rest/responderMensaje", responderMensaje);
 
 export default router;
