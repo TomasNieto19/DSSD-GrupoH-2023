@@ -8,14 +8,17 @@ import services.RecipeHasReportServiceImpl;
 public class Main {
     public static void main(String[] args) {
 
-        String url = "http://localhost:9001/ws-grupoH-app/RecipeHasReportServiceImpl";
-      
-        String url = "http://localhost:9000/ws-grupoH-app/RecipeBookServiceImpl";
+        String url1 = "http://localhost:9000/ws-grupoH-app/RecipeHasReportServiceImpl";
+        
+        String url2 = "http://localhost:9000/ws-grupoH-app/RecipeBookServiceImpl";
 
-        //Endpoint.publish(url, new EmpleadoServiceImpl());
-        Endpoint.publish(url, new RecipeHasReportServiceImpl());
-
-        System.out.println("\n\nServicio iniciado en: " + url + "?wsdl");
+        Endpoint.publish(url1, new RecipeHasReportServiceImpl());
+        
+        Endpoint.publish(url2, new RecipeBookServiceImpl());
+        
+        System.out.println("\n\nServicio iniciado en: " + url1 + "?wsdl");
+        
+        System.out.println("\n\nServicio iniciado en: " + url2 + "?wsdl");
 
     }
 }

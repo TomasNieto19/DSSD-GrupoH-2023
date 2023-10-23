@@ -5,27 +5,21 @@
     "description": "Python + Flask + SudsClient + Swagger",
     "version": "0.0.1"
   },
-  "paths": {
-    "/soap/saludo": {
-      "get": {
-        "tags": ["Endpoints"],
-        "summary": "Obtener un saludo",
-        "responses": {
-          "200": {
-            "description": "Operacion compleatada",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
+  "tags": [
+    {
+      "name": "Recetarios",
+      "description": "Endpoints relacionados con los recetarios (PUNTO 1)"
     },
-    "/soap/saludar": {
+    {
+      "name": "Denuncia de recetas",
+      "description": "Endpoints relacionados con la denuncia de recetas (PUNTO 2)"
+    }
+  ],
+  "paths": {
+    "/soap/agregarDenuncia": {
       "post": {
-        "tags": ["Endpoints"],
-        "summary": "Saludar a un usuario",
+        "tags": ["Denuncia de recetas"],
+        "summary": "Agregar Denuncias",
         "requestBody": {
           "required": true,
           "content": {
@@ -33,8 +27,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "nombre": {
+                  "id_recipe": {
+                    "type": "number"
+                  },
+                  "reason": {
                     "type": "string"
+                  },
+                  "is_reason": {
+                    "type": "boolean"
                   }
                 }
               }
@@ -53,17 +53,104 @@
         }
       }
     },
-
-    "/soap/agregarDenuncia":{
-      "post":{
-        "tags": ["Endpoints"],
-        "summary": "Agregar Denuncias",
+    "/soap/traerTodasDenuncias": {
+      "get": {
+        "tags": ["Denuncia de recetas"],
+        "summary": "Traer todas las denuncias",
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/soap/ignorarDenuncia/{id_report}": {
+      "put": {
+        "tags": ["Denuncia de recetas"],
+        "summary": "Ignorar una denuncia",
+        "description": "Marca una denuncia como ignorada.",
+        "parameters": [
+          {
+            "name": "id_report",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Denuncia ignorada exitosamente"
+          },
+          "404": {
+            "description": "Denuncia no encontrada"
+          }
+        },
+        "consumes": ["application/json"],
+        "produces": ["application/json"]
+      }
+    },
+    "/soap/eliminarReceta/{id_recipe}": {
+      "delete": {
+        "tags": ["Denuncia de recetas"],
+        "summary": "Eliminar una receta",
+        "description": "Elimina una receta de informe por ID de receta.",
+        "parameters": [
+          {
+            "name": "id_recipe",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receta eliminada exitosamente"
+          },
+          "404": {
+            "description": "Receta no encontrada"
+          }
+        },
+        "consumes": ["application/json"],
+        "produces": ["application/json"]
+      }
+    },
+    "/soap/userIsModerator/{idUser}": {
+      "get": {
+        "tags": ["Denuncia de recetas"],
+        "summary": "Saber si un usuario es Moderador o no",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUser",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID del usuario que queres saber si es moderador o no"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion compleatada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
 
     "/soap/agregarRecetario": {
       "post": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Agregar Recetario",
-
         "requestBody": {
           "required": true,
           "content": {
@@ -71,15 +158,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-
-                  "id_recipe": {
-                    "type": "number"
-                  },
-                  "reason":{
-                    "type" : "string"
-                  },
-                  "is_reason":{
-                    "type" : "boolean"
                   "name": {
                     "type": "string"
                   },
@@ -103,16 +181,10 @@
         }
       }
     },
-
-    "/soap/traerTodasDenuncias":{
-      "get": {
-        "tags": ["Endpoints"],
-        "summary": "Traer todas las denuncias",
     "/soap/traerTodosRecetarios": {
       "get": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Traer todos los recetarios",
-
         "responses": {
           "200": {
             "description": "Operacion compleatada",
@@ -125,21 +197,9 @@
         }
       }
     },
-
-    "/soap/ignorarDenuncia/{id_report}": {
-      "put": {
-        "summary": "Ignorar una denuncia",
-        "description": "Marca una denuncia como ignorada.",
-        "parameters": [
-          {
-            "name": "id_report",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-
     "/soap/traerRecetarioPorId/{id}": {
       "get": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Traer todos los recetarios",
         "parameters": [
           {
@@ -150,37 +210,10 @@
               "type": "integer"
             },
             "description": "ID del recetario a recuperar"
-
           }
         ],
         "responses": {
           "200": {
-
-            "description": "Denuncia ignorada exitosamente"
-          },
-          "404": {
-            "description": "Denuncia no encontrada"
-          }
-        },
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ]
-      }
-    },
-    "/soap/eliminarReceta/{id_recipe}": {
-      "delete": {
-        "summary": "Eliminar una receta",
-        "description": "Elimina una receta de informe por ID de receta.",
-        "parameters": [
-          {
-            "name": "id_recipe",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-
             "description": "Operacion compleatada",
             "content": {
               "application/json": {
@@ -193,7 +226,7 @@
     },
     "/soap/deleteRecipeBook/{id}": {
       "delete": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Borrar recetarios por id",
         "parameters": [
           {
@@ -220,7 +253,7 @@
     },
     "/soap/addRecipeInRecipeBook": {
       "post": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Agregar Receta en recetario",
         "requestBody": {
           "required": true,
@@ -254,7 +287,7 @@
     },
     "/soap/getRecipeInRecipeBookById/{idRecipeBook}": {
       "get": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Traer recetas del recetario",
         "parameters": [
           {
@@ -281,7 +314,7 @@
     },
     "/soap/deleteRecipefromRecipeBook/{idRecipeBook}&{idRecipe}": {
       "delete": {
-        "tags": ["Endpoints"],
+        "tags": ["Recetarios"],
         "summary": "Borrar receta del recetario por id",
         "parameters": [
           {
@@ -301,25 +334,10 @@
               "type": "integer"
             },
             "description": "ID de la receta"
-
           }
         ],
         "responses": {
           "200": {
-
-            "description": "Receta eliminada exitosamente"
-          },
-          "404": {
-            "description": "Receta no encontrada"
-          }
-        },
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ]
-
             "description": "Operación completada",
             "content": {
               "application/json": {
@@ -329,35 +347,6 @@
           }
         }
       }
-    },
-    "/soap/userIsModerator/{idUser}": {
-      "get": {
-        "tags": ["Endpoints"],
-        "summary": "Saber si un usuario es Moderador o no",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "idUser",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "ID del usuario que queres saber si es moderador o no"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operacion compleatada",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-
-      }
     }
-    
   }
 }
