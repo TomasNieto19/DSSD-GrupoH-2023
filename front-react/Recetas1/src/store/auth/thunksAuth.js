@@ -62,6 +62,7 @@ export const loginUserThunk = (username, password) => {
 
                     }
                     dispatch(toLoginUser({ user: bodyState }));
+                    console.log("hola?")
                     localStorage.setItem('user', JSON.stringify(bodyState))
 
                 }

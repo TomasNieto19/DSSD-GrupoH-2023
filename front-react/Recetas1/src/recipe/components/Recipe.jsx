@@ -15,12 +15,12 @@ import { Button, Rating } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { favRecipeThunk } from '../../store/receta/thunksRecipe';
 
-export default function Recipe({ recipe, type }) {
+const Recipe = ({recipe, type}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [disabledEdit, setDisabledEdit] = useState();
   const { user } = useSelector(state => state.auth);
-
+  console.log(recipe)
   const [averageScore, setAverageScore] = useState(recipe.averageScore);
   let hr = 0;
   let min = 0;
@@ -189,3 +189,6 @@ export default function Recipe({ recipe, type }) {
     </Card>
   );
 }
+
+
+export default Recipe

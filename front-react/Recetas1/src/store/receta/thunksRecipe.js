@@ -11,18 +11,16 @@ export const getRecipes = () => {
     const { user } = auth;
     const { favoriteRecipes } = user;
     dispatch(isLoadingRecipes());
-
     const { data } = await recetasApi.get("/recipes");
     const { recipes } = data;
     const { data: dataScores, status } = await kafkaApi.get("/kafka/recipesScore")
     let recipesData = recipes.map((recipe) => {
-
       let recipeFav = favoriteRecipes.find((recipeFav) => recipeFav.idRecipe === recipe.idRecipe);
       let averageScore;
       if (status === 200) {
 
         let recipeScore = dataScores.find((recipeScore) => recipeScore.idRecipe === recipe.idRecipe);
-        averageScore = recipeScore ? recipeScore.averageScore : 0;
+        averageScore = recipeScore ? recipeScore.averageScore : 0;  console.log("mehiceee")
 
       }
       return {
@@ -383,11 +381,12 @@ export const setLastFiveRecipesThunk = () => {
   return async (dispatch, getState) => {
     dispatch(setLoadingFive(true));
     const { data, status } = await kafkaApi.get(`/kafka/lastRecipes`);
-
     if (status === 200) {
 
       dispatch(setLastFiveRecipes(data));
 
+    }else{
+      dispatch(setLastFiveRecipes([]))
     }
 
 
