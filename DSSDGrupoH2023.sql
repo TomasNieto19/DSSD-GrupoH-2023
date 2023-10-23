@@ -143,6 +143,16 @@ CREATE TABLE `messages` (
         REFERENCES users (id_user)
 );
 
+CREATE TABLE `recipe_has_report` (
+  `id_report` INT NOT NULL AUTO_INCREMENT,
+  `id_recipe` INT NOT NULL,
+  `reason` varchar(100)NOT NULL,
+  `is_reason` boolean,
+  PRIMARY KEY (id_report),
+  FOREIGN KEY (id_recipe)
+      REFERENCES recipe (id_recipe)
+);
+
 
 ############### INSERTS DE PRUEBA ###############
 
@@ -215,5 +225,7 @@ INSERT INTO recipe_book (name,id_user) values
 
 INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
 (1,1),
-(1,2),
-(2,1);
+
+INSERT INTO moderator values (1,1);
+
+INSERT INTO recipe_has_report values (1,1,"Peligroso", true);

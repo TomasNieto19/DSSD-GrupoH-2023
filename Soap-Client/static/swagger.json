@@ -53,10 +53,17 @@
         }
       }
     },
+
+    "/soap/agregarDenuncia":{
+      "post":{
+        "tags": ["Endpoints"],
+        "summary": "Agregar Denuncias",
+
     "/soap/agregarRecetario": {
       "post": {
         "tags": ["Endpoints"],
         "summary": "Agregar Recetario",
+
         "requestBody": {
           "required": true,
           "content": {
@@ -64,6 +71,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
+
+                  "id_recipe": {
+                    "type": "number"
+                  },
+                  "reason":{
+                    "type" : "string"
+                  },
+                  "is_reason":{
+                    "type" : "boolean"
                   "name": {
                     "type": "string"
                   },
@@ -87,10 +103,16 @@
         }
       }
     },
+
+    "/soap/traerTodasDenuncias":{
+      "get": {
+        "tags": ["Endpoints"],
+        "summary": "Traer todas las denuncias",
     "/soap/traerTodosRecetarios": {
       "get": {
         "tags": ["Endpoints"],
         "summary": "Traer todos los recetarios",
+
         "responses": {
           "200": {
             "description": "Operacion compleatada",
@@ -103,6 +125,18 @@
         }
       }
     },
+
+    "/soap/ignorarDenuncia/{id_report}": {
+      "put": {
+        "summary": "Ignorar una denuncia",
+        "description": "Marca una denuncia como ignorada.",
+        "parameters": [
+          {
+            "name": "id_report",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+
     "/soap/traerRecetarioPorId/{id}": {
       "get": {
         "tags": ["Endpoints"],
@@ -116,10 +150,37 @@
               "type": "integer"
             },
             "description": "ID del recetario a recuperar"
+
           }
         ],
         "responses": {
           "200": {
+
+            "description": "Denuncia ignorada exitosamente"
+          },
+          "404": {
+            "description": "Denuncia no encontrada"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/soap/eliminarReceta/{id_recipe}": {
+      "delete": {
+        "summary": "Eliminar una receta",
+        "description": "Elimina una receta de informe por ID de receta.",
+        "parameters": [
+          {
+            "name": "id_recipe",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+
             "description": "Operacion compleatada",
             "content": {
               "application/json": {
@@ -240,10 +301,25 @@
               "type": "integer"
             },
             "description": "ID de la receta"
+
           }
         ],
         "responses": {
           "200": {
+
+            "description": "Receta eliminada exitosamente"
+          },
+          "404": {
+            "description": "Receta no encontrada"
+          }
+        },
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ]
+
             "description": "Operación completada",
             "content": {
               "application/json": {
@@ -279,6 +355,7 @@
             }
           }
         }
+
       }
     }
     
