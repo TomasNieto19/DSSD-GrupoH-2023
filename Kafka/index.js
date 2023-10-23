@@ -27,4 +27,4 @@ setInterval(savePopularityUsersInMySQL, 300 * 1000); // Lo reliza cada 5 minutos
 
 setInterval(saveCommentsInMySQL, 300 * 1000); 
 
-app.listen(8080, () => console.log("\nServer is running on port 8080.\n"));
+app.listen(8083, () => console.log("\nServer is running on port 8080.\n"));

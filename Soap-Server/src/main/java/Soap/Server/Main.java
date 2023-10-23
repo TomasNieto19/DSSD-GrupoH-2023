@@ -9,6 +9,8 @@ public class Main {
     public static void main(String[] args) {
 
         String url = "http://localhost:9001/ws-grupoH-app/RecipeHasReportServiceImpl";
+      
+        String url = "http://localhost:9000/ws-grupoH-app/RecipeBookServiceImpl";
 
         //Endpoint.publish(url, new EmpleadoServiceImpl());
         Endpoint.publish(url, new RecipeHasReportServiceImpl());

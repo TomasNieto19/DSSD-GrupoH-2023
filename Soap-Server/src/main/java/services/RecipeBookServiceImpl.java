@@ -101,6 +101,11 @@ public class RecipeBookServiceImpl implements IRecipeBookService  {
 		}
 		return res;
 	}
+
+	@Override
+	public boolean userIsModerator(int iduser) {
+		return RecipeBookDao.getInstance().userIsModerator(iduser);
+	}
 	
 
 }

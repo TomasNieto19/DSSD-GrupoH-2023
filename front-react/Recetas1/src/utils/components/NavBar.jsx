@@ -24,7 +24,9 @@ value: "favorites"},
 {text: "Popular Users",
 value: "popularUsers"},
 {text: "Popular Recipes",
-value: "popularRecipes"}];
+value: "popularRecipes"},
+{text: "Drafts",
+value: "drafts"}];
 export const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const handleOpenNavMenu = (event) => {
