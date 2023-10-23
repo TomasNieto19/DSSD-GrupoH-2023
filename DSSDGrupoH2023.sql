@@ -2,9 +2,7 @@ create database DSSDGrupoH2023;
 
 use DSSDGrupoH2023;
 
-
 ############### CREAR TABLAS ###############
-
 
 CREATE TABLE `users` (
     `id_user` INT NOT NULL AUTO_INCREMENT,
@@ -111,7 +109,7 @@ CREATE TABLE `recipe_book` (
         REFERENCES users (id_user)
 );
 
-CREATE TABLE `recipe_in_recipeBook` (
+CREATE TABLE `recipe_in_recipebook` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `id_recipe_book` INT NOT NULL,
     `id_recipe` INT NOT NULL,
@@ -143,23 +141,33 @@ CREATE TABLE `messages` (
         REFERENCES users (id_user)
 );
 
+CREATE TABLE `recipe_has_report` (
+    `id_report` INT NOT NULL AUTO_INCREMENT,
+    `id_recipe` INT NOT NULL,
+    `reason` VARCHAR(100) NOT NULL,
+    `is_reason` BOOLEAN,
+    PRIMARY KEY (id_report),
+    FOREIGN KEY (id_recipe)
+        REFERENCES recipe (id_recipe)
+);
+
 
 ############### INSERTS DE PRUEBA ###############
 
 
-INSERT INTO users (name, email, username, password) VALUES
+INSERT INTO `users` (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
 
-INSERT INTO recipe (title, description, ingredients, category, steps, preparation_time, id_user) VALUES
-  ('Galletas veganas de chocolate',
+INSERT INTO `recipe` (title, description, ingredients, category, steps, preparation_time, id_user) VALUES
+   ('Galletas veganas de chocolate',
    'Cookies veganas de textura suave con sabor a chocolate, aroma a naranja y chispas de chocolate negro que se derriten en tu boca.',
    '250 g de harina de trigo\n50 g de cacao en polvo\n140 g de margarina vegetal\n100 g de azúcar blanco\n100 g de azúcar moreno\n½ cucharita de levadura en polvo\nPiel de 4 naranjas\n100 ml de zumo de naranja\n200 g de chocolate negro en barra',
    'Veganas',
    'Corta la barra de chocolate negro en pedazos.\nMezcla la margarina con ambos azúcares y la piel de naranja.\nAgrega el zumo de naranja y poco a poco harina, levadura y cacao en polvo.\nAñade los trocitos de chocolate.\nGuarda la masa en la nevera al menos media hora.\nCoge una cucharada de masa y con la ayuda del dedo o de otra cuchara deja caerla encima de una bandeja de horno.\nHornea durante 20-25 minutos a 180º.',
    50,
    1),
-  ('Flan',
+   ('Flan',
    'Flan casero argentino',
    '8 huevos\n350 gr. azúcar\n1 litro leche\n1 cucharada esencia de vainilla',
    'Postres',
@@ -181,16 +189,16 @@ INSERT INTO recipe (title, description, ingredients, category, steps, preparatio
    50,
    1);
    
-   INSERT INTO popularity_recipes (id_recipe, score) VALUES
+INSERT INTO `popularity_recipes` (id_recipe, score) VALUES
   (1,10),
   (2,20),
   (3,30);
 
-INSERT INTO popularity_users (id_user, score) VALUES
+INSERT INTO `popularity_users` (id_user, score) VALUES
   (1,1),
   (2,1);
 
-INSERT INTO photo (url, id_recipe) VALUES
+INSERT INTO `photo` (url, id_recipe) VALUES
   ("https://i.imgur.com/I1SyBTh.jpeg", 1),
   ("https://i.imgur.com/d2F6BCW.jpeg", 1),
   ("https://i.imgur.com/s8z6wDy.jpeg", 2),
@@ -200,20 +208,25 @@ INSERT INTO photo (url, id_recipe) VALUES
   ("https://i.imgur.com/JS5eg4D.jpeg", 4),
   ("https://i.imgur.com/Hf2Th3u.jpeg", 4);
 
-INSERT INTO follows (id_follower, id_following) VALUES
+INSERT INTO `follows` (id_follower, id_following) VALUES
   (1,2),
   (2,1);
 
-INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES
+INSERT INTO `comments_recipes` (id_user_comment, id_recipe_comment, comment) VALUES
   (1,1,"Muy buena receta"),
   (1,2,"Excelente comida"),
   (1,3,"Que rica!");
 
-INSERT INTO recipe_book (name,id_user) values
-("Recetario 1",1),
-("Recetario 2",1);
+INSERT INTO `recipe_book` (name,id_user) values
+  ("Recetario 1",1),
+  ("Recetario 2",1);
 
-INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
-(1,1),
-(1,2),
-(2,1);
+INSERT INTO `recipe_in_recipebook` (id_recipe_book,id_recipe) values 
+  (1,1),
+  (1,2);
+
+INSERT INTO `moderator` (id, id_user) values 
+  (1,1);
+
+INSERT INTO `recipe_has_report` values 
+  (1,1,"Peligroso", true);
