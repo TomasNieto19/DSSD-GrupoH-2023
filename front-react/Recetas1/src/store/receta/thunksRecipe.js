@@ -1,8 +1,8 @@
 import { toast } from "react-toastify";
-import { imgurApi, kafkaApi, recetasApi, restApi } from "../../api/api";
+import { imgurApi, kafkaApi, pythonApi, recetasApi, restApi } from "../../api/api";
 import { setFavs, setFavsRecipes } from "../auth/authSlice";
 
-import { addCommentToList, addRecipe, addRecipeFive, deleteDraftState, editRecipe, isLoadingRecipes, setDraftDetail, setDrafts, setFav, setLastFiveRecipes, setLoading, setLoadingCSV, setLoadingFive, setPopularRecipes, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
+import { addCommentToList, addRecipe, addRecipeFive, deleteDraftState, deleteRecipeReport, editRecipe, ignoreRecipeReport, isLoadingRecipes, setDenuncias, setDraftDetail, setDrafts, setFav, setIsLoadingReports, setLastFiveRecipes, setLoading, setLoadingCSV, setLoadingFive, setPopularRecipes, setRecipeDetail, setRecipes, setScore, setScoreRecipes } from "./recipeSlice"
 
 export const getRecipes = () => {
 
@@ -11,18 +11,16 @@ export const getRecipes = () => {
     const { user } = auth;
     const { favoriteRecipes } = user;
     dispatch(isLoadingRecipes());
-
     const { data } = await recetasApi.get("/recipes");
     const { recipes } = data;
     const { data: dataScores, status } = await kafkaApi.get("/kafka/recipesScore")
     let recipesData = recipes.map((recipe) => {
-
       let recipeFav = favoriteRecipes.find((recipeFav) => recipeFav.idRecipe === recipe.idRecipe);
       let averageScore;
       if (status === 200) {
 
         let recipeScore = dataScores.find((recipeScore) => recipeScore.idRecipe === recipe.idRecipe);
-        averageScore = recipeScore ? recipeScore.averageScore : 0;
+        averageScore = recipeScore ? recipeScore.averageScore : 0;  console.log("mehiceee")
 
       }
       return {
@@ -378,16 +376,41 @@ export const setScoreInRecipe = (idRecipe) => {
 
 }
 
+export const sendRecipeReported = (id, motivo) =>{
+
+  return async (dispatch, getState) => {
+
+    const bodyDenuncia = {
+
+      "id_recipe": id,
+      "reason": motivo,
+      "is_reason": true
+
+    }
+
+    const { data, status } = await pythonApi.post(`/soap/agregarDenuncia`, bodyDenuncia);
+
+    if(status ===200){
+
+      toast.success("Denuncia enviada");
+
+    }
+
+  }
+
+}
+
 export const setLastFiveRecipesThunk = () => {
 
   return async (dispatch, getState) => {
     dispatch(setLoadingFive(true));
     const { data, status } = await kafkaApi.get(`/kafka/lastRecipes`);
-
     if (status === 200) {
 
       dispatch(setLastFiveRecipes(data));
 
+    }else{
+      dispatch(setLastFiveRecipes([]))
     }
 
 
@@ -568,6 +591,67 @@ export const deleteDraft = (id) => {
         theme: "dark",
       })
     }
+
+  }
+
+}
+
+export const getRecipesReportedThunk = () =>{
+
+  return async (dispatch, getState) => {
+    dispatch(setIsLoadingReports(true));
+    const { data, status } = await pythonApi.get(`/soap/traerTodasDenuncias`);
+    if(status === 200){
+     
+        dispatch(setDenuncias(data));
+
+      }else{
+
+        dispatch(setDenuncias(data));
+
+      }
+    
+
+  }
+
+}
+
+export const ignoreReportThunk = (id) =>{
+
+  return async (dispatch, getState) => {
+    dispatch(setIsLoadingReports(true));
+    const { data, status } = await pythonApi.put(`/soap/ignorarDenuncia/${id}`);
+    if(status === 200){
+     
+        dispatch(ignoreRecipeReport(id));
+        dispatch(setIsLoadingReports(false));
+        toast.success("Receta ignorada");
+      }else{
+
+        dispatch(setIsLoadingReports(false));
+
+      }
+    
+
+  }
+
+}
+
+export const deleteRecipeThunk = (id) =>{
+
+  return async (dispatch, getState) => {
+    const { data, status } = await pythonApi.delete(`/soap/eliminarReceta/${id}`);
+    if(status === 200){
+     
+      dispatch(deleteRecipeReport(id));
+      toast.success("Receta eliminada");
+
+      }else{
+
+        
+
+      }
+    
 
   }
 

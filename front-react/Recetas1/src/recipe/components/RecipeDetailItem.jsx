@@ -1,11 +1,13 @@
+
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, MenuItem, Rating, Select, TextField, Typography } from '@mui/material';
+import { Autocomplete, Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Popper, Rating, TextField, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import Loader from '../../utils/components/Loader';
-import { Add, DeleteOutline, Edit, House, Save, Send } from '@mui/icons-material';
+import { Add, DeleteOutline, Edit, House, Report, ReportProblemRounded, ReportRounded, Save, Send } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { editRecipeThunk, favRecipeThunk, setCommentsThunk, setScoreInRecipe, setScoreThunk } from '../../store/receta/thunksRecipe';
+import { editRecipeThunk, favRecipeThunk, sendRecipeReported, setCommentsThunk, setScoreInRecipe, setScoreThunk } from '../../store/receta/thunksRecipe';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { addCommentToList } from '../../store/receta/recipeSlice';
@@ -71,15 +73,37 @@ const RecipeDetailItem = ({ recipe }) => {
   const [images, setImages] = useState([]);
   const [disabledVote, setDisabledVote] = useState(false);
   const [image, setImage] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [motivo, setMotivo] = useState();
+  const [isMine, setIsMine] = useState(false);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(!open);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setMotivo(null);
+  };
+
+  const sendReport = () => {
+    setOpen(false);
+    dispatch(sendRecipeReported(recipe.idRecipe, motivo));
+  };
+
 
   const toFavRecipe = (id, recipe) =>{
 
     dispatch(favRecipeThunk(id, recipe));
 
   }
+  console.log(isMine);
 
   useEffect(() => {
     verify(user.userId, recipe.idRecipe);
+    verifyUserRecipe();
     setImages([]);
     setImage(undefined);
     if (recipe !== null || recipe !== undefined) {
@@ -116,6 +140,18 @@ const RecipeDetailItem = ({ recipe }) => {
     const {data, status} = await kafkaApi.get(`/kafka/getVoteNotVote/${idUser}/${recipeId}`)
     const {vote} = data;
     setDisabledVote(vote);
+
+  }
+
+  const verifyUserRecipe = () =>{
+
+    if(user.userId === recipe.user.userId){
+
+      setIsMine(true);
+
+    }else{
+      setIsMine(false);
+    }
 
   }
 
@@ -199,7 +235,18 @@ const RecipeDetailItem = ({ recipe }) => {
     }
   };
 
+  const onHandleChange = (event, value) =>{
 
+    setMotivo(value.value);
+
+  }
+
+  const id = open ? 'simple-popper' : undefined;
+  const motivos = [
+    {label: 'Contenido inapropiado', value: 'Contenido inapropiado'},
+    {label: 'Ingredientes prohibidos', value: 'Ingredientes prohibidos'},
+    {label: 'Peligroso para la salud', value: 'Peligroso para la salud'}
+  ]
   return (
     
 (recipe.user !== undefined && recipe.user !== null) && edit ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
@@ -214,9 +261,35 @@ const RecipeDetailItem = ({ recipe }) => {
         subheader={`${recipe.user.username ? "por " + recipe.user.username : ""}`}
         titleTypographyProps={{ color: "#a8add3" }}
         action={
+          <Box>
+            <IconButton aria-label='Report' disabled={isMine} onClick={handleClick}>
+            <ReportRounded sx={{ color: isMine ? "grey" : "red" }}/>
+          </IconButton>
+          <Popper id={id} open={open} anchorEl={anchorEl}>
+        <div style={{ padding: 10, border: '1px solid #ccc', borderRadius: 5, backgroundColor: '#f9f9f9' }}>
+          <Typography>Estas reportando la receta, coloca un motivo: </Typography>
+          <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={motivos}
+      sx={{ width: 300 }}
+      onChange={onHandleChange}
+      renderInput={(params) => <TextField {...params} label="Motivos" />}
+    />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button variant="contained" onClick={handleClose} style={{ marginRight: 10 }}>
+              Cancelar
+            </Button>
+            <Button variant="contained" color="error" onClick={sendReport} >
+              DENUNCIAR
+            </Button>
+          </div>
+        </div>
+      </Popper>
           <IconButton aria-label='Editar' disabled={disabledEdit} onClick={() => setEdit(!edit)}>
             {disabledEdit ? <Edit sx={{ color: "#595b6d" }} /> : <Edit sx={{ color: "#0b1218" }} />}
           </IconButton>
+          </Box>
         }
       />
       <CardContent>

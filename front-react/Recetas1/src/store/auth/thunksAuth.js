@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { recetasApi } from "../../api/api";
+import { pythonApi, recetasApi } from "../../api/api";
 import { toLoginUser } from "./authSlice";
 
 export const registerUser = (username, name, email, password) => {
@@ -61,8 +61,9 @@ export const loginUserThunk = (username, password) => {
                         "favoriteRecipes": favoriteRecipesFav
 
                     }
-                    dispatch(toLoginUser({ user: bodyState }));
-                    localStorage.setItem('user', JSON.stringify(bodyState))
+                    const {data: dataMod, status: statusMod} = await pythonApi.get(`/soap/userIsModerator/${dataLogin.userId}`);
+                    dispatch(toLoginUser({ user: {...bodyState, isModerator: dataMod.isModerator} }));
+                    localStorage.setItem('user', JSON.stringify({...bodyState, isModerator: dataMod.isModerator}))
 
                 }
 

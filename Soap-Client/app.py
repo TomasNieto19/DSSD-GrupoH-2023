@@ -1,6 +1,7 @@
 from flask_swagger_ui import get_swaggerui_blueprint
 from suds.client import Client as SudsClient
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 
 # Se crean el los clientes de los servicios SOAP
@@ -11,6 +12,7 @@ RecipeBook_client = SudsClient(url='http://localhost:9000/ws-grupoH-app/RecipeBo
 
 # Se crea la aplicación Flask
 app = Flask(__name__)
+CORS(app)
 
 # Se crea la ruta /swagger y se le asigna swagger.json
 swaggerui_blueprint = get_swaggerui_blueprint('/swagger','/static/swagger.json')
