@@ -17,7 +17,7 @@ const RecipeDetail = () => {
 
 
   }, [])
-  
+  console.log(recipeDetail);
 
   return (
     <Box display="flex"

@@ -66,9 +66,9 @@ export const recipeSlice = createSlice({
 
         },
         setRecipeDetail: (state, action)=>{
-
+            console.log(action.payload.recipe, "estado");
             state.recipeDetail = action.payload.recipe
-
+            console.log(state.recipeDetail, "estadoPostReemplazo");
         },
         editRecipe: (state, action) =>{
 

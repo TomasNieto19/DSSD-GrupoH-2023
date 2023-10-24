@@ -1,11 +1,10 @@
 
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, MenuItem, Rating, Select, TextField, Typography } from '@mui/material';
-import { Autocomplete, Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Popper, Rating, TextField, Typography } from '@mui/material';
+import { Autocomplete, Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Popper, Rating, TextField, Typography, Select, MenuItem} from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import Loader from '../../utils/components/Loader';
-import { Add, DeleteOutline, Edit, House, Report, ReportProblemRounded, ReportRounded, Save, Send } from '@mui/icons-material';
+import { Add, DeleteOutline, Edit, Report, ReportProblemRounded, ReportRounded, Save, Send } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { editRecipeThunk, favRecipeThunk, sendRecipeReported, setCommentsThunk, setScoreInRecipe, setScoreThunk } from '../../store/receta/thunksRecipe';
 import { useNavigate } from 'react-router-dom';
@@ -76,7 +75,7 @@ const RecipeDetailItem = ({ recipe }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const [motivo, setMotivo] = useState();
-  const [isMine, setIsMine] = useState(false);
+  const [isMine, setIsMine] = useState(user && recipe && user.userId !== recipe.user.userId ? false : true);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -99,11 +98,9 @@ const RecipeDetailItem = ({ recipe }) => {
     dispatch(favRecipeThunk(id, recipe));
 
   }
-  console.log(isMine);
 
   useEffect(() => {
     verify(user.userId, recipe.idRecipe);
-    verifyUserRecipe();
     setImages([]);
     setImage(undefined);
     if (recipe !== null || recipe !== undefined) {
@@ -125,9 +122,7 @@ const RecipeDetailItem = ({ recipe }) => {
     .get("http://localhost:8085/soap/traerTodosRecetarios")
     .then((res) => setData(res.data))
     .catch((err) => console.log(err))
-    .finally(() => setLoading(false));
-
-  }, [recipe])
+  }, [recipe, user])
 
   const deleteImg = (photo) =>{
 
@@ -140,18 +135,6 @@ const RecipeDetailItem = ({ recipe }) => {
     const {data, status} = await kafkaApi.get(`/kafka/getVoteNotVote/${idUser}/${recipeId}`)
     const {vote} = data;
     setDisabledVote(vote);
-
-  }
-
-  const verifyUserRecipe = () =>{
-
-    if(user.userId === recipe.user.userId){
-
-      setIsMine(true);
-
-    }else{
-      setIsMine(false);
-    }
 
   }
 

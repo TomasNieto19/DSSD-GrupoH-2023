@@ -81,8 +81,9 @@ export const getRecipeByRecipeId = (id) => {
     const { favoriteRecipes } = user;
     dispatch(isLoadingRecipes());
     const { data } = await recetasApi.get(`/recipe/${id}`);
+    console.log(data);
     let { data: commentarys, status } = await kafkaApi.get(`/kafka/comments/${id}`);
-    console.log(commentarys)
+    console.log(status)
     const { data: dataScore, status: statusScore } = await kafkaApi.get(`/kafka/recipesScoreId/${id}`)
     let averageScore;
     if (statusScore === 200) {
@@ -97,6 +98,7 @@ export const getRecipeByRecipeId = (id) => {
       "fav": fav ? true : false,
       "averageScore": averageScore ? averageScore : 0
     }
+    console.log(favEnviar, "aca viene el fav");
     dispatch(setLoading(false));
     dispatch(setRecipeDetail({ recipe: favEnviar }));
   }

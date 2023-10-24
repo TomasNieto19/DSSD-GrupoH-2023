@@ -12,26 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toLoginUser, unLoginUser } from "../../store/auth/authSlice";
 import { Logout } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-const pages = [
-  {
-    text: "My recipes",
-    value: "myRecipes",
-  },
-  {
-    text: "Add Recipe",
-    value: "addRecipe",
-  },
-  {
-    text: "Users",
-    value: "users",
-  },
-  { text: "Favorite Recipes", value: "favorites" },
-  { text: "Popular Users", value: "popularUsers" },
-  { text: "Popular Recipes", value: "popularRecipes" },
-  { text: "Drafts", value: "drafts" },
-    { text: "Add Recipes Books", value: "addRecipesBooks" },
-    { text: "Recipes Books", value: "recipesBooks" },
-];
+
 export const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const handleOpenNavMenu = (event) => {
@@ -43,7 +24,29 @@ export const NavBar = () => {
     setAnchorElNav(null);
   };
   const dispatch = useDispatch();
-
+  const pages = [
+    {
+      text: "My recipes",
+      value: "myRecipes",
+    },
+    {
+      text: "Add Recipe",
+      value: "addRecipe",
+    },
+    {
+      text: "Users",
+      value: "users",
+    },
+    { text: "Favorite Recipes", value: "favorites" },
+    { text: "Popular Users", value: "popularUsers" },
+    { text: "Popular Recipes", value: "popularRecipes" },
+    { text: "Drafts", value: "drafts" },
+      { text: "Add Recipes Books", value: "addRecipesBooks" },
+      { text: "Recipes Books", value: "recipesBooks" },
+      {text: "Send Message", value: "messages"},
+      {text: "My messages", value: "mymessages"},
+    user.isModerator && { text: "Reports", value: "reports" }
+  ];
   const unLogin = () => {
     dispatch(unLoginUser());
   };
@@ -137,7 +140,7 @@ export const NavBar = () => {
                       key={page.value}
                       sx={{
                         textDecoration: "none",
-                        color: "white",
+                        color: page.value === "reports" ? "#39ff14": "white",
                         textTransform: "Capitalize",
                       }}
                     >

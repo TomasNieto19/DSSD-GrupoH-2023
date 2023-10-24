@@ -8,6 +8,7 @@ const SendMessageContainer = () => {
 
     const {users} = useSelector(state => state.user);
     const {user} = useSelector(state=> state.auth);
+    console.log(user);
     const navigator = useNavigate();
     let arrayFiltrado = users.filter((userFilt => userFilt.idUser !== user.userId))
     const toNav = (user)=>{
