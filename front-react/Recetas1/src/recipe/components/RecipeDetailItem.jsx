@@ -42,6 +42,7 @@ const RecipeDetailItem = ({ recipe }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
   const [motivo, setMotivo] = useState();
+  const [isMine, setIsMine] = useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,10 +65,11 @@ const RecipeDetailItem = ({ recipe }) => {
     dispatch(favRecipeThunk(id, recipe));
 
   }
-  console.log(recipe);
+  console.log(isMine);
 
   useEffect(() => {
     verify(user.userId, recipe.idRecipe);
+    verifyUserRecipe();
     setImages([]);
     setImage(undefined);
     if (recipe !== null || recipe !== undefined) {
@@ -98,6 +100,18 @@ const RecipeDetailItem = ({ recipe }) => {
     const {data, status} = await kafkaApi.get(`/kafka/getVoteNotVote/${idUser}/${recipeId}`)
     const {vote} = data;
     setDisabledVote(vote);
+
+  }
+
+  const verifyUserRecipe = () =>{
+
+    if(user.userId === recipe.user.userId){
+
+      setIsMine(true);
+
+    }else{
+      setIsMine(false);
+    }
 
   }
 
@@ -208,8 +222,8 @@ const RecipeDetailItem = ({ recipe }) => {
         titleTypographyProps={{ color: "#a8add3" }}
         action={
           <Box>
-            <IconButton aria-label='Report' onClick={handleClick}>
-            <ReportRounded sx={{ color: "red" }}/>
+            <IconButton aria-label='Report' disabled={isMine} onClick={handleClick}>
+            <ReportRounded sx={{ color: isMine ? "grey" : "red" }}/>
           </IconButton>
           <Popper id={id} open={open} anchorEl={anchorEl}>
         <div style={{ padding: 10, border: '1px solid #ccc', borderRadius: 5, backgroundColor: '#f9f9f9' }}>
