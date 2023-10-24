@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
-import { Button, Rating } from '@mui/material';
+import { Button, MenuItem, Rating, Select } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { favRecipeThunk } from '../../store/receta/thunksRecipe';
 
@@ -20,6 +20,9 @@ export default function Recipe({ recipe, type }) {
   const dispatch = useDispatch();
   const [disabledEdit, setDisabledEdit] = useState();
   const { user } = useSelector(state => state.auth);
+
+
+
 
   const [averageScore, setAverageScore] = useState(recipe.averageScore);
   let hr = 0;
@@ -165,7 +168,12 @@ export default function Recipe({ recipe, type }) {
             {disabledEdit && <FavoriteIcon sx={{ color: "#0b1218" }} />}
           </IconButton>}
 
-        </CardActions></>}
+  
+
+        </CardActions>
+        
+        
+        </>}
         {type === "lastFiveRecipes" && <><CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "#2D4356" }} aria-label="recipe">

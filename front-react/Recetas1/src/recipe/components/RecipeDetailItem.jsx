@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Rating, TextField, Typography } from '@mui/material';
+import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, MenuItem, Rating, Select, TextField, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
@@ -9,7 +9,9 @@ import { editRecipeThunk, favRecipeThunk, setCommentsThunk, setScoreInRecipe, se
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { addCommentToList } from '../../store/receta/recipeSlice';
-import { kafkaApi } from '../../api/api';
+import { kafkaApi,pythonApi } from '../../api/api';
+import axios from 'axios';
+
 
 const RecipeDetailItem = ({ recipe }) => {
   let hr = 0;
@@ -20,6 +22,36 @@ const RecipeDetailItem = ({ recipe }) => {
     min = recipe.preparationTime - (hr * 60);
   }
   console.log(recipe);
+
+  const [selectedRecetario, setSelectedRecetario] = useState('');
+
+  const handleRecetarioChange = async (event) => {
+    setSelectedRecetario(event.target.value);
+    console.log('DESDE EL HANDLEEE', event.target.value);
+
+/**
+ * 
+ *     idRecipeBook = data.get('idRecipeBook')
+
+    idRecipe = data.get('idRecipe')
+ */
+
+    const send = {
+
+      "idRecipeBook": event.target.value,
+      "idRecipe": recipe.idRecipe,
+    }
+
+    const { data, status } = await pythonApi.post('/soap/addRecipeInRecipeBook', send );
+    {toast.success("Receta agregada al recetario")}
+    
+    console.log('data', data);
+
+  };
+
+  const [data, setData] = useState([]);
+
+
   const [commentary, setCommentary] = useState();
   const [value, setValue] = useState(recipe.averageScore);
   const [edit, setEdit] = useState(true);
@@ -64,6 +96,12 @@ const RecipeDetailItem = ({ recipe }) => {
       }
     }
     setPhotos(recipe.photos)
+
+    axios
+    .get("http://localhost:8085/soap/traerTodosRecetarios")
+    .then((res) => setData(res.data))
+    .catch((err) => console.log(err))
+    .finally(() => setLoading(false));
 
   }, [recipe])
 
@@ -247,6 +285,26 @@ const RecipeDetailItem = ({ recipe }) => {
         </IconButton>}
       </CardActions>
       <CardContent>
+
+
+      <Select
+        value={selectedRecetario}
+        onChange={handleRecetarioChange}
+        displayEmpty
+        inputProps={{ 'aria-label': 'Recetario' }}
+      >
+        <MenuItem value="" disabled>
+          Seleccione un recetario
+        </MenuItem>
+
+        {   data.map((item, index) => (
+          <MenuItem key={index} value={item.idRecipeBook}>{item.name}</MenuItem>
+        ))}
+
+  
+      </Select>
+
+
       <Typography paragraph color="#a8add3">Comentarios:</Typography>
       <TextField multiline sx={{ width: "100%" }} id="outlined-basic" onKeyDown={handleEnterPress} InputProps={{style:{color:"white"},
     endAdornment: (
@@ -256,6 +314,10 @@ const RecipeDetailItem = ({ recipe }) => {
     ),
   }} placeholder='Ingrese un comentario...' variant="outlined" value={commentary} onChange={({ target }) => setCommentary(target.value)} />
       </CardContent>
+
+ 
+
+
       <CardContent>
       {recipe.commentarys.map((commentary)=>{
         let userFind = users.find((user)=> user.idUser === commentary.idUserComment);
