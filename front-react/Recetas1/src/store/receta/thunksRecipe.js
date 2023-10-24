@@ -392,7 +392,7 @@ export const sendRecipeReported = (id, motivo) =>{
 
     if(status ===200){
 
-      console.log("se denuncio correctamente")
+      toast.success("Denuncia enviada");
 
     }
 
@@ -625,6 +625,7 @@ export const ignoreReportThunk = (id) =>{
      
         dispatch(ignoreRecipeReport(id));
         dispatch(setIsLoadingReports(false));
+        toast.success("Receta ignorada");
       }else{
 
         dispatch(setIsLoadingReports(false));
@@ -643,6 +644,7 @@ export const deleteRecipeThunk = (id) =>{
     if(status === 200){
      
       dispatch(deleteRecipeReport(id));
+      toast.success("Receta eliminada");
 
       }else{
 
