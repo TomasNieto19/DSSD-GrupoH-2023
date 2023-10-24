@@ -8,6 +8,7 @@ import FavoriteContainer from '../components/FavoriteContainer'
 import PopularRecipesListContainer from '../components/PopularRecipesListContainer'
 import DraftListContainer from '../components/DraftListContainer'
 import DraftDetailContainer from '../components/DraftDetailContainer'
+import ReportRecipesContainer from '../components/ReportRecipesContainer'
 
 export const RecipeRoutes = () => {
     return (
@@ -19,6 +20,7 @@ export const RecipeRoutes = () => {
             <Route path='/popularRecipes' element={<PopularRecipesListContainer/>}/>
             <Route path='/drafts' element={<DraftListContainer/>}/>
             <Route path='/draft/:id' element={<DraftDetailContainer/>}/>
+            <Route path='/reports' element={<ReportRecipesContainer/>}/>
             <Route path='/' element={<RecipesListContainer/>}/>
         </Routes>
     )

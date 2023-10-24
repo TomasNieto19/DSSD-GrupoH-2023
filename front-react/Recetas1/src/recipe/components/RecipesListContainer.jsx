@@ -11,7 +11,6 @@ const RecipesListContainer = () => {
 
     const dispatch = useDispatch();
   const {isLoading, recipes}= useSelector(state=> state.recipe);
-  
   useEffect(() => {
     dispatch(getRecipes());
     dispatch(getUsers());

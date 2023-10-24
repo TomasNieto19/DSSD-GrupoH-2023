@@ -12,30 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toLoginUser, unLoginUser } from '../../store/auth/authSlice';
 import { Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-const pages = [{
-    text: "My recipes",
-    value: "myRecipes"},{
-    text: "Add Recipe",
-    value: "addRecipe"},{
-        text: "Users",
-        value: "users"},
-    {text: "Favorite Recipes",
-value: "favorites"},
-{text: "Popular Users",
-value: "popularUsers"},
-{text: "Popular Recipes",
-value: "popularRecipes"},
-{text: "Drafts",
-value: "drafts"},
-{
-text: "Send Message",
-value: "messages"
-},
-{
-text: "My messages",
-value: "mymessages"
-}];
+
 export const NavBar = () => {
+    
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -45,8 +24,34 @@ export const NavBar = () => {
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
+    console.log(user);
     const dispatch = useDispatch();
-    
+    const pages = [{
+        text: "My recipes",
+        value: "myRecipes"},{
+        text: "Add Recipe",
+        value: "addRecipe"},{
+            text: "Users",
+            value: "users"},
+        {text: "Favorite Recipes",
+    value: "favorites"},
+    {text: "Popular Users",
+    value: "popularUsers"},
+    {text: "Popular Recipes",
+    value: "popularRecipes"},
+    {text: "Drafts",
+    value: "drafts"},
+    {
+    text: "Send Message",
+    value: "messages"
+    },
+    {
+    text: "My messages",
+    value: "mymessages"
+    }, user.isModerator && {
+        text: "Reports",
+        value: "reports"
+        }];
     const unLogin = () =>{
 
         dispatch(unLoginUser());
@@ -112,13 +117,13 @@ export const NavBar = () => {
                         >
                             {pages.map((page) => (
                                 <MenuItem key={page.text} onClick={handleCloseNavMenu}>
-                                    <Button key={page.value} sx={{ backgroundColor: "#2D4356", width: "100%" }} onClick={() => toRedirect(page.value)}><Typography key={page.value} sx={{ textDecoration: 'none', color: 'white', textTransform: "Capitalize" }}>{page.text}</Typography></Button>
+                                    <Button key={page.value} sx={{ backgroundColor: "#2D4356", width: "100%" }} onClick={() => toRedirect(page.value)}><Typography key={page.value} sx={{ textDecoration: 'none', color: page.value === "reports" ? "#39ff14" : "white", textTransform: "Capitalize" }}>{page.text}</Typography></Button>
                                 </MenuItem>
                             ))}
                         </Menu>
                     </Box><Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             {pages.map((page) => (
-                                <Button key={page.value} onClick={() => toRedirect(page.value)}><Typography key={page.value} sx={{ textDecoration: 'none', color: 'white', textTransform: "Capitalize" }}>{page.text}</Typography></Button>
+                                <Button key={page.value} onClick={() => toRedirect(page.value)}><Typography key={page.value} sx={{ textDecoration: 'none', color: page.value === "reports" ? "#39ff14" : "white", textTransform: "Capitalize" }}>{page.text}</Typography></Button>
                             ))}
                         </Box></>}
                     <Typography variant="h6" component="div">
