@@ -6,6 +6,7 @@ import Login from '../auth/components/Login'
 import { PublicRoute } from './PublicRoute'
 import Register from '../auth/components/Register'
 import { UserRoutes } from '../users/routes/UserRoutes'
+import { MessagesRoutes } from '../messages/routes/MessagesRoutes'
 
 export const AppRouter = () => {
   return (
@@ -34,6 +35,7 @@ export const AppRouter = () => {
                 <PrivateRoute>
                     <RecipeRoutes/>
                     <UserRoutes/>
+                    <MessagesRoutes/>
                 </PrivateRoute>
             }/>
 
