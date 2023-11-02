@@ -7,6 +7,7 @@ import dao.UsuarioChefDao;
 import entities.RecetasChef;
 import entities.RecipeBook;
 import entities.Recipe_in_RecipeBook;
+import entities.SeleccionDelChef;
 import entities.UsuarioChef;
 
 public class TesteoChef {
@@ -57,7 +58,31 @@ public class TesteoChef {
 		String fotos = "https://cdn0.recetasgratis.net/es/posts/4/7/9/lomo_de_cerdo_a_la_mostaza_76974_600.webp"+ "\n\n";
 		RecetasChef recetasChefEnCasa1 = new RecetasChef(titulo, descripcion, tiempoCoccion, ingredientes, pasos,idUsuario,fotos);
 		*/
-			
+		System.out.println("-----------------------------------------------------------------------------------------");
+		System.out.println("add recetario id: \n");
+		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA1",1,true);
+		
+		try {
+			System.out.println(RecetarioChefDAO.getInstance().addOrUpdateSeleccionDelChef(seleccionDelChef));
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());		
+			}
+		System.out.println("Traigo recetario id: 3\n");
+		System.out.println(RecetarioChefDAO.getInstance().getSeleccionDelChefById(3));
+		
+		
+		System.out.println("Borro recetario id: 3\n");
+		System.out.println(RecetarioChefDAO.getInstance().deleteSeleccionDelChef(3));
+		
+		
+		System.out.println("Traigo todos los  recetarios: 3\n");
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		
+		
+		
+		
 		}
 
 }

@@ -42,7 +42,7 @@ public class RecetarioChefDAO {
 
 		} catch (Exception e) {
 
-			throw new Exception("Error al persistir SeleccionDelChef: " + e.getMessage());
+			throw new Exception("Error al persistir SeleccionDelChef: ");
 
 		} finally {
 

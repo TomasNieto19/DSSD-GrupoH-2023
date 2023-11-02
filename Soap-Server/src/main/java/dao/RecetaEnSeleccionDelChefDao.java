@@ -29,6 +29,7 @@ public class RecetaEnSeleccionDelChefDao {
 		}
 		return instance;
 	}
+	
 	public RecetaEnSeleccionDelChef addRecetaEnSeleccionDelChef(RecetaEnSeleccionDelChef recetaEnSeleccionDelChef) throws Exception {
 
 		EntityManager em = JPAUtil.getEMF().createEntityManager();
@@ -42,7 +43,7 @@ public class RecetaEnSeleccionDelChefDao {
 
 		} catch (Exception e) {
 
-			throw new Exception("Error al persistir Receta En Seleccion Del Chef: " + e.getMessage());
+			throw new Exception("Error al persistir Receta En Seleccion Del Chef: ");
 
 		} finally {
 

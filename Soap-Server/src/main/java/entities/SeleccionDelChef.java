@@ -28,7 +28,7 @@ public class SeleccionDelChef {
 	@Column(name = "id")
 	private int idSelecChef;
 	
-	@Column(name = "nombre", nullable = false)
+	@Column(name = "nombre", nullable = true)
 	private String name;
 	
 	@Column(name = "idUsuario", nullable = false)
@@ -43,5 +43,7 @@ public class SeleccionDelChef {
 		this.idUser = idUser;
 		this.visibleComunidad = visibleComunidad;
 	}
+
+	
  
 }

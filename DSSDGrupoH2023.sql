@@ -79,19 +79,19 @@ CREATE TABLE recetas_chef ( -- recuperatorio matias
     
 );
 
-CREATE TABLE recetarios_chef ( -- recuperatorio matias
+CREATE TABLE seleccion_del_chef  ( -- ex recetarios_chef
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nombre varchar(50) NOT NULL,
+    nombre varchar(50),
     idUsuario INT, -- Clave foránea para vincularlo con el usuario
     visibleComunidad BOOLEAN,
     FOREIGN KEY (idUsuario) REFERENCES users (id_user)
 );
 
-CREATE TABLE recetas_en_recetario ( -- recuperatorio matias
+CREATE TABLE receta_en_seleccion_del_chef ( -- ex recetas_en_recetario
     id INT PRIMARY KEY AUTO_INCREMENT,
     idRecetario INT, -- Clave foránea para vincularlo con el recetario
     idReceta INT, -- Clave foránea para vincularlo con la receta
-    FOREIGN KEY (idRecetario) REFERENCES recetarios_chef (id),
+    FOREIGN KEY (idRecetario) REFERENCES seleccion_del_chef (id),
     FOREIGN KEY (idReceta) REFERENCES recetas_chef (id)
 );
 
@@ -254,5 +254,26 @@ INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
 (1,1),
 (1,2),
 (2,1);
+
+
+
+-- practica matias  
+
+INSERT INTO seleccion_del_chef (nombre, idUsuario, visibleComunidad)
+VALUES ('Receta 1', 1, true);
+
+INSERT INTO seleccion_del_chef (nombre, idUsuario, visibleComunidad)
+VALUES ('Receta 2', 2, false);
+
+
+
+-- Insertar la primera fila
+INSERT INTO receta_en_seleccion_del_chef (idRecetario, idReceta)
+VALUES (1, 1);
+
+-- Insertar la segunda fila
+INSERT INTO receta_en_seleccion_del_chef (idRecetario, idReceta)
+VALUES (2, 1);
+
 
 
