@@ -12,7 +12,7 @@ export async function leerMensajes(req, res) {
 
   } catch (error) {
 
-    res.status(500).json({ mensaje: error });
+    res.status(204).json({ mensaje: error });
 
   }
 }

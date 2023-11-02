@@ -1,15 +1,18 @@
-import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Rating, TextField, Typography } from '@mui/material';
+
+import { Autocomplete, Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, Container, IconButton, ImageList, ImageListItem, InputAdornment, Popper, Rating, TextField, Typography, Select, MenuItem} from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import Loader from '../../utils/components/Loader';
-import { Add, DeleteOutline, Edit, House, Save, Send } from '@mui/icons-material';
+import { Add, DeleteOutline, Edit, Report, ReportProblemRounded, ReportRounded, Save, Send } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
-import { editRecipeThunk, favRecipeThunk, setCommentsThunk, setScoreInRecipe, setScoreThunk } from '../../store/receta/thunksRecipe';
+import { editRecipeThunk, favRecipeThunk, sendRecipeReported, setCommentsThunk, setScoreInRecipe, setScoreThunk } from '../../store/receta/thunksRecipe';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { addCommentToList } from '../../store/receta/recipeSlice';
-import { kafkaApi } from '../../api/api';
+import { kafkaApi,pythonApi } from '../../api/api';
+import axios from 'axios';
+
 
 const RecipeDetailItem = ({ recipe }) => {
   let hr = 0;
@@ -20,6 +23,36 @@ const RecipeDetailItem = ({ recipe }) => {
     min = recipe.preparationTime - (hr * 60);
   }
   console.log(recipe);
+
+  const [selectedRecetario, setSelectedRecetario] = useState('');
+
+  const handleRecetarioChange = async (event) => {
+    setSelectedRecetario(event.target.value);
+    console.log('DESDE EL HANDLEEE', event.target.value);
+
+/**
+ * 
+ *     idRecipeBook = data.get('idRecipeBook')
+
+    idRecipe = data.get('idRecipe')
+ */
+
+    const send = {
+
+      "idRecipeBook": event.target.value,
+      "idRecipe": recipe.idRecipe,
+    }
+
+    const { data, status } = await pythonApi.post('/soap/addRecipeInRecipeBook', send );
+    {toast.success("Receta agregada al recetario")}
+    
+    console.log('data', data);
+
+  };
+
+  const [data, setData] = useState([]);
+
+
   const [commentary, setCommentary] = useState();
   const [value, setValue] = useState(recipe.averageScore);
   const [edit, setEdit] = useState(true);
@@ -39,6 +72,26 @@ const RecipeDetailItem = ({ recipe }) => {
   const [images, setImages] = useState([]);
   const [disabledVote, setDisabledVote] = useState(false);
   const [image, setImage] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [motivo, setMotivo] = useState();
+  const [isMine, setIsMine] = useState(user && recipe && user.userId !== recipe.user.userId ? false : true);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(!open);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setMotivo(null);
+  };
+
+  const sendReport = () => {
+    setOpen(false);
+    dispatch(sendRecipeReported(recipe.idRecipe, motivo));
+  };
+
 
   const toFavRecipe = (id, recipe) =>{
 
@@ -65,7 +118,11 @@ const RecipeDetailItem = ({ recipe }) => {
     }
     setPhotos(recipe.photos)
 
-  }, [recipe])
+    axios
+    .get("http://localhost:8085/soap/traerTodosRecetarios")
+    .then((res) => setData(res.data))
+    .catch((err) => console.log(err))
+  }, [recipe, user])
 
   const deleteImg = (photo) =>{
 
@@ -161,7 +218,18 @@ const RecipeDetailItem = ({ recipe }) => {
     }
   };
 
+  const onHandleChange = (event, value) =>{
 
+    setMotivo(value.value);
+
+  }
+
+  const id = open ? 'simple-popper' : undefined;
+  const motivos = [
+    {label: 'Contenido inapropiado', value: 'Contenido inapropiado'},
+    {label: 'Ingredientes prohibidos', value: 'Ingredientes prohibidos'},
+    {label: 'Peligroso para la salud', value: 'Peligroso para la salud'}
+  ]
   return (
     
 (recipe.user !== undefined && recipe.user !== null) && edit ? <Card sx={{ minWidth: 700, maxWidth: 700, backgroundColor: "#223344" }}>
@@ -176,9 +244,35 @@ const RecipeDetailItem = ({ recipe }) => {
         subheader={`${recipe.user.username ? "por " + recipe.user.username : ""}`}
         titleTypographyProps={{ color: "#a8add3" }}
         action={
+          <Box>
+            <IconButton aria-label='Report' disabled={isMine} onClick={handleClick}>
+            <ReportRounded sx={{ color: isMine ? "grey" : "red" }}/>
+          </IconButton>
+          <Popper id={id} open={open} anchorEl={anchorEl}>
+        <div style={{ padding: 10, border: '1px solid #ccc', borderRadius: 5, backgroundColor: '#f9f9f9' }}>
+          <Typography>Estas reportando la receta, coloca un motivo: </Typography>
+          <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={motivos}
+      sx={{ width: 300 }}
+      onChange={onHandleChange}
+      renderInput={(params) => <TextField {...params} label="Motivos" />}
+    />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button variant="contained" onClick={handleClose} style={{ marginRight: 10 }}>
+              Cancelar
+            </Button>
+            <Button variant="contained" color="error" onClick={sendReport} >
+              DENUNCIAR
+            </Button>
+          </div>
+        </div>
+      </Popper>
           <IconButton aria-label='Editar' disabled={disabledEdit} onClick={() => setEdit(!edit)}>
             {disabledEdit ? <Edit sx={{ color: "#595b6d" }} /> : <Edit sx={{ color: "#0b1218" }} />}
           </IconButton>
+          </Box>
         }
       />
       <CardContent>
@@ -247,6 +341,26 @@ const RecipeDetailItem = ({ recipe }) => {
         </IconButton>}
       </CardActions>
       <CardContent>
+
+
+      <Select
+        value={selectedRecetario}
+        onChange={handleRecetarioChange}
+        displayEmpty
+        inputProps={{ 'aria-label': 'Recetario' }}
+      >
+        <MenuItem value="" disabled>
+          Seleccione un recetario
+        </MenuItem>
+
+        {   data.map((item, index) => (
+          <MenuItem key={index} value={item.idRecipeBook}>{item.name}</MenuItem>
+        ))}
+
+  
+      </Select>
+
+
       <Typography paragraph color="#a8add3">Comentarios:</Typography>
       <TextField multiline sx={{ width: "100%" }} id="outlined-basic" onKeyDown={handleEnterPress} InputProps={{style:{color:"white"},
     endAdornment: (
@@ -256,6 +370,10 @@ const RecipeDetailItem = ({ recipe }) => {
     ),
   }} placeholder='Ingrese un comentario...' variant="outlined" value={commentary} onChange={({ target }) => setCommentary(target.value)} />
       </CardContent>
+
+ 
+
+
       <CardContent>
       {recipe.commentarys.map((commentary)=>{
         let userFind = users.find((user)=> user.idUser === commentary.idUserComment);

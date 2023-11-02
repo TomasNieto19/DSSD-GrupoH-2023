@@ -4,6 +4,7 @@ export const recipeSlice = createSlice({
     name: 'recipe',
     initialState: {
         isLoading: false,
+        isLoadingReports: false,
         isLoadingFive: false,
         isLoadingCSV: false,
         recipes: [],
@@ -11,12 +12,16 @@ export const recipeSlice = createSlice({
         lastFiveRecipes: [],
         popularRecipes: [],
         drafts: [],
-        draftDetail: {}
+        draftDetail: {},
+        recipesReported: []
        
     },
     reducers: {
         isLoadingRecipes: (state) => {
             state.isLoading = true;
+        },
+        setIsLoadingReports: (state, action)=>{
+            state.isLoadingReports = action.payload
         },
         setRecipes: (state, action) =>{
 
@@ -61,9 +66,9 @@ export const recipeSlice = createSlice({
 
         },
         setRecipeDetail: (state, action)=>{
-
+            console.log(action.payload.recipe, "estado");
             state.recipeDetail = action.payload.recipe
-
+            console.log(state.recipeDetail, "estadoPostReemplazo");
         },
         editRecipe: (state, action) =>{
 
@@ -127,6 +132,27 @@ export const recipeSlice = createSlice({
         },
         setLoadingCSV: (state, action) =>{
             state.isLoadingCSV = action.payload;
+        },
+        setDenuncias: (state, action)=>{
+
+            state.recipesReported = action.payload;
+            state.isLoadingReports = false;
+
+        },
+        deleteRecipeReport: (state, action)=>{
+
+            let idRecipe = action.payload;
+            let recipesFilter = state.recipesReported.filter(rec=> rec.id_recipe !== idRecipe);
+            state.recipesReported = recipesFilter;
+
+
+        },
+        ignoreRecipeReport: (state, action)=>{
+
+            let idReport = action.payload;
+            let recipesFilter = state.recipesReported.filter(rec=> rec.id_report !== idReport);
+            state.recipesReported = recipesFilter;
+
         }
     }
 });
@@ -134,4 +160,5 @@ export const recipeSlice = createSlice({
 
 
 export const { isLoadingRecipes, setRecipes,addRecipe, setRecipeDetail, editRecipe, setLoading, setFav, addCommentToList, setScore, setScoreRecipes, 
-    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes, setDrafts, setDraftDetail,deleteDraftState, setLoadingCSV} = recipeSlice.actions;
+    setLastFiveRecipes, setLoadingFive, addRecipeFive, setPopularRecipes, setDrafts, setDraftDetail,deleteDraftState, setLoadingCSV, setDenuncias,
+    deleteRecipeReport, setIsLoadingReports, ignoreRecipeReport} = recipeSlice.actions;
