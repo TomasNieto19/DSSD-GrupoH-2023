@@ -1,16 +1,20 @@
 package dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import entities.RecetarioChef;
+
 import entities.RecetasChef;
-import entities.RecetasEnRecetario;
+import entities.RecetaEnSeleccionDelChef;
+import entities.RecipeBook;
 import entities.Recipe_in_RecipeBook;
+import entities.SeleccionDelChef;
 import entities.UsuarioChef;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecetarioChefDAO {
@@ -25,46 +29,90 @@ public class RecetarioChefDAO {
 		}
 		return instance;
 	}
-	
-	
+	public SeleccionDelChef addOrUpdateSeleccionDelChef(SeleccionDelChef seleccionDelChef) throws Exception {
 
-	
-	
-	
-	
-	
+		EntityManager em = JPAUtil.getEMF().createEntityManager();
+
+		SeleccionDelChef SeleccionDelChefAdd = null;
+
+		try {
+			em.getTransaction().begin();
+			SeleccionDelChefAdd = em.merge(seleccionDelChef);
+			em.getTransaction().commit();
+
+		} catch (Exception e) {
+
+			throw new Exception("Error al persistir SeleccionDelChef: " + e.getMessage());
+
+		} finally {
+
+			em.close();
+		}
+
+		return SeleccionDelChefAdd;
 	}
-	
-	
-	
-    /*private static EntityManager entityManager;
 
-    public RecetarioChefDAO(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+	// Metodo para traer todos los recetarios de la BD
+		@SuppressWarnings("unchecked")
+		public List<SeleccionDelChef> getAll() {
 
-    // Crear un recetario público
-    public RecetarioChef crearRecetarioPublico(UsuarioChef usuario, String nombreRecetario) {
-        RecetarioChef recetario = new RecetarioChef();
-        recetario.setUsuarioChef(usuario);
-        recetario.setNombreRecetario(nombreRecetario);
-        recetario.setVisibleComunidad(true); // Marcar como público
-        entityManager.persist(recetario);
-        return recetario;
-    }
+			EntityManager em = JPAUtil.getEMF().createEntityManager();
+			List<SeleccionDelChef> seleccionDelChef = new ArrayList<>();
 
-   
+			try {
 
-    // Obtener todos los recetarios públicos
-    public List<RecetarioChef> obtenerRecetariosPublicos() {
-        String jpql = "SELECT r FROM RecetarioChef r WHERE r.visibleComunidad = true";
-        Query query = entityManager.createQuery(jpql, RecetarioChef.class);
-        return query.getResultList();
-    }
+				String jpql = "SELECT sc FROM seleccion_del_chef sh";
+				Query query = em.createQuery(jpql, SeleccionDelChef.class);
+				seleccionDelChef = query.getResultList();
 
-    // Comprobar si un recetario contiene al menos 5 recetas
-    public boolean recetarioCumpleRequisitos(RecetarioChef recetario) {
-        List<RecetasEnRecetario> recetas = recetario.getRecetasEnRecetario();
-        return recetas.size() >= 5;
-    }*/
+			} finally {
+
+				em.close();
+			}
+
+			return seleccionDelChef;
+		}
+		
+		
+		// Metodo para traer seleccion Del Chef por id
+		public SeleccionDelChef getSeleccionDelChefById(int idSelecChef) {
+
+			EntityManager em = JPAUtil.getEMF().createEntityManager();
+			SeleccionDelChef seleccionDelChef = null;
+
+			try {
+
+				seleccionDelChef = em.find(SeleccionDelChef.class, idSelecChef);
+
+			} finally {
+
+				em.close();
+			}
+
+			return seleccionDelChef;
+		}
+		
+		public String deleteSeleccionDelChef(int idSelecChef) {
+
+			String res = "";
+			EntityManager em = JPAUtil.getEMF().createEntityManager();
+			SeleccionDelChef seleccionDelChef = null;
+
+			try {
+				seleccionDelChef = em.find(SeleccionDelChef.class, idSelecChef);// lo busco
+				em.getTransaction().begin();
+				em.remove(seleccionDelChef);
+				em.getTransaction().commit();
+
+				res = "seleccion Del Chef eliminado correctamente.";
+
+			} catch (Exception e) {
+				res = "Error al borrar seleccion Del Chef.";
+			}
+
+			return res;
+
+		}
+
+}
 

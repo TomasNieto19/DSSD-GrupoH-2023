@@ -1,5 +1,6 @@
 create database DSSDGrupoH2023;
 
+
 use DSSDGrupoH2023;
 
 
@@ -29,6 +30,19 @@ CREATE TABLE `recipe` (
         REFERENCES users (id_user)
 );
 
+CREATE TABLE `drafts` (
+  `id_draft` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(7500) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `preparation_time` int DEFAULT NULL,
+  `id_user` int NOT NULL,
+  `ingredients` varchar(2000) DEFAULT NULL,
+  `steps` varchar(2000) DEFAULT NULL,
+  PRIMARY KEY (`id_draft`),
+  FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
+);
+
 CREATE TABLE `photo` (
     `id_photo` INT NOT NULL AUTO_INCREMENT,
     `url` VARCHAR(16000) NOT NULL,
@@ -50,6 +64,37 @@ CREATE TABLE `follows` (
         REFERENCES users (id_user),
     PRIMARY KEY (id_follower , id_following)
 );
+
+CREATE TABLE recetas_chef ( -- recuperatorio matias
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    tiempoCoccion INT,
+    ingredientes TEXT,
+    pasos TEXT,
+    id_user INT ,
+    foto VARCHAR(16000),
+    FOREIGN KEY (id_user)
+    REFERENCES users (id_user)
+    
+);
+
+CREATE TABLE recetarios_chef ( -- recuperatorio matias
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre varchar(50) NOT NULL,
+    idUsuario INT, -- Clave foránea para vincularlo con el usuario
+    visibleComunidad BOOLEAN,
+    FOREIGN KEY (idUsuario) REFERENCES users (id_user)
+);
+
+CREATE TABLE recetas_en_recetario ( -- recuperatorio matias
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idRecetario INT, -- Clave foránea para vincularlo con el recetario
+    idReceta INT, -- Clave foránea para vincularlo con la receta
+    FOREIGN KEY (idRecetario) REFERENCES recetarios_chef (id),
+    FOREIGN KEY (idReceta) REFERENCES recetas_chef (id)
+);
+
 
 CREATE TABLE `favorite_recipes` (
     `id_user` INT NOT NULL,
@@ -88,6 +133,7 @@ CREATE TABLE `popularity_users` (
         REFERENCES users (id_user)
 );
 
+
 CREATE TABLE `messages` (
     id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
     id_remitente INT,
@@ -101,41 +147,37 @@ CREATE TABLE `messages` (
         REFERENCES users (id_user)
 );
 
-
-############### INSERTS DE PRUEBA ###############
-
-
-
-INSERT INTO popularity_recipes (id_recipe, score) VALUES
-  (1,10),
-  (2,20),
-  (3,30);
-
-INSERT INTO popularity_users (id_user, score) VALUES
-  (1,1),
-  (2,1);
-
-
-CREATE TABLE `drafts` (
-  `id_draft` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `description` varchar(7500) DEFAULT NULL,
-  `category` varchar(255) DEFAULT NULL,
-  `preparation_time` int DEFAULT NULL,
-  `id_user` int NOT NULL,
-  `ingredients` varchar(2000) DEFAULT NULL,
-  `steps` varchar(2000) DEFAULT NULL,
-  PRIMARY KEY (`id_draft`),
-  FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
-);
-  
-CREATE TABLE `popularity_users` (
-  `id_user` INT NOT NULL,
-  `score` INT NOT NULL,
-  PRIMARY KEY (id_user),
+CREATE TABLE `recipe_book` (
+  `id_recipe_book` INT NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_user` INT NOT NULL, -- seria el id del usuario que lo creo
+  PRIMARY KEY (id_recipe_book),
   FOREIGN KEY (id_user)
       REFERENCES users (id_user)
 );
+
+
+
+ CREATE TABLE `recipe_in_recipeBook` (
+   `id` INT NOT NULL auto_increment,
+  `id_recipe_book` INT NOT NULL,
+  `id_recipe` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_recipe_book)
+      REFERENCES recipe_book (id_recipe_book),
+  FOREIGN KEY (id_recipe)
+      REFERENCES recipe (id_recipe)
+);
+ CREATE TABLE `moderator` (
+  `id` INT NOT NULL auto_increment,
+  `id_user` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+
+############### INSERTS DE PRUEBA ###############
+
 
 INSERT INTO users (name, email, username, password) VALUES
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
@@ -171,15 +213,22 @@ INSERT INTO recipe (title, description, ingredients, category, steps, preparatio
    50,
    1);
    
+
 INSERT INTO popularity_recipes (id_recipe, score) VALUES
   (1,10),
   (2,20),
   (3,30);
 
+
 INSERT INTO popularity_users (id_user, score) VALUES
   (1,1),
   (2,1);
 
+
+INSERT INTO follows (id_follower, id_following) VALUES
+  (1,2),
+  (2,1);
+  
 INSERT INTO photo (url, id_recipe) VALUES
   ("https://i.imgur.com/I1SyBTh.jpeg", 1),
   ("https://i.imgur.com/d2F6BCW.jpeg", 1),
@@ -190,49 +239,20 @@ INSERT INTO photo (url, id_recipe) VALUES
   ("https://i.imgur.com/JS5eg4D.jpeg", 4),
   ("https://i.imgur.com/Hf2Th3u.jpeg", 4);
 
-INSERT INTO follows (id_follower, id_following) VALUES
-  (1,2),
-  (2,1);
-
 INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES
   (1,1,"Muy buena receta"),
   (1,2,"Excelente comida"),
   (1,3,"Que rica!");
   
-CREATE TABLE `recipe_book` (
-  `id_recipe_book` INT NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `id_user` INT NOT NULL, -- seria el id del usuario que lo creo
-  PRIMARY KEY (id_recipe_book),
-  FOREIGN KEY (id_user)
-      REFERENCES users (id_user)
-);
-
+  
 INSERT INTO recipe_book (name,id_user) values
 ("Recetario 1",1),
 ("Recetario 2",1);
 
- CREATE TABLE `recipe_in_recipeBook` (
-   `id` INT NOT NULL auto_increment,
-  `id_recipe_book` INT NOT NULL,
-  `id_recipe` INT NOT NULL,-- la receta que voy a agregar
-  PRIMARY KEY (id),
-  FOREIGN KEY (id_recipe_book)
-      REFERENCES recipe_book (id_recipe_book),
-  FOREIGN KEY (id_recipe)
-      REFERENCES recipe (id_recipe)
-);
 
 INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
 (1,1),
 (1,2),
 (2,1);
 
- CREATE TABLE `moderator` (
-  `id` INT NOT NULL auto_increment,
-  `id_user` INT NOT NULL,-- la receta que voy a agregar
-  PRIMARY KEY (id),
-  FOREIGN KEY (id_user)
-      REFERENCES users (id_user)
-);
 
