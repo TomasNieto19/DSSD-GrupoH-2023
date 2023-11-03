@@ -52,20 +52,20 @@ public class TesteoChef {
 		
 		
 		/*
-		String titulo = "Receta de Lomo de cerdo a la mostaza.\n";
-		String descripcion = "El plato te presentamos consiste en una receta clásica que se elabora de manera rápida y sencilla.\n";
+		String titulo = "Receta de Lomo de cerdo a la mostaza.";
+		String descripcion = "El plato te presentamos consiste en una receta clásica que se elabora de manera rápida y sencilla.";
 		int tiempoCoccion = 30;
-		String ingredientes = "Ingrediente 1 " + "Ingrediente 2 " + "Ingrediente 3 " + "Ingrediente 4 \n";
-		String pasos = "Paso 1 " + "Paso 2 " + "Paso 3 " + "Paso 4 \n";
+		String ingredientes = "Ingrediente 1 " + "Ingrediente 2 " + "Ingrediente 3 " + "Ingrediente 4 ";
+		String pasos = "Paso 1 " + "Paso 2 " + "Paso 3 " + "Paso 4 ";
 		int idUsuario = 1;
-		String fotos = "https://cdn0.recetasgratis.net/es/posts/4/7/9/lomo_de_cerdo_a_la_mostaza_76974_600.webp"+ "\n\n";
+		String fotos = "https://cdn0.recetasgratis.net/es/posts/4/7/9/lomo_de_cerdo_a_la_mostaza_76974_600.webp";
 		RecetasChef recetasChefEnCasa1 = new RecetasChef(titulo, descripcion, tiempoCoccion, ingredientes, pasos,idUsuario,fotos);
 		*/
 		//---------------------recetario seleccion del chef-----------------------------------------------------
 		
 		System.out.println("-----------------------------------------------------------------------------------------");
 		System.out.println("add selelccion de chef: \n");
-		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA1",1,true);
+		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA Micaela",4,false);
 		
 		try {
 			System.out.println(RecetarioChefDAO.getInstance().addOrUpdateSeleccionDelChef(seleccionDelChef));
@@ -108,6 +108,31 @@ public class TesteoChef {
 		System.out.println(RecetaEnSeleccionDelChefDao.getInstance().getAllRecetaEnSeleccionDelChef());
 		
 		
-		}
-
+		System.out.println("\ntraerRecetaPorIdUser");
+		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario(8));
+		
+	 
+		System.out.println("\nComprueba cantidad de recetas");
+		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario5(8));
+		
+		System.out.println("\nhacer a todos falsos");
+		RecetarioChefDAO.getInstance().habilitarTodosParaVisibleEnBaseDeDatos();
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		System.out.println("\nhacer visible solo los que tenga numero 3");
+		RecetarioChefDAO.getInstance().habilitarVisiblePorIdUsuario(3);
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		System.out.println("\nhacer visible los registros de micaela ");
+		RecetarioChefDAO.getInstance().habilitarVisiblePorIdUsuarioMayor5(4);
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		
+		
+		
+		
+		
+		
+		RecetarioChefDAO.getInstance().generarPDFDeSeleccionDelChef(seleccionDelChef, RecetasChefDao.getInstance().getAllRecetasChef());
+	}
 }

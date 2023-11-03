@@ -43,7 +43,8 @@ public class RecetaEnSeleccionDelChef {
 
 	@Override
 	public String toString() {
-		return "\nReceta En Seleccion Del Chef [id=" + id + ", idRecetario=" + idRecetario + ", idReceta=" + idReceta + "]";
+		return "\nReceta En Seleccion Del Chef [id: " + id + ", idRecetario: " 
+				+ idRecetario + ", idReceta: " + idReceta + "]";
 	}
 	  
 	  

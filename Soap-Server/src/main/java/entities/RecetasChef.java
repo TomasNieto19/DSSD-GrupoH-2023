@@ -73,4 +73,14 @@ public class RecetasChef {
        
     }
     
+    
+	@Override
+	public String toString() {
+		return "\n\nRecetasChef [\nid: " + idRecipe + " Usuario: " + users + ", Titulo: " + title + "\nDescripcion: " + description + "\nTiempo de coccion: "
+				+ cookTime + "\nIngredientes: " + ingredients + "\nPasos: " + steps + "\nURL foto: "
+				+ photoUrl + "]";
+	}
+    
+    
+    
 }
