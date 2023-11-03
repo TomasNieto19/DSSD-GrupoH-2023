@@ -72,5 +72,13 @@ public class RecetasChef {
         this.photoUrl = photoUrl;
        
     }
+	@Override
+	public String toString() {
+		return "\nRecetasChef [\nid: " + idRecipe + ", Titulo: " + title + "Descripcion: " + description + "Tiempo de coccion: "
+				+ cookTime + ", Ingredientes: " + ingredients + "Pasos: " + steps + "Usuario: " + users + "\nURL foto: "
+				+ photoUrl + "]";
+	}
+    
+    
     
 }
