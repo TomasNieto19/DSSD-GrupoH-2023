@@ -43,7 +43,7 @@ public class RecetasChefDao {
 
 			} catch (Exception e) {
 
-				throw new Exception("Error al persistir Recetario: " + e.getMessage());
+				throw new Exception("Error al persistir recetas: " + e.getMessage());
 
 			} finally {
 

@@ -1,5 +1,6 @@
 create database DSSDGrupoH2023;
 
+
 use DSSDGrupoH2023;
 
 ############### CREAR TABLAS ###############
@@ -28,6 +29,18 @@ CREATE TABLE `recipe` (
 );
 
 CREATE TABLE `drafts` (
+<<<<<<< HEAD
+  `id_draft` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `description` varchar(7500) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `preparation_time` int DEFAULT NULL,
+  `id_user` int NOT NULL,
+  `ingredients` varchar(2000) DEFAULT NULL,
+  `steps` varchar(2000) DEFAULT NULL,
+  PRIMARY KEY (`id_draft`),
+  FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`)
+=======
     `id_draft` INT NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) DEFAULT NULL,
     `description` VARCHAR(7500) DEFAULT NULL,
@@ -39,6 +52,7 @@ CREATE TABLE `drafts` (
     PRIMARY KEY (`id_draft`),
     FOREIGN KEY (`id_user`)
         REFERENCES `users` (`id_user`)
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
 );
 
 CREATE TABLE `photo` (
@@ -62,6 +76,37 @@ CREATE TABLE `follows` (
         REFERENCES users (id_user),
     PRIMARY KEY (id_follower , id_following)
 );
+
+CREATE TABLE recetas_chef ( -- recuperatorio matias
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    tiempoCoccion INT,
+    ingredientes TEXT,
+    pasos TEXT,
+    id_user INT ,
+    foto VARCHAR(16000),
+    FOREIGN KEY (id_user)
+    REFERENCES users (id_user)
+    
+);
+
+CREATE TABLE seleccion_del_chef  ( -- ex recetarios_chef
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre varchar(50),
+    idUsuario INT, -- Clave foránea para vincularlo con el usuario
+    visibleComunidad BOOLEAN,
+    FOREIGN KEY (idUsuario) REFERENCES users (id_user)
+);
+
+CREATE TABLE receta_en_seleccion_del_chef ( -- ex recetas_en_recetario
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idRecetario INT, -- Clave foránea para vincularlo con el recetario
+    idReceta INT, -- Clave foránea para vincularlo con la receta
+    FOREIGN KEY (idRecetario) REFERENCES seleccion_del_chef (id),
+    FOREIGN KEY (idReceta) REFERENCES recetas_chef (id)
+);
+
 
 CREATE TABLE `favorite_recipes` (
     `id_user` INT NOT NULL,
@@ -100,6 +145,8 @@ CREATE TABLE `popularity_users` (
         REFERENCES users (id_user)
 );
 
+<<<<<<< HEAD
+=======
 CREATE TABLE `recipe_book` (
     `id_recipe_book` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(50) NOT NULL,
@@ -127,6 +174,7 @@ CREATE TABLE `moderator` (
     FOREIGN KEY (id_user)
         REFERENCES users (id_user)
 );
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
 
 CREATE TABLE `messages` (
     id_mensaje INT AUTO_INCREMENT PRIMARY KEY,
@@ -141,6 +189,15 @@ CREATE TABLE `messages` (
         REFERENCES users (id_user)
 );
 
+<<<<<<< HEAD
+CREATE TABLE `recipe_book` (
+  `id_recipe_book` INT NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_user` INT NOT NULL, -- seria el id del usuario que lo creo
+  PRIMARY KEY (id_recipe_book),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+=======
 CREATE TABLE `recipe_has_report` (
     `id_report` INT NOT NULL AUTO_INCREMENT,
     `id_recipe` INT NOT NULL,
@@ -149,13 +206,39 @@ CREATE TABLE `recipe_has_report` (
     PRIMARY KEY (id_report),
     FOREIGN KEY (id_recipe)
         REFERENCES recipe (id_recipe)
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
 );
 
 
 ############### INSERTS DE PRUEBA ###############
 
+<<<<<<< HEAD
+ CREATE TABLE `recipe_in_recipeBook` (
+   `id` INT NOT NULL auto_increment,
+  `id_recipe_book` INT NOT NULL,
+  `id_recipe` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_recipe_book)
+      REFERENCES recipe_book (id_recipe_book),
+  FOREIGN KEY (id_recipe)
+      REFERENCES recipe (id_recipe)
+);
+ CREATE TABLE `moderator` (
+  `id` INT NOT NULL auto_increment,
+  `id_user` INT NOT NULL,-- la receta que voy a agregar
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_user)
+      REFERENCES users (id_user)
+);
+
+############### INSERTS DE PRUEBA ###############
+
+
+INSERT INTO users (name, email, username, password) VALUES
+=======
 
 INSERT INTO `users` (name, email, username, password) VALUES
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
   ('Usuario1', 'usuario1@gmail.com', 'admin', '1234'),
   ('Usuario2', 'usuario2@gmail.com', 'user', '1234');
 
@@ -189,16 +272,35 @@ INSERT INTO `recipe` (title, description, ingredients, category, steps, preparat
    50,
    1);
    
+<<<<<<< HEAD
+
+INSERT INTO popularity_recipes (id_recipe, score) VALUES
+=======
 INSERT INTO `popularity_recipes` (id_recipe, score) VALUES
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
   (1,10),
   (2,20),
   (3,30);
 
+<<<<<<< HEAD
+
+INSERT INTO popularity_users (id_user, score) VALUES
+  (1,1),
+  (2,1);
+
+
+INSERT INTO follows (id_follower, id_following) VALUES
+  (1,2),
+  (2,1);
+  
+INSERT INTO photo (url, id_recipe) VALUES
+=======
 INSERT INTO `popularity_users` (id_user, score) VALUES
   (1,1),
   (2,1);
 
 INSERT INTO `photo` (url, id_recipe) VALUES
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
   ("https://i.imgur.com/I1SyBTh.jpeg", 1),
   ("https://i.imgur.com/d2F6BCW.jpeg", 1),
   ("https://i.imgur.com/s8z6wDy.jpeg", 2),
@@ -208,6 +310,45 @@ INSERT INTO `photo` (url, id_recipe) VALUES
   ("https://i.imgur.com/JS5eg4D.jpeg", 4),
   ("https://i.imgur.com/Hf2Th3u.jpeg", 4);
 
+<<<<<<< HEAD
+INSERT INTO comments_recipes (id_user_comment, id_recipe_comment, comment) VALUES
+  (1,1,"Muy buena receta"),
+  (1,2,"Excelente comida"),
+  (1,3,"Que rica!");
+  
+  
+INSERT INTO recipe_book (name,id_user) values
+("Recetario 1",1),
+("Recetario 2",1);
+
+
+INSERT INTO recipe_in_recipeBook(id_recipe_book,id_recipe) values
+(1,1),
+(1,2),
+(2,1);
+
+
+
+-- practica matias  
+
+INSERT INTO seleccion_del_chef (nombre, idUsuario, visibleComunidad)
+VALUES ('Receta 1', 1, true);
+
+INSERT INTO seleccion_del_chef (nombre, idUsuario, visibleComunidad)
+VALUES ('Receta 2', 2, false);
+
+
+
+-- Insertar la primera fila
+INSERT INTO receta_en_seleccion_del_chef (idRecetario, idReceta)
+VALUES (1, 1);
+
+-- Insertar la segunda fila
+INSERT INTO receta_en_seleccion_del_chef (idRecetario, idReceta)
+VALUES (2, 1);
+
+
+=======
 INSERT INTO `follows` (id_follower, id_following) VALUES
   (1,2),
   (2,1);
@@ -227,6 +368,7 @@ INSERT INTO `recipe_in_recipebook` (id_recipe_book,id_recipe) values
 
 INSERT INTO `moderator` (id, id_user) values 
   (1,1);
+>>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
 
 INSERT INTO `recipe_has_report` values 
   (1,1,"Peligroso", true);

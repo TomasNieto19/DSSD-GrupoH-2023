@@ -42,11 +42,26 @@ public class RecetasChef {
     @Column(name = "pasos", nullable = true)
     private String steps;
 
+    @Column(name = "id_user")
+    private Integer users;
+    
     @Column(name = "foto", nullable = true)
     private String photoUrl;
     
-    
 
+   
+
+    public RecetasChef(String title, String description, int cookTime, String ingredients, String steps, int users, String photoUrl) {
+        super();
+        this.title = title;
+        this.description = description;
+        this.cookTime = cookTime;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.users = users;
+        this.photoUrl = photoUrl;
+        
+    }
     public RecetasChef(String title, String description, int cookTime, String ingredients, String steps, String photoUrl) {
         super();
         this.title = title;
@@ -55,6 +70,7 @@ public class RecetasChef {
         this.ingredients = ingredients;
         this.steps = steps;
         this.photoUrl = photoUrl;
+       
     }
     
 }

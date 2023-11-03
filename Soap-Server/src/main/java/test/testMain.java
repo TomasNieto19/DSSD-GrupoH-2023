@@ -1,10 +1,14 @@
 package test;
+import dao.RecetaEnSeleccionDelChefDao;
+import dao.RecetarioChefDAO;
+import entities.RecetaEnSeleccionDelChef;
 
 import dao.RecipeBookDao;
 import dao.RecipeHasReportDao;
 import entities.RecipeBook;
 import entities.Recipe_has_report;
 import entities.Recipe_in_RecipeBook;
+import entities.SeleccionDelChef;
 
 public class testMain {
 
@@ -33,6 +37,22 @@ public class testMain {
 		 * System.out.println(e); }
 		 */
 
+		
+		
+		/*
+		RecetaEnSeleccionDelChef recetaEnSeleccionDelChef = new RecetaEnSeleccionDelChef (2,2);
+		
+		try {
+			System.out.println(RecetaEnSeleccionDelChefDao.getInstance().addRecetaEnSeleccionDelChef(recetaEnSeleccionDelChef));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("traigo todos los recetarios");
+		System.out.println(RecetaEnSeleccionDelChefDao.getInstance().getRecetaEnSeleccionDelChefById(2));
+		
+		*/
+		
 		
 		/*
 		  RecipeBook recipebook=new RecipeBook("Recetario 3",1);
