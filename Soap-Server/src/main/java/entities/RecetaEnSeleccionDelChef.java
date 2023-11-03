@@ -39,6 +39,14 @@ public class RecetaEnSeleccionDelChef {
 		  this.idRecetario = idRecetario; 
 		  this.idReceta = idReceta; 
 	  }
+
+
+	@Override
+	public String toString() {
+		return "\nReceta En Seleccion Del Chef [id=" + id + ", idRecetario=" + idRecetario + ", idReceta=" + idReceta + "]";
+	}
+	  
+	  
 	 
 	
 	

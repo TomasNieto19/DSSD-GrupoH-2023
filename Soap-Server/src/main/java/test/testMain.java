@@ -1,13 +1,10 @@
 package test;
-
-<<<<<<< HEAD
 import dao.RecetaEnSeleccionDelChefDao;
 import dao.RecetarioChefDAO;
 import entities.RecetaEnSeleccionDelChef;
-=======
+
 import dao.RecipeBookDao;
 import dao.RecipeHasReportDao;
->>>>>>> ca34481309c7f59b16ce8e70d7f5fa084b0dcef6
 import entities.RecipeBook;
 import entities.Recipe_has_report;
 import entities.Recipe_in_RecipeBook;

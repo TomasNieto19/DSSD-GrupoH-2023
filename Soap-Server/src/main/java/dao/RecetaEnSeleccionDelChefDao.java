@@ -21,6 +21,8 @@ public class RecetaEnSeleccionDelChefDao {
 	
 	private static RecetaEnSeleccionDelChefDao instance;
 
+
+
 	// Patron Singleton para reutilizar la instancia en el serivce
 	public static RecetaEnSeleccionDelChefDao getInstance() {
 
@@ -62,7 +64,7 @@ public class RecetaEnSeleccionDelChefDao {
 
 			try {
 
-				String jpql = "SELECT rs FROM receta_en_seleccion_del_chef rs";
+				String jpql = "SELECT rs FROM RecetaEnSeleccionDelChef rs";
 				Query query = em.createQuery(jpql, RecetaEnSeleccionDelChef.class);
 				recetaEnSeleccionDelChef = query.getResultList();
 

@@ -53,25 +53,25 @@ public class RecetarioChefDAO {
 	}
 
 	// Metodo para traer todos los recetarios de la BD
+	
 		@SuppressWarnings("unchecked")
+
 		public List<SeleccionDelChef> getAll() {
+	        EntityManager em = JPAUtil.getEMF().createEntityManager();
+	        List<SeleccionDelChef> seleccionDelChef = null;
 
-			EntityManager em = JPAUtil.getEMF().createEntityManager();
-			List<SeleccionDelChef> seleccionDelChef = new ArrayList<>();
+	        try {
+	            String jpql = "SELECT sc FROM SeleccionDelChef sc";
+	            Query query = em.createQuery(jpql, SeleccionDelChef.class);
+	            seleccionDelChef = query.getResultList();
+	        } finally {
+	            em.close();
+	        }
 
-			try {
-
-				String jpql = "SELECT sc FROM seleccion_del_chef sh";
-				Query query = em.createQuery(jpql, SeleccionDelChef.class);
-				seleccionDelChef = query.getResultList();
-
-			} finally {
-
-				em.close();
-			}
-
-			return seleccionDelChef;
-		}
+	        return seleccionDelChef;
+	    }
+	
+	
 		
 		
 		// Metodo para traer seleccion Del Chef por id

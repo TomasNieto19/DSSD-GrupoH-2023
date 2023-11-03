@@ -44,6 +44,12 @@ public class SeleccionDelChef {
 		this.visibleComunidad = visibleComunidad;
 	}
 
+	@Override
+	public String toString() {
+		return "\nSeleccion DelChef [id: " + idSelecChef + ", name: " + name + ", idUser: " + idUser
+				+ ", visibleComunidad: " + visibleComunidad + "]";
+	}
+
 	
  
 }
