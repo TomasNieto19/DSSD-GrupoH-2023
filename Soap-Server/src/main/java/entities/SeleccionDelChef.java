@@ -31,11 +31,13 @@ public class SeleccionDelChef {
 	@Column(name = "nombre", nullable = true)
 	private String name;
 	
+	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idUsuario", nullable = false)
 	private int idUser;
 	
 	@Column(name = "visibleComunidad", nullable = false)
-	private boolean visibleComunidad;
+	private boolean visibleComunidad=false;
 	
 	public SeleccionDelChef(String name, int idUser, boolean visibleComunidad) {
 		super();

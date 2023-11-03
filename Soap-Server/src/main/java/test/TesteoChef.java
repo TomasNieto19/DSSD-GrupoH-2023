@@ -65,7 +65,7 @@ public class TesteoChef {
 		
 		System.out.println("-----------------------------------------------------------------------------------------");
 		System.out.println("add selelccion de chef: \n");
-		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA1",1,true);
+		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA Micaela",4,false);
 		
 		try {
 			System.out.println(RecetarioChefDAO.getInstance().addOrUpdateSeleccionDelChef(seleccionDelChef));
@@ -108,6 +108,31 @@ public class TesteoChef {
 		System.out.println(RecetaEnSeleccionDelChefDao.getInstance().getAllRecetaEnSeleccionDelChef());
 		
 		
-		}
-
+		System.out.println("\ntraerRecetaPorIdUser");
+		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario(8));
+		
+	 
+		System.out.println("\nComprueba cantidad de recetas");
+		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario5(8));
+		
+		System.out.println("\nhacer a todos falsos");
+		RecetarioChefDAO.getInstance().habilitarTodosParaVisibleEnBaseDeDatos();
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		System.out.println("\nhacer visible solo los que tenga numero 3");
+		RecetarioChefDAO.getInstance().habilitarVisiblePorIdUsuario(3);
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		System.out.println("\nhacer visible los registros de micaela ");
+		RecetarioChefDAO.getInstance().habilitarVisiblePorIdUsuarioMayor5(4);
+		System.out.println(RecetarioChefDAO.getInstance().getAll());
+		
+		
+		
+		
+		
+		
+		
+		RecetarioChefDAO.getInstance().generarPDFDeSeleccionDelChef(seleccionDelChef, RecetasChefDao.getInstance().getAllRecetasChef());
+	}
 }
