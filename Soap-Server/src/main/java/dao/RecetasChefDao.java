@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import entities.RecetasChef;
 import entities.RecipeBook;
 import entities.Recipe_in_RecipeBook;
+import entities.SeleccionDelChef;
 import entities.UsuarioChef;
 
 public class RecetasChefDao {
@@ -68,7 +69,23 @@ public class RecetasChefDao {
 
 	        return recetasChef;
 	    }
-	
+		
+		public List<RecetasChef> getRecetasChefByUserId(int userId) {
+		    EntityManager em = JPAUtil.getEMF().createEntityManager();
+		    List<RecetasChef> recetasChef = null;
+		    try {
+		        String jpql = "SELECT rc FROM RecetasChef rc WHERE rc.users = :userId";
+		        Query query = em.createQuery(jpql, RecetasChef.class);
+		        query.setParameter("userId", userId);
+		        recetasChef = query.getResultList();
+		    } finally {
+		        em.close();
+		    }
+
+		    return recetasChef;
+		}
+
+
 		
 		public void deleteAllRecetasChef(String tabla) {
 	        EntityManager em = JPAUtil.getEMF().createEntityManager();
