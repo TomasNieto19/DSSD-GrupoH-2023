@@ -15,11 +15,13 @@ import entities.UsuarioChef;
 public class TesteoChef {
 
 	public static void main(String[] args) {
-
-		//Utilidades.agregarCincoRecetas();
-		//Utilidades.agregarUsuario();
-
 		
+		 //Utilidades.agregarUsuario();
+		 //Utilidades.agregarCincoRecetas();
+		 
+		
+		//-----------------RECETAS DEL CHEF-------------------------------------
+		/*
 		System.out.println("Traigo todas las recetas: \n");
 		System.out.println(RecetasChefDao.getInstance().getAllRecetasChef());
 
@@ -34,13 +36,13 @@ public class TesteoChef {
 		
 		System.out.println("Borro receta por id:2 \n");
 		System.out.println(RecetasChefDao.getInstance().deleteRecetaChef(2));
-		
-		//--------------------usuario---------------------------------------------------
+		*/
+		//--------------------USUARIOS CHEF---------------------------------------------------
 		
 		System.out.println("\n\nTraigo todos los usuarios: \n");
 		System.out.println(UsuarioChefDao.getInstance().getAllUsers());
 		
-		
+		/*
 		System.out.println("\n\nTraigo usuario por id: \n");
 		System.out.println(UsuarioChefDao.getInstance().getUsersById(14));
 		//no me deja borrar porque esta asociada a mas tablas
@@ -49,23 +51,14 @@ public class TesteoChef {
 		
 		System.out.println("\n\nBorro usuario por id: \n");
 		System.out.println(UsuarioChefDao.getInstance().deleteUserChefbyId(15));
-		
-		
-		/*
-		String titulo = "Receta de Lomo de cerdo a la mostaza.";
-		String descripcion = "El plato te presentamos consiste en una receta clásica que se elabora de manera rápida y sencilla.";
-		int tiempoCoccion = 30;
-		String ingredientes = "Ingrediente 1 " + "Ingrediente 2 " + "Ingrediente 3 " + "Ingrediente 4 ";
-		String pasos = "Paso 1 " + "Paso 2 " + "Paso 3 " + "Paso 4 ";
-		int idUsuario = 1;
-		String fotos = "https://cdn0.recetasgratis.net/es/posts/4/7/9/lomo_de_cerdo_a_la_mostaza_76974_600.webp";
-		RecetasChef recetasChefEnCasa1 = new RecetasChef(titulo, descripcion, tiempoCoccion, ingredientes, pasos,idUsuario,fotos);
 		*/
-		//---------------------recetario seleccion del chef-----------------------------------------------------
+		
+		
+		//---------------------RECETARIO SELECCION DEL CHEF---------------------------------------------------------
 		
 		System.out.println("-----------------------------------------------------------------------------------------");
-		System.out.println("add selelccion de chef: \n");
-		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA Micaela",4,false);
+		System.out.println("ADD RECETARIO SELECCION DEL CHEF: \n");
+		SeleccionDelChef seleccionDelChef = new SeleccionDelChef ("RECETA Micaela ",4,false);
 		
 		try {
 			System.out.println(RecetarioChefDAO.getInstance().addOrUpdateSeleccionDelChef(seleccionDelChef));
@@ -85,7 +78,7 @@ public class TesteoChef {
 		System.out.println(RecetarioChefDAO.getInstance().getAll());
 		
 		//------------------------RecetaEnSeleccionDelChefDao--------receta en seleccion de receta----------------------------------
-		
+		/*
 		System.out.println("-----------------------------------------------------------------------------------------");
 		System.out.println("add Receta En Seleccion Del Chef: \n");
 		RecetaEnSeleccionDelChef recetaEnSeleccionDelChef = new RecetaEnSeleccionDelChef(1,1);
@@ -95,7 +88,7 @@ public class TesteoChef {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
+		*/
 		System.out.println("\nTraigo Receta En Seleccion Del Chef id: 6\n");
 		System.out.println(RecetaEnSeleccionDelChefDao.getInstance().getRecetaEnSeleccionDelChefById(6));
 		
@@ -112,8 +105,8 @@ public class TesteoChef {
 		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario(8));
 		
 	 
-		System.out.println("\nComprueba cantidad de recetas");
-		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario5(8));
+		System.out.println("\nComprueba cantidad de recetas USUARIO 4");
+		System.out.println(RecetarioChefDAO.getInstance().traerSeleccionDelChefPorIdUsuario5(4));
 		
 		System.out.println("\nhacer a todos falsos");
 		RecetarioChefDAO.getInstance().habilitarTodosParaVisibleEnBaseDeDatos();
@@ -128,11 +121,15 @@ public class TesteoChef {
 		System.out.println(RecetarioChefDAO.getInstance().getAll());
 		
 		
+		//RecetarioChefDAO.getInstance().generarYGuardarPDF(seleccionDelChef, RecetasChefDao.getInstance().getAllRecetasChef());
 		
 		
+		System.out.println("trigo una lista de recetas chef por usuario ejemplo: 4 ");
+		
+		System.out.println(RecetasChefDao.getInstance().getRecetasChefByUserId(4));
+		
+		RecetarioChefDAO.getInstance().generarYGuardarPDF(seleccionDelChef, RecetasChefDao.getInstance().getRecetasChefByUserId(4));
 		
 		
-		
-		RecetarioChefDAO.getInstance().generarPDFDeSeleccionDelChef(seleccionDelChef, RecetasChefDao.getInstance().getAllRecetasChef());
 	}
 }

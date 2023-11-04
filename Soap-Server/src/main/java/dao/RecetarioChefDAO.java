@@ -20,11 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.List;
 
 public class RecetarioChefDAO {
@@ -286,7 +293,75 @@ public class RecetarioChefDAO {
 		        return null;
 		    }
 		}
+		public void generarYGuardarPDF(SeleccionDelChef seleccionDelChef, List<RecetasChef> recetas) {
+		    Document document = new Document(PageSize.A4);
 
+		    try {
+		        // Definir la ubicación de almacenamiento y el nombre del archivo PDF
+		        String rutaAlmacenamiento = "C:\\ruta\\";
+		        Integer traerNombre = seleccionDelChef.getIdUser();
+		        String nombreArchivo = "user"+traerNombre+"seleccion_del_chef.pdf";
+		        String rutaCompleta = rutaAlmacenamiento + nombreArchivo;
+
+		        // Crear el archivo PDF
+		        PdfWriter.getInstance(document, new FileOutputStream(rutaCompleta));
+		        document.open();
+
+		        // Título del PDF
+		        Paragraph titulo = new Paragraph("SELECCIÓN DEL CHEF " + seleccionDelChef.getIdUser());
+		        Paragraph subtitulo = new Paragraph("UNLa_COOK ");
+		        titulo.setAlignment(Element.ALIGN_CENTER);
+		        subtitulo.setAlignment(Element.ALIGN_CENTER);
+		        document.add(titulo);
+		        document.add(subtitulo);
+		        String logoUNLa = "https://upload.wikimedia.org/wikipedia/commons/f/f8/Universidad_Nacional_de_Lan%C3%BAs_logo.png";
+		        try {
+	                Image imagen = Image.getInstance(new URL(logoUNLa));
+	                imagen.setAlignment(Element.ALIGN_CENTER);
+	                document.add(imagen);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+
+		        // Separar las recetas una por cada página
+		        for (RecetasChef receta : recetas) {
+		            document.newPage();
+
+		            // Título de la receta
+		            Paragraph tituloReceta = new Paragraph(receta.getTitle());
+		            tituloReceta.setAlignment(Element.ALIGN_CENTER);
+		            document.add(tituloReceta);
+
+		            // Descripción
+		            document.add(new Paragraph("Descripción: " + receta.getDescription()));
+		            
+		         // Tiempo de cocción
+		            document.add(new Paragraph("Tiempo de cocción: " + receta.getCookTime()));
+
+ 
+		            // Ingredientes
+		            document.add(new Paragraph("Ingredientes: " + receta.getIngredients()));
+
+		            // Pasos
+		            document.add(new Paragraph("Pasos: " + receta.getSteps()));
+
+		         // Agregar la imagen desde la URL
+		            try {
+		                Image imagen = Image.getInstance(new URL(receta.getPhotoUrl()));
+		                imagen.setAlignment(Element.ALIGN_CENTER);
+		                document.add(imagen);
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            }
+
+		        }
+
+		        document.close();
+		        System.out.println("PDF generado y guardado en: " + rutaCompleta);
+		    } catch (DocumentException | IOException e) {
+		        e.printStackTrace();
+		    }
+		}
 
 		public String deleteSeleccionDelChef(int idSelecChef) {
 

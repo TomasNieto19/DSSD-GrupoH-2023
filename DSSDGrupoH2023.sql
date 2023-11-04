@@ -270,7 +270,7 @@ VALUES ('Receta 2', 2, false);
 -- Insertar la primera fila
 INSERT INTO receta_en_seleccion_del_chef (idRecetario, idReceta)
 VALUES (1, 1);
--- DEBERIA DE AGREGAR USUARIO Y RECETAS
+
 -- Insertar la segunda fila
 INSERT INTO receta_en_seleccion_del_chef (idRecetario, idReceta)
 VALUES (2, 1);
