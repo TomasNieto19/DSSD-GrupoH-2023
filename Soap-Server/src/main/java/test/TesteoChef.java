@@ -126,9 +126,9 @@ public class TesteoChef {
 		
 		System.out.println("trigo una lista de recetas chef por usuario ejemplo: 4 ");
 		
-		System.out.println(RecetasChefDao.getInstance().getRecetasChefByUserId(4));
+		System.out.println(RecetasChefDao.getInstance().getRecetasChefByUserId(1));
 		
-		RecetarioChefDAO.getInstance().generarYGuardarPDF(seleccionDelChef, RecetasChefDao.getInstance().getRecetasChefByUserId(4));
+		RecetarioChefDAO.getInstance().generarYGuardarPDF(seleccionDelChef, RecetasChefDao.getInstance().getRecetasChefByUserId(1));
 		
 		
 	}

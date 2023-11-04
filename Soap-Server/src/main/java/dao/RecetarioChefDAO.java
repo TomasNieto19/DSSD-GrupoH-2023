@@ -299,7 +299,7 @@ public class RecetarioChefDAO {
 		    try {
 		        // Definir la ubicación de almacenamiento y el nombre del archivo PDF
 		        String rutaAlmacenamiento = "C:\\ruta\\";
-		        Integer traerNombre = seleccionDelChef.getIdUser();
+		        Integer traerNombre = recetas.get(0).getUsers();
 		        String nombreArchivo = "user"+traerNombre+"seleccion_del_chef.pdf";
 		        String rutaCompleta = rutaAlmacenamiento + nombreArchivo;
 
@@ -308,7 +308,7 @@ public class RecetarioChefDAO {
 		        document.open();
 
 		        // Título del PDF
-		        Paragraph titulo = new Paragraph("SELECCIÓN DEL CHEF " + seleccionDelChef.getIdUser());
+		        Paragraph titulo = new Paragraph("SELECCIÓN DEL CHEF " + " User: "+traerNombre);
 		        Paragraph subtitulo = new Paragraph("UNLa_COOK ");
 		        titulo.setAlignment(Element.ALIGN_CENTER);
 		        subtitulo.setAlignment(Element.ALIGN_CENTER);
