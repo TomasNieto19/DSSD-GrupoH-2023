@@ -14,8 +14,6 @@ public class testMain {
 
 	public static void main(String[] args) {
 
-
-		// TODO Auto-generated method stub
 		
 		Recipe_has_report prueba = new Recipe_has_report(2,"Contenido inapropiado",true);
 		
