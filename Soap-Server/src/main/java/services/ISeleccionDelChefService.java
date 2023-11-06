@@ -36,63 +36,7 @@ SeleccionDelChef getSeleccionDelChefById( @WebParam(name = "id") int idSelecChef
 @WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
 String deleteSeleccionDelChef(@WebParam(name = "idRecipeBook") int idSelecChef);
 
- 
-//otra clase
 
-
-@WebMethod(operationName = "addRecetaEnSeleccionDelChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-String addRecetaEnSeleccionDelChef(@WebParam(name = "idRecetario") int idRecetario, @WebParam(name = "idReceta") int idReceta);
-
-
-@WebMethod(operationName = "getAllRecetaEnSeleccionDelChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-List<RecetaEnSeleccionDelChef> getAllRecetaEnSeleccionDelChef();//me devuelve una lista de recetarios
-
-@WebMethod(operationName = "getRecetaEnSeleccionDelChefById") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-RecetaEnSeleccionDelChef getRecetaEnSeleccionDelChefById( @WebParam(name = "id") int id);//devuelve un recetario
-
-@WebMethod(operationName = "deleteRecetaEnSeleccionDelChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-String deleteRecetaEnSeleccionDelChef(@WebParam(name = "idRecetario") int idRecetario);
-
-
-//otra clase
-
-
- 
-
-@WebMethod(operationName = "addRecetasChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-String addRecetasChef(@WebParam(name = "titulo") String title, @WebParam(name = "descripcion") String description,
-		@WebParam(name = "tiempoCoccion") int cookTime,@WebParam(name = "ingredientes")  String ingredients,
-		@WebParam(name = "pasos") String steps,@WebParam(name = "id_user") Integer users,
-		@WebParam(name = "foto") String photoUrl);
-
-
-@WebMethod(operationName = "getAllRecetasChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-List<RecetasChef> getAllRecetasChef();//me devuelve una lista de recetarios
-
-@WebMethod(operationName = "getRecetasChefByUserId") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-RecetasChef getRecetasChefByUserId( @WebParam(name = "id_user") int users);//devuelve un recetario
-
-@WebMethod(operationName = "deleteAllRecetasChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-String deleteAllRecetasChef(@WebParam(name = "recetas_chef") String tabla);
-
-@WebMethod(operationName = "getRecetaById") //nombre de la operacion solo id de la receta$$$$$$$
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-RecetasChef getRecetaById( @WebParam(name = "id") int idRecipe);//devuelve un recetario
-
-@WebMethod(operationName = "deleteRecetaChef") //nombre de la operacion
-@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
-String deleteRecetaChef(@WebParam(name = "idRecipe") int idRecipe);
-
-
-//Recetario Chef Dao
 
 @WebMethod(operationName = "addOrUpdateSeleccionDelChef")
 @WebResult(name = "ResultadoOperacion")
