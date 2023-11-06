@@ -14,7 +14,7 @@ public class Main {
         Endpoint.publish(url, new RecipeBookServiceImpl());
 
         System.out.println("\n\nServicio iniciado en: " + url + "?wsdl");
-
+       /*
         String url1 = "http://localhost:9000/ws-grupoH-app/RecipeHasReportServiceImpl";
         
         String url2 = "http://localhost:9000/ws-grupoH-app/RecipeBookServiceImpl";
@@ -26,7 +26,7 @@ public class Main {
         System.out.println("\n\nServicio iniciado en: " + url1 + "?wsdl");
         
         System.out.println("\n\nServicio iniciado en: " + url2 + "?wsdl");
-
+	*/
 
     }
 }

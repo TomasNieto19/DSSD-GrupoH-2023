@@ -14,7 +14,6 @@ public class RecipeHasReportServiceImpl implements IRecipeHasReportService{
 
 	@Override
 	public String addOrUpdateReport(int id_recipe, String reason, boolean is_reason) {
-		// TODO Auto-generated method stub
 		String res="";
 		
 		try {
