@@ -22,14 +22,14 @@ public class TesteoChef {
 		//Utilidades.agregarUsuario();
 		//Utilidades.agregarCincoRecetas();
 		 
-		//-------------IMPRIMO TODAS LAS RECETAS-Y USUARIOS---------------------
+		/*-------------IMPRIMO TODAS LAS RECETAS-Y USUARIOS---------------------
 		System.out.println("\nTraigo todas las recetas: \n");
 		System.out.println(RecetasChefDao.getInstance().getAllRecetasChef());
 
 		System.out.println("\n\nTraigo todos los usuarios: \n");
 		System.out.println(UsuarioChefDao.getInstance().getAllUsers());
 		
-		
+		*/
 		System.out.println("\nB)- Modificacion de perfil de usuario.");
 		//---------------------RECETARIO SELECCION DEL CHEF---------------------
 		System.out.println("----------------------------------------------------------------------------------");
@@ -62,7 +62,7 @@ public class TesteoChef {
 		System.out.println("\nD,E)- Descarga de seleccion chef y generacion del pdf.");
 		//Genero y guardo un pdf de recetas expecificas de un usuario
 		System.out.println("\nGenero y guardo PDF de recetas Seleccion_del_Chef de un usuario en expecifico.");
-		RecetarioChefDAO.getInstance().generarYGuardarPDF(seleccionDelChef, RecetasChefDao.getInstance().getRecetasChefByUserId(seleccionDelChef.getIdUser()));
+		RecetarioChefDAO.getInstance().generarYGuardarPDF(seleccionDelChef, RecetasChefDao.getInstance().getRecetasChefByUserId(1));
 		
 		
 		
