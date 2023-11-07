@@ -17,7 +17,7 @@ import entities.Recipe_in_RecipeBook;
 import entities.SeleccionDelChef;
 
 
-@WebService(endpointInterface = "services.IRecetaEnSeleccionDelChefService")//tome los metodos desde aca.
+@WebService(endpointInterface = "services.IRecetaEnSeleccionDelChefService")//.
 public class RecetaEnSeleccionDelChefImpl implements IRecetaEnSeleccionDelChefService{
 
 	@Override

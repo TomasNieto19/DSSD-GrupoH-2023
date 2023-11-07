@@ -17,7 +17,7 @@ import entities.Recipe_in_RecipeBook;
 import entities.SeleccionDelChef;
 
 
-@WebService(endpointInterface = "services.IRecetaChef")//tome los metodos desde aca.
+@WebService(endpointInterface = "services.IRecetaChef")//
 public class RecetasChefImpl implements IRecetaChef{
 
 

@@ -19,17 +19,13 @@ import entities.SeleccionDelChef;
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = Use.LITERAL)
 public interface IRecetaChef {
 	
-	//otra clase
-
-
-	 
 
 	@WebMethod(operationName = "addRecetasChef") //nombre de la operacion
 	@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
 	String addRecetasChef(@WebParam(name = "titulo") String title, @WebParam(name = "descripcion") String description,
-			@WebParam(name = "tiempoCoccion") int cookTime,@WebParam(name = "ingredientes")  String ingredients,
-			@WebParam(name = "pasos") String steps,@WebParam(name = "id_user") Integer users,
-			@WebParam(name = "foto") String photoUrl);
+	@WebParam(name = "tiempoCoccion") int cookTime,@WebParam(name = "ingredientes")  String ingredients,
+	@WebParam(name = "pasos") String steps,@WebParam(name = "id_user") Integer users,
+	@WebParam(name = "foto") String photoUrl);
 
 
 	@WebMethod(operationName = "getAllRecetasChef") //nombre de la operacion
