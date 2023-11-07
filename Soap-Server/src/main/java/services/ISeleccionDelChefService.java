@@ -19,6 +19,14 @@ import entities.SeleccionDelChef;
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, use = Use.LITERAL)
 public interface ISeleccionDelChefService {
 
+@WebMethod(operationName = "generarYGuardarPDF") //nombre de la operacion
+@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
+void  generarYGuardarPDF(@WebParam(name = "seleccion_del_chef") SeleccionDelChef seleccionDelChef, @WebParam(name = "recetas_chef") List<RecetasChef> recetas );
+
+@WebMethod(operationName = "generarPDFDeSeleccionDelChef") //nombre de la operacion
+@WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
+byte[]  generarPDFDeSeleccionDelChef(@WebParam(name = "seleccion_del_chef") SeleccionDelChef seleccionDelChef, @WebParam(name = "recetas_chef") List<RecetasChef> recetasChef );
+
 
 @WebMethod(operationName = "addSeleccionDelChef") //nombre de la operacion
 @WebResult(name = "ResultadoOperacion") //nombre de donde nos va a dejar el resultado
